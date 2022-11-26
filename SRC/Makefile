@@ -139,7 +139,7 @@ SLASRC = \
    slaqtr.o slar1v.o slar2v.o ilaslr.o ilaslc.o \
    slarf.o  slarfb.o slarfb_gett.o slarfg.o slarfgp.o slarft.o slarfx.o slarfy.o \
    slargv.o slarmm.o slarrv.o slartv.o \
-   slarz.o  slarzb.o slarzt.o slaswp.o slasy2.o slasyf.o slasyf_rook.o \
+   slarz.o  slarzb.o slarzt.o slaswp.o slasy2.o slasyf.o slakyf.o slasyf_rook.o \
    slasyf_rk.o \
    slatbs.o slatdf.o slatps.o slatrd.o slatrs.o slatrs3.o slatrz.o \
    slauu2.o slauum.o sopgtr.o sopmtr.o sorg2l.o sorg2r.o \
@@ -159,10 +159,10 @@ SLASRC = \
    ssptrf.o ssptri.o ssptrs.o sstegr.o sstein.o sstev.o  sstevd.o sstevr.o \
    sstevx.o \
    ssycon.o ssyev.o  ssyevd.o ssyevr.o ssyevx.o ssygs2.o \
-   ssygst.o ssygv.o  ssygvd.o ssygvx.o ssyrfs.o ssysv.o  ssysvx.o \
-   ssytd2.o ssytf2.o ssytrd.o ssytrf.o ssytri.o ssytri2.o ssytri2x.o \
-   ssyswapr.o ssytrs.o ssytrs2.o \
-   ssyconv.o ssyconvf.o ssyconvf_rook.o \
+   ssygst.o ssygv.o  ssygvd.o ssygvx.o ssyrfs.o ssysv.o skysv.o  ssysvx.o \
+   ssytd2.o ssytf2.o skytf2.o ssytrd.o ssytrf.o skytrf.o ssytri.o ssytri2.o ssytri2x.o \
+   ssyswapr.o ssytrs.o skytrs.o ssytrs2.o skytrs2.o \
+   ssyconv.o skyconv.o ssyconvf.o ssyconvf_rook.o \
    ssytf2_rook.o ssytrf_rook.o ssytrs_rook.o \
    ssytri_rook.o ssycon_rook.o ssysv_rook.o \
    ssytf2_rk.o ssytrf_rk.o ssytrs_3.o \

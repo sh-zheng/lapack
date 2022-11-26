@@ -1,0 +1,716 @@
+*> \brief \b SLAKYF computes a partial factorization of a real skew-symmetric matrix using the Bunch partial pivoting method.
+*
+*  =========== DOCUMENTATION ===========
+*
+* Online html documentation available at
+*            http://www.netlib.org/lapack/explore-html/
+*
+*> \htmlonly
+*> Download SLASYF + dependencies
+*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.tgz?format=tgz&filename=/lapack/lapack_routine/slakyf.f">
+*> [TGZ]</a>
+*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.zip?format=zip&filename=/lapack/lapack_routine/slakyf.f">
+*> [ZIP]</a>
+*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.txt?format=txt&filename=/lapack/lapack_routine/slakyf.f">
+*> [TXT]</a>
+*> \endhtmlonly
+*
+*  Definition:
+*  ===========
+*
+*       SUBROUTINE SLAKYF( UPLO, N, NB, KB, A, LDA, IPIV, W, LDW, INFO )
+*
+*       .. Scalar Arguments ..
+*       CHARACTER          UPLO
+*       INTEGER            INFO, KB, LDA, LDW, N, NB
+*       ..
+*       .. Array Arguments ..
+*       INTEGER            IPIV( * )
+*       REAL               A( LDA, * ), W( LDW, * )
+*       ..
+*
+*
+*> \par Purpose:
+*  =============
+*>
+*> \verbatim
+*>
+*> SLASYF computes a partial factorization of a real skew-symmetric matrix A
+*> using the Bunch partial pivoting method. The partial
+*> factorization has the form:
+*>
+*> A  =  ( I  U12 ) ( A11  0  ) (  I       0    )  if UPLO = 'U', or:
+*>       ( 0  U22 ) (  0   D  ) ( -U12**T -U22**T )
+*>
+*> A  =  ( L11  0 ) (  D   0  ) ( -L11**T -L21**T )  if UPLO = 'L'
+*>       ( L21  I ) (  0  A22 ) (  0       I    )
+*>
+*> where the order of D is at most NB. The actual order is returned in
+*> the argument KB, and is either NB or NB-1, or N if N <= NB.
+*>
+*> SLAKYF is an auxiliary routine called by SKYTRF. It uses blocked code
+*> (calling Level 3 BLAS) to update the submatrix A11 (if UPLO = 'U') or
+*> A22 (if UPLO = 'L').
+*> \endverbatim
+*
+*  Arguments:
+*  ==========
+*
+*> \param[in] UPLO
+*> \verbatim
+*>          UPLO is CHARACTER*1
+*>          Specifies whether the upper or lower triangular part of the
+*>          skew-symmetric matrix A is stored:
+*>          = 'U':  Upper triangular
+*>          = 'L':  Lower triangular
+*> \endverbatim
+*>
+*> \param[in] N
+*> \verbatim
+*>          N is INTEGER
+*>          The order of the matrix A.  N >= 0.
+*> \endverbatim
+*>
+*> \param[in] NB
+*> \verbatim
+*>          NB is INTEGER
+*>          The maximum number of columns of the matrix A that should be
+*>          factored.  NB should be at least 2 to allow for 2-by-2 pivot
+*>          blocks.
+*> \endverbatim
+*>
+*> \param[out] KB
+*> \verbatim
+*>          KB is INTEGER
+*>          The number of columns of A that were actually factored.
+*>          KB is either NB-1 or NB, or N if N <= NB.
+*> \endverbatim
+*>
+*> \param[in,out] A
+*> \verbatim
+*>          A is REAL array, dimension (LDA,N)
+*>          On entry, the symmetric matrix A.  If UPLO = 'U', the leading
+*>          n-by-n upper triangular part of A contains the upper
+*>          triangular part of the matrix A, and the strictly lower
+*>          triangular part of A is not referenced.  If UPLO = 'L', the
+*>          leading n-by-n lower triangular part of A contains the lower
+*>          triangular part of the matrix A, and the strictly upper
+*>          triangular part of A is not referenced.
+*>          On exit, A contains details of the partial factorization.
+*> \endverbatim
+*>
+*> \param[in] LDA
+*> \verbatim
+*>          LDA is INTEGER
+*>          The leading dimension of the array A.  LDA >= max(1,N).
+*> \endverbatim
+*>
+*> \param[out] IPIV
+*> \verbatim
+*>          IPIV is INTEGER array, dimension (N)
+*>          Details of the interchanges and the block structure of D.
+*>
+*>          If UPLO = 'U':
+*>             Only the last KB elements of IPIV are set.
+*>
+*>             If IPIV(k) > 0, then rows and columns k and IPIV(k) were
+*>             interchanged and D(k,k) is a 1-by-1 diagonal block.
+*>
+*>             If IPIV(k) = IPIV(k-1) < 0, then rows and columns
+*>             k-1 and -IPIV(k) were interchanged and D(k-1:k,k-1:k)
+*>             is a 2-by-2 diagonal block.
+*>
+*>          If UPLO = 'L':
+*>             Only the first KB elements of IPIV are set.
+*>
+*>             If IPIV(k) > 0, then rows and columns k and IPIV(k) were
+*>             interchanged and D(k,k) is a 1-by-1 diagonal block.
+*>
+*>             If IPIV(k) = IPIV(k+1) < 0, then rows and columns
+*>             k+1 and -IPIV(k) were interchanged and D(k:k+1,k:k+1)
+*>             is a 2-by-2 diagonal block.
+*> \endverbatim
+*>
+*> \param[out] W
+*> \verbatim
+*>          W is REAL array, dimension (LDW,NB)
+*> \endverbatim
+*>
+*> \param[in] LDW
+*> \verbatim
+*>          LDW is INTEGER
+*>          The leading dimension of the array W.  LDW >= max(1,N).
+*> \endverbatim
+*>
+*> \param[out] INFO
+*> \verbatim
+*>          INFO is INTEGER
+*>          = 0: successful exit
+*>          > 0: if INFO = k, D(k,k) is exactly zero.  The factorization
+*>               has been completed, but the block diagonal matrix D is
+*>               exactly singular.
+*> \endverbatim
+*
+*  Authors:
+*  ========
+*
+*> \author Univ. of Tennessee
+*> \author Univ. of California Berkeley
+*> \author Univ. of Colorado Denver
+*> \author NAG Ltd.
+*
+*> \ingroup realSYcomputational
+*
+*> \par Contributors:
+*  ==================
+*>
+*> \verbatim
+*>
+*>  November 2013,  Igor Kozachenko,
+*>                  Computer Science Division,
+*>                  University of California, Berkeley
+*> \endverbatim
+*
+*  =====================================================================
+      SUBROUTINE SLAKYF( UPLO, N, NB, KB, A, LDA, IPIV, W, LDW, INFO )
+*
+*  -- LAPACK computational routine --
+*  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+*  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
+*
+*     .. Scalar Arguments ..
+      CHARACTER          UPLO
+      INTEGER            INFO, KB, LDA, LDW, N, NB
+*     ..
+*     .. Array Arguments ..
+      INTEGER            IPIV( * )
+      REAL               A( LDA, * ), W( LDW, * )
+*     ..
+*
+*  =====================================================================
+*
+*     .. Parameters ..
+      REAL               ZERO, ONE
+      PARAMETER          ( ZERO = 0.0E+0, ONE = 1.0E+0 )
+      REAL               EIGHT, SEVTEN
+      PARAMETER          ( EIGHT = 8.0E+0, SEVTEN = 17.0E+0 )
+*     ..
+*     .. Local Scalars ..
+      INTEGER            IMAX1, IMAX2, J, JB, JJ, JMAX, JP, K, KK, KKW,
+     $                   KP, KSTEP, KW
+      REAL               ABSAKP1K, ALPHA, COLMAX1, COLMAX2, D11, D21,
+     $                   D22, R1, ROWMAX, T
+*     ..
+*     .. External Functions ..
+      LOGICAL            LSAME
+      INTEGER            ISAMAX
+      EXTERNAL           LSAME, ISAMAX
+*     ..
+*     .. External Subroutines ..
+      EXTERNAL           SCOPY, SGEMM, SGEMV, SSCAL, SSWAP
+*     ..
+*     .. Intrinsic Functions ..
+      INTRINSIC          ABS, MAX, MIN, SQRT
+*     ..
+*     .. Executable Statements ..
+*
+      INFO = 0
+*
+*     Initialize ALPHA for use in choosing pivot block size.
+*
+      ALPHA = ( ONE+SQRT( SEVTEN ) ) / EIGHT
+*
+      IF( LSAME( UPLO, 'U' ) ) THEN
+*
+*        Factorize the leading columns of A using the upper triangle
+*        of A and working forwards, and compute the matrix W = L21*D
+*        for use in updating A22
+*
+*        K is the main loop index, decreasing from N-1 in steps of 2
+*
+         K = N-1
+   10    CONTINUE
+*
+*        Exit from loop
+*
+         IF( ( K.LE.N-NB-1 .AND. NB.LT.N ) .OR. K.LT.1 )
+     $      GO TO 30
+*
+*        Copy column K and K+1 of A to column K and K+1 of W and update them
+*
+         CALL SCOPY( N-K+1, A( K, K ), 1, W( K, K ), 1 )
+         CALL SCOPY( N-K, A( K+1, K+1 ), 1, W( K+1, K+1 ), 1 )
+         CALL SGEMV( 'No transpose', N-K+1, K-1, ONE, A( K, 1 ), LDA,
+     $               W( K, 1 ), LDW, ONE, W( K, K ), 1 )
+         CALL SGEMV( 'No transpose', N-K, K-1, ONE, A( K+1, 1 ), LDA,
+     $               W( K+1, 1 ), LDW, ONE, W( K+1, K+1 ), 1 )
+*
+         KSTEP = 2
+*
+*        Determine rows and columns to be interchanged
+*
+         ABSAKP1K = ABS( W( K+1, K ) )
+*
+*        IMAX1 is the row-index of the absolute value largest element in
+*        row K+2 to N, column K.
+*        IMAX2 is the row-index of the absolute value largest element in
+*        row K+2 to N, column K+1.
+*        COLMAX1 and COLMAX2 are their absolute values.
+*
+         IMAX1 = K+1 + ISAMAX( N-K-1, W( K+2, K ), 1 )
+         COLMAX1 = ABS( W( IMAX1, K ) )
+         IMAX2 = K+1 + ISAMAX( N-K-1, W( K+2, K+1 ), 1 )
+         COLMAX2 = ABS( W( IMAX2, K+1 ) )
+*
+         IF( MAX(MAX( ABSAKP1K, COLMAX1 ), COLMAX2).EQ.ZERO ) THEN
+*
+*           Column K and K+1 is zero or underflow: set INFO and continue
+*
+            IF( INFO.EQ.0 )
+     $         INFO = K
+            KP = 0
+            IPIV( K ) = KP
+         ELSE
+            IF( ABSAKP1K.GE.MAX( COLMAX1, COLMAX2 ) ) THEN
+*
+*              No interchange
+*
+               KP = 0
+               IPIV( K ) = KP
+            ELSE
+
+               IF( COLMAX1.GE.COLMAX2 ) THEN
+
+*
+*                 Absolute value largest element is in column K
+*                 Interchange rows and columns K+1 and IMAX1
+*                  
+                  KP = IMAX1
+                  IPIV( K ) = KP
+
+*                 
+*                 Write the column K+1 of W with elements in column IMAX1
+*        
+                  CALL SAXPY( IMAX1-K-1, -ONE, A( IMAX1, K+1 ), LDA,
+     $                     W( K+1, K+1 ), 1 )
+
+                  CALL SCOPY( N-IMAX1+1, A( IMAX1, IMAX1 ), 1,
+     $                     W( IMAX1, K+1 ), 1 )
+
+*                 
+*                 Update the column K+1 of W
+*     
+                  CALL SGEMV( 'No transpose', N-K, K-1, ONE,
+     $                     A( K+1, 1 ), LDA, W( IMAX1, 1 ), LDW, ONE,
+     $                     W( K+1, K+1 ), 1 )
+
+*                 
+*                 Write the column IMAX1 of W with elements in column K+1 of A
+*
+                  CALL SAXPY( IMAX1-K-2, -ONE, A( K+2, K+1 ), LDA,
+     $                     A( IMAX1, K+2 ), 1 )
+
+                  CALL SCOPY( N-IMAX1, A( IMAX1+1, K+1 ), 1,
+     $                     A( IMAX1+1, IMAX1 ), 1 ) 
+
+*                 
+*                 Interchange rows K+1 and IMAX1 in first K-1 columns of A
+*
+                  CALL SSWAP( K-1, A( K+1, 1 ), LDA, A( IMAX1, 1 ),
+     $                     LDA )
+
+*                 
+*                 Interchange rows K+1 and IMAX1 in first K+1 columns of W
+*
+                  CALL SSWAP( K+1, W( K+1, 1 ), LDW, W( IMAX1, 1 ),
+     $                     LDW )
+                  W( IMAX1, K+1 ) = -W( IMAX1, K+1 )
+
+               ELSE
+
+*
+*                 Absolute value largest element is in column K+1
+*                 Interchange rows and columns K and K+1, then Interchange K+1 and IMAX2
+*                                  
+                  KP = -IMAX2
+                  IPIV( K ) = KP
+
+*                 
+*                 Interchange columns K and K+1, then write the column K+1 of W with elements in column IMAX1
+*       
+                  CALL SSWAP( N-K, W( K+1, K ), LDW, W( K+1, K+1 ),
+     $                     LDW )
+
+                  CALL SAXPY( IMAX2-K-1, -ONE, A( IMAX2, K+1 ), LDA,
+     $                     W( K+1, K+1 ), 1 )
+
+                  CALL SCOPY( N-IMAX2+1, A( IMAX2, IMAX2 ), 1,
+     $                     W( IMAX2, K+1 ), 1 ) 
+
+*                 
+*                 Update the column K+1 of W
+*     
+                  CALL SGEMV( 'No transpose', N-K, K-1, ONE,
+     $                     A( K+1, 1 ), LDA, W( IMAX2, 1 ), LDW, ONE,
+     $                     W( K+1, K+1 ), 1 )
+
+*                 
+*                 Write the column IMAX1 of W with elements in column K (not K+1, since columns of A has not been interchanged) of A
+*
+                  CALL SAXPY( IMAX2-K-2, -ONE, A( K+2, K ), LDA,
+     $                     A( IMAX2, K+2 ), 1 )
+
+                  CALL SCOPY( N-IMAX2, A( IMAX2+1, K ), 1,
+     $                     A( IMAX2+1, IMAX2 ), 1 ) 
+
+*                 
+*                 Interchange rows K and K+1, then rows K+1 and IMAX1 in first K-1 columns of A
+*
+                  CALL SSWAP( K-1, A( K, 1 ), LDA, A( K+1, 1 ),
+     $                     LDA )
+
+                  CALL SSWAP( K-1, A( K+1, 1 ), LDA, A( IMAX2, 1 ),
+     $                     LDA )
+
+*                 
+*                 Interchange rows K and K+1, then rows K+1 and IMAX1 in first K+1 columns of W
+*     
+                  CALL SSWAP( K+1, W( K+1, 1 ), LDW, W( K, 1 ), LDW )
+                  W( K+1, K ) = -W( K+1, K )
+
+                  CALL SSWAP( K+1, W( K+1, 1 ), LDW, W( IMAX2, 1 ),
+     $                     LDW )
+                  W( IMAX2, K+1 ) = -W( IMAX2, K+1 )
+
+               END IF
+            END IF   
+
+*                 
+*           Write back C*S^-1 to A
+*            
+            DO 20 J = K+2, N
+               A( J, K ) = -W( J, K+1 )/W( K+1, K )
+               A( J, K+1 ) = W( J, K )/W( K+1, K )
+20             CONTINUE
+
+            A( K+1, K ) = W( K+1, K )
+
+         END IF
+
+         K = K-2
+
+         GO TO 10
+*
+30    CONTINUE
+*
+*        Update the lower triangle of A22 (= A(k:n,k:n)) as
+*
+*        A22 := A22 + L21*D*L21**T = A22 + L21*W**T
+*
+*        computing blocks of NB columns at a time
+*
+         DO 50 J = K, N, NB
+            JB = MIN( NB, N-J+1 )
+*
+*           Update the lower triangle of the diagonal block
+*
+            DO 40 JJ = J, J + JB - 1
+               CALL SGEMV( 'No transpose', J+JB-JJ, K-1, ONE,
+     $                     A( JJ, 1 ), LDA, W( JJ, 1 ), LDW, ONE,
+     $                     A( JJ, JJ ), 1 )
+  40       CONTINUE
+*
+*           Update the rectangular subdiagonal block
+*
+            IF( J+JB.LE.N )
+     $         CALL SGEMM( 'No transpose', 'Transpose', N-J-JB+1, JB,
+     $                     K-1, ONE, A( J+JB, 1 ), LDA, W( J, 1 ), LDW,
+     $                     ONE, A( J+JB, J ), LDA )
+  50    CONTINUE
+*
+*        Put L21 in standard form by partially undoing the interchanges
+*        of rows in columns 1:k-1 looping backwards from k-1 to 1
+*
+         J = K - 2
+  60    CONTINUE
+*
+*           Undo the interchanges (if any) of rows JJ and JP at each
+*           step J
+*
+*           (Here, J is a diagonal index)
+
+            IF( J.GT.1 ) THEN
+               JJ = J
+               JP = IPIV( J )
+
+               IF( JP.LT.0 ) THEN
+                  JP = -JP
+*                 (Here, J is a diagonal index)
+                  CALL SSWAP( J-1, A( JP, 1 ), LDA, A( JJ+1, 1 ), LDA )
+                  CALL SSWAP( J-1, A( JJ+1, 1 ), LDA, A( JJ, 1 ), LDA )
+               ELSEIF( JP.GT.0 ) THEN
+                  CALL SSWAP( J-1, A( JP, 1 ), LDA, A( JJ+1, 1 ), LDA )
+               END IF
+               
+            END IF
+*        (NOTE: Here, J is used to determine row length. Length J
+*        of the rows to swap back doesn't include diagonal element)
+
+         J = J - 2
+         IF( J.GT.1 )
+     $      GO TO 60
+*
+*        Set KB to the number of columns factorized
+*
+         KB = K - 1
+*         
+      ELSE
+*
+*        Factorize the leading columns of A using the lower triangle
+*        of A and working forwards, and compute the matrix W = L21*D
+*        for use in updating A22
+*
+*        K is the main loop index, increasing from 1 in steps  2
+*
+         K = 1
+   70    CONTINUE
+*
+*        Exit from loop
+*
+         IF( ( K.GE.NB .AND. NB.LT.N ) .OR. K.GT.N )
+     $      GO TO 90
+*
+*        Copy column K and K+1 of A to column K and K+1 of W and update them
+*
+         CALL SCOPY( N-K+1, A( K, K ), 1, W( K, K ), 1 )
+         CALL SCOPY( N-K, A( K+1, K+1 ), 1, W( K+1, K+1 ), 1 )
+         CALL SGEMV( 'No transpose', N-K+1, K-1, ONE, A( K, 1 ), LDA,
+     $               W( K, 1 ), LDW, ONE, W( K, K ), 1 )
+         CALL SGEMV( 'No transpose', N-K, K-1, ONE, A( K+1, 1 ), LDA,
+     $               W( K+1, 1 ), LDW, ONE, W( K+1, K+1 ), 1 )
+*
+         KSTEP = 2
+*
+*        Determine rows and columns to be interchanged
+*
+         ABSAKP1K = ABS( W( K+1, K ) )
+*
+*        IMAX1 is the row-index of the absolute value largest element in
+*        row K+2 to N, column K.
+*        IMAX2 is the row-index of the absolute value largest element in
+*        row K+2 to N, column K+1.
+*        COLMAX1 and COLMAX2 are their absolute values.
+*
+         IMAX1 = K+1 + ISAMAX( N-K-1, W( K+2, K ), 1 )
+         COLMAX1 = ABS( W( IMAX1, K ) )
+         IMAX2 = K+1 + ISAMAX( N-K-1, W( K+2, K+1 ), 1 )
+         COLMAX2 = ABS( W( IMAX2, K+1 ) )
+*
+         IF( MAX(MAX( ABSAKP1K, COLMAX1 ), COLMAX2).EQ.ZERO ) THEN
+*
+*           Column K and K+1 is zero or underflow: set INFO and continue
+*
+            IF( INFO.EQ.0 )
+     $         INFO = K
+            KP = 0
+            IPIV( K ) = KP
+         ELSE
+            IF( ABSAKP1K.GE.MAX( COLMAX1, COLMAX2 ) ) THEN
+*
+*              No interchange
+*
+               KP = 0
+               IPIV( K ) = KP
+            ELSE
+
+               IF( COLMAX1.GE.COLMAX2 ) THEN
+
+*
+*                 Absolute value largest element is in column K
+*                 Interchange rows and columns K+1 and IMAX1
+*                  
+                  KP = IMAX1
+                  IPIV( K ) = KP
+
+*                 
+*                 Write the column K+1 of W with elements in column IMAX1
+*        
+                  CALL SAXPY( IMAX1-K-1, -ONE, A( IMAX1, K+1 ), LDA,
+     $                     W( K+1, K+1 ), 1 )
+
+                  CALL SCOPY( N-IMAX1+1, A( IMAX1, IMAX1 ), 1,
+     $                     W( IMAX1, K+1 ), 1 )
+
+*                 
+*                 Update the column K+1 of W
+*     
+                  CALL SGEMV( 'No transpose', N-K, K-1, ONE,
+     $                     A( K+1, 1 ), LDA, W( IMAX1, 1 ), LDW, ONE,
+     $                     W( K+1, K+1 ), 1 )
+
+*                 
+*                 Write the column IMAX1 of W with elements in column K+1 of A
+*
+                  CALL SAXPY( IMAX1-K-2, -ONE, A( K+2, K+1 ), LDA,
+     $                     A( IMAX1, K+2 ), 1 )
+
+                  CALL SCOPY( N-IMAX1, A( IMAX1+1, K+1 ), 1,
+     $                     A( IMAX1+1, IMAX1 ), 1 ) 
+
+*                 
+*                 Interchange rows K+1 and IMAX1 in first K-1 columns of A
+*
+                  CALL SSWAP( K-1, A( K+1, 1 ), LDA, A( IMAX1, 1 ),
+     $                     LDA )
+
+*                 
+*                 Interchange rows K+1 and IMAX1 in first K+1 columns of W
+*
+                  CALL SSWAP( K+1, W( K+1, 1 ), LDW, W( IMAX1, 1 ),
+     $                     LDW )
+                  W( IMAX1, K+1 ) = -W( IMAX1, K+1 )
+
+               ELSE
+
+*
+*                 Absolute value largest element is in column K+1
+*                 Interchange rows and columns K and K+1, then Interchange K+1 and IMAX2
+*                                  
+                  KP = -IMAX2
+                  IPIV( K ) = KP
+
+*                 
+*                 Interchange columns K and K+1, then write the column K+1 of W with elements in column IMAX1
+*       
+                  CALL SSWAP( N-K, W( K+1, K ), LDW, W( K+1, K+1 ),
+     $                     LDW )
+
+                  CALL SAXPY( IMAX2-K-1, -ONE, A( IMAX2, K+1 ), LDA,
+     $                     W( K+1, K+1 ), 1 )
+
+                  CALL SCOPY( N-IMAX2+1, A( IMAX2, IMAX2 ), 1,
+     $                     W( IMAX2, K+1 ), 1 ) 
+
+*                 
+*                 Update the column K+1 of W
+*     
+                  CALL SGEMV( 'No transpose', N-K, K-1, ONE,
+     $                     A( K+1, 1 ), LDA, W( IMAX2, 1 ), LDW, ONE,
+     $                     W( K+1, K+1 ), 1 )
+
+*                 
+*                 Write the column IMAX1 of W with elements in column K (not K+1, since columns of A has not been interchanged) of A
+*
+                  CALL SAXPY( IMAX2-K-2, -ONE, A( K+2, K ), LDA,
+     $                     A( IMAX2, K+2 ), 1 )
+
+                  CALL SCOPY( N-IMAX2, A( IMAX2+1, K ), 1,
+     $                     A( IMAX2+1, IMAX2 ), 1 ) 
+
+*                 
+*                 Interchange rows K and K+1, then rows K+1 and IMAX1 in first K-1 columns of A
+*
+                  CALL SSWAP( K-1, A( K, 1 ), LDA, A( K+1, 1 ),
+     $                     LDA )
+
+                  CALL SSWAP( K-1, A( K+1, 1 ), LDA, A( IMAX2, 1 ),
+     $                     LDA )
+
+*                 
+*                 Interchange rows K and K+1, then rows K+1 and IMAX1 in first K+1 columns of W
+*     
+                  CALL SSWAP( K+1, W( K+1, 1 ), LDW, W( K, 1 ), LDW )
+                  W( K+1, K ) = -W( K+1, K )
+
+                  CALL SSWAP( K+1, W( K+1, 1 ), LDW, W( IMAX2, 1 ),
+     $                     LDW )
+                  W( IMAX2, K+1 ) = -W( IMAX2, K+1 )
+
+               END IF
+            END IF   
+
+*                 
+*           Write back C*S^-1 to A
+*            
+            DO 80 J = K+2, N
+               A( J, K ) = -W( J, K+1 )/W( K+1, K )
+               A( J, K+1 ) = W( J, K )/W( K+1, K )
+80             CONTINUE
+
+            A( K+1, K ) = W( K+1, K )
+
+         END IF
+
+         K = K+2
+
+         GO TO 70
+*
+90    CONTINUE
+*
+*        Update the lower triangle of A22 (= A(k:n,k:n)) as
+*
+*        A22 := A22 + L21*D*L21**T = A22 + L21*W**T
+*
+*        computing blocks of NB columns at a time
+*
+         DO 110 J = K, N, NB
+            JB = MIN( NB, N-J+1 )
+*
+*           Update the lower triangle of the diagonal block
+*
+            DO 100 JJ = J, J + JB - 1
+               CALL SGEMV( 'No transpose', J+JB-JJ, K-1, ONE,
+     $                     A( JJ, 1 ), LDA, W( JJ, 1 ), LDW, ONE,
+     $                     A( JJ, JJ ), 1 )
+  100       CONTINUE
+*
+*           Update the rectangular subdiagonal block
+*
+            IF( J+JB.LE.N )
+     $         CALL SGEMM( 'No transpose', 'Transpose', N-J-JB+1, JB,
+     $                     K-1, ONE, A( J+JB, 1 ), LDA, W( J, 1 ), LDW,
+     $                     ONE, A( J+JB, J ), LDA )
+  110    CONTINUE
+*
+*        Put L21 in standard form by partially undoing the interchanges
+*        of rows in columns 1:k-1 looping backwards from k-1 to 1
+*
+         J = K - 2
+  120    CONTINUE
+*
+*           Undo the interchanges (if any) of rows JJ and JP at each
+*           step J
+*
+*           (Here, J is a diagonal index)
+
+            IF( J.GT.1 ) THEN
+               JJ = J
+               JP = IPIV( J )
+
+               IF( JP.LT.0 ) THEN
+                  JP = -JP
+*                 (Here, J is a diagonal index)
+                  CALL SSWAP( J-1, A( JP, 1 ), LDA, A( JJ+1, 1 ), LDA )
+                  CALL SSWAP( J-1, A( JJ+1, 1 ), LDA, A( JJ, 1 ), LDA )
+               ELSEIF( JP.GT.0 ) THEN
+                  CALL SSWAP( J-1, A( JP, 1 ), LDA, A( JJ+1, 1 ), LDA )
+               END IF
+               
+            END IF
+*        (NOTE: Here, J is used to determine row length. Length J
+*        of the rows to swap back doesn't include diagonal element)
+
+         J = J - 2
+         IF( J.GT.1 )
+     $      GO TO 120
+*
+*        Set KB to the number of columns factorized
+*
+         KB = K - 1
+*
+      END IF
+      RETURN
+*
+*     End of SLASYF
+*
+      END
