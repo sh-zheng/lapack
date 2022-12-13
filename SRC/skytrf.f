@@ -39,7 +39,7 @@
 *> the Bunch partial pivoting method.  The form of the
 *> factorization is
 *>
-*>    A = U**T*D*U  or  A = L*D*L**T
+*>    A = U*D*(-U)**T  or  A = L*D*(-L)**T
 *>
 *> where U (or L) is a product of permutation and unit upper (lower)
 *> triangular matrices, and D is skew-symmetric and block diagonal with
@@ -67,16 +67,20 @@
 *> \param[in,out] A
 *> \verbatim
 *>          A is REAL array, dimension (LDA,N)
-*>          On entry, the skew-symmetric matrix A.  If UPLO = 'U', the leading
-*>          N-by-N upper triangular part of A contains the upper
-*>          triangular part of the matrix A, and the strictly lower
+*>          On entry, the skew-symmetric matrix A.  If UPLO = 'U', the
+*>          strictly upper triangular part of A contains the upper
+*>          triangular part of the matrix A, and the leading N-by-N lower
 *>          triangular part of A is not referenced.  If UPLO = 'L', the
-*>          leading N-by-N lower triangular part of A contains the lower
-*>          triangular part of the matrix A, and the strictly upper
+*>          strictly lower triangular part of A contains the lower
+*>          triangular part of the matrix A, and the leading N-by-N upper
 *>          triangular part of A is not referenced.
 *>
 *>          On exit, the block diagonal matrix D and the multipliers used
 *>          to obtain the factor U or L (see below for further details).
+*>
+*>          The block diagonal matrix D is always 2-by-2 unless the order
+*>          of A is odd, what means the first (if UPLO = 'U') or
+*>          the last block (if UPLO = 'L') is just 0.
 *> \endverbatim
 *>
 *> \param[in] LDA
@@ -90,15 +94,26 @@
 *>          IPIV is INTEGER array, dimension (N)
 *>          Details of the interchanges of D.
 *>
-*>          The elements of array IPIV are combined in pair, and the second
-*>          element in the pair always keeps the value 0.  If the order of A
-*>          is odd, the last element of IPIV is 0.
-*>          In the following, we only use odd value k to refer to IPIV(k).
+*>          The elements of array IPIV are combined in pair, and the first 
+*>          (if UPLO = 'U') or the second (if UPLO = 'L') element in
+*>          the pair always keeps the value 0.  If the order of A
+*>          is odd, the first (if UPLO = 'U') or the last (if UPLO = 'L')
+*>          element of IPIV is 0, which is the only element not in pair.
+*>          
+*>          In the following, we only use the first (if UPLO = 'L') or
+*>          the second (if UPLO = 'U') element k in the pair value 
+*>          to refer to IPIV(k).
 *>
-*>          If IPIV(k) = 0, there was no interchange.
-*>          If IPIV(k) > 0, rows and columns k+1 and IPIV(k) were interchanged. 
-*>          If IPIV(k) < 0, rows and columns k and k+1 were interchanged,
-*>          then rows and columns k+1 and -IPIV(k) were interchanged.
+*>          IPIV(k) as an INTEGER
+*>          = 0: there was no interchange.
+*>          > 0: rows and columns k-1 and IPIV(k) were interchanged, if
+*>               UPLO = 'U', and rows and columns k+1 and IPIV(k) were
+*>               interchanged, if UPLO = 'L'.
+*>          < 0: rows and columns k and k-1 were interchanged,
+*>               then rows and columns k-1 and -IPIV(k) were interchanged, if
+*>               UPLO = 'U', and rows and columns k and k+1 were interchanged,
+*>               then rows and columns k+1 and -IPIV(k) were interchanged, if
+*>               UPLO = 'L'.
 *> \endverbatim
 *>
 *> \param[out] WORK
@@ -122,12 +137,12 @@
 *> \param[out] INFO
 *> \verbatim
 *>          INFO is INTEGER
-*>          = 0:  successful exit
-*>          < 0:  if INFO = -i, the i-th argument had an illegal value
-*>          > 0:  if INFO = i, D(i,i) is exactly zero.  The factorization
-*>                has been completed, but the block diagonal matrix D is
-*>                exactly singular, and division by zero will occur if it
-*>                is used to solve a system of equations.
+*>          = 0: successful exit
+*>          < 0: if INFO = -i, the i-th argument had an illegal value
+*>          > 0: if INFO = i, D(i-1,i) (if UPLO = 'U') or D(i+1,i) (if UPLO = 'L')
+*>               is exactly zero.  The factorization has been completed,
+*>               but the block diagonal matrix D is exactly singular,
+*>               so the solution could not be computed.
 *> \endverbatim
 *
 *  Authors:
@@ -145,39 +160,41 @@
 *>
 *> \verbatim
 *>
-*>  If UPLO = 'U', then A = U**T*D*U, where
+*>  If UPLO = 'U', then A = U*D*(-U)**T, where
 *>     U = P(n)*U(n)* ... *P(k)U(k)* ...,
 *>  i.e., U is a product of terms P(k)*U(k), where k decreases from n to
-*>  1 in steps of 1 or 2, and D is a block diagonal matrix with 1-by-1
-*>  and 2-by-2 diagonal blocks D(k).  P(k) is a permutation matrix as
-*>  defined by IPIV(k), and U(k) is a unit upper triangular matrix, such
-*>  that if the diagonal block D(k) is of order s (s = 1 or 2), then
+*>  1 in steps of 2, and D is a block diagonal matrix with 2-by-2
+*>  diagonal blocks D(k).  P(k) is a permutation matrix as defined by
+*>  IPIV(k), and U(k) is a unit upper triangular matrix, such that if
+*>  the diagonal block D(k) is of order 2, then
 *>
 *>             (   I    v    0   )   k-s
 *>     U(k) =  (   0    I    0   )   s
 *>             (   0    0    I   )   n-k
 *>                k-s   s   n-k
 *>
-*>  If s = 1, D(k) overwrites A(k,k), and v overwrites A(1:k-1,k).
-*>  If s = 2, the upper triangle of D(k) overwrites A(k-1,k-1), A(k-1,k),
-*>  and A(k,k), and v overwrites A(1:k-2,k-1:k).
+*>  The upper triangle of D(k) overwrites A(k-1,k), and v overwrites
+*>  A(1:k-2,k-1:k).
 *>
-*>  If UPLO = 'L', then A = L*D*L**T, where
+*>  If UPLO = 'L', then A = L*D*(-L)**T, where
 *>     L = P(1)*L(1)* ... *P(k)*L(k)* ...,
 *>  i.e., L is a product of terms P(k)*L(k), where k increases from 1 to
-*>  n in steps of 1 or 2, and D is a block diagonal matrix with 1-by-1
-*>  and 2-by-2 diagonal blocks D(k).  P(k) is a permutation matrix as
-*>  defined by IPIV(k), and L(k) is a unit lower triangular matrix, such
-*>  that if the diagonal block D(k) is of order s (s = 1 or 2), then
+*>  n in steps of 2, and D is a block diagonal matrix with 2-by-2
+*>  diagonal blocks D(k).  P(k) is a permutation matrix as defined by
+*>  IPIV(k), and L(k) is a unit lower triangular matrix, such that if
+*>  the diagonal block D(k) is of order 2, then
 *>
 *>             (   I    0     0   )  k-1
 *>     L(k) =  (   0    I     0   )  s
 *>             (   0    v     I   )  n-k-s+1
 *>                k-1   s  n-k-s+1
 *>
-*>  If s = 1, D(k) overwrites A(k,k), and v overwrites A(k+1:n,k).
-*>  If s = 2, the lower triangle of D(k) overwrites A(k,k), A(k+1,k),
-*>  and A(k+1,k+1), and v overwrites A(k+2:n,k:k+1).
+*>  The lower triangle of D(k) overwrites A(k+1,k), and v overwrites
+*>  A(k+2:n,k:k+1).
+*>
+*>  If n is odd or INFO > 0, A is singular. In this situation, D may have
+*>  1-by-1 diagonal blocks(the value be regarded as 0) after all 2-by-2
+*>  diagonal blocks are found.
 *> \endverbatim
 *>
 *  =====================================================================

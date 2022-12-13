@@ -42,8 +42,8 @@
 *> matrices.
 *>
 *> The partial pivoting method is used to factor A as
-*>    A = U * D * U**T,  if UPLO = 'U', or
-*>    A = L * D * L**T,  if UPLO = 'L',
+*>    A = U * D * (-U)**T,  if UPLO = 'U', or
+*>    A = L * D * (-L)**T,  if UPLO = 'L',
 *> where U (or L) is a product of permutation and unit upper (lower)
 *> triangular matrices, and D is skew-symmetric and block diagonal with
 *> 1-by-1 and 2-by-2 diagonal blocks.  All 1-by-1 diagonal blocks are 0.
@@ -181,7 +181,6 @@
 *> \author Univ. of California Berkeley
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
-*> \author Zheng Shuo
 *
 *> \ingroup realKYsolve
 *
@@ -243,7 +242,7 @@
             LWKOPT = 1
          ELSE
             CALL SKYTRF( UPLO, N, A, LDA, IPIV, WORK, -1, INFO )
-            LWKOPT = WORK(1)
+            LWKOPT = INT( WORK( 1 ) )
          END IF
          WORK( 1 ) = LWKOPT
       END IF

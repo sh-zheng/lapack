@@ -246,7 +246,7 @@
 *
             CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
             CALL SSCAL( NRHS, ONE / A( K, K ), B( K, 1 ), LDB )
-			CALL SSCAL( NRHS, ONE / A( K+1, K+1 ), B( K+1, 1 ), LDB )			
+		CALL SSCAL( NRHS, ONE / A( K+1, K+1 ), B( K+1, 1 ), LDB )
          END IF
 		 K = K - 2
 *
