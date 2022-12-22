@@ -206,7 +206,7 @@
 *     .. Local Scalars ..
       INTEGER            IMAX1, IMAX2, J, JB, JJ, JMAX, JP, K, KK, KKW,
      $                   KP, KSTEP, KW
-      REAL               ABSAKP1K, ALPHA, COLMAX1, COLMAX2, D11, D21,
+      REAL               ABSAKP1K, COLMAX1, COLMAX2, D11, D21,
      $                   D22, R1, ROWMAX, T
 *     ..
 *     .. External Functions ..
@@ -223,10 +223,7 @@
 *     .. Executable Statements ..
 *
       INFO = 0
-*
-*     Initialize ALPHA for use in choosing pivot block size.
-*
-      ALPHA = ( ONE+SQRT( SEVTEN ) ) / EIGHT
+
 *
       IF( LSAME( UPLO, 'U' ) ) THEN
 *
@@ -498,6 +495,9 @@
      $               W( K, 1 ), LDW, ONE, W( K, K ), 1 )
          CALL SGEMV( 'No transpose', N-K, K-1, ONE, A( K+1, 1 ), LDA,
      $               W( K+1, 1 ), LDW, ONE, W( K+1, K+1 ), 1 )
+
+         W( K, K+1 ) = -W( K+1, K )
+
 *
          KSTEP = 2
 *
@@ -545,10 +545,12 @@
 *                 
 *                 Write the column K+1 of W with elements in column IMAX1
 *        
-                  CALL SAXPY( IMAX1-K-2, -ONE, A( IMAX1, K+2 ), LDA,
-     $                     W( K+2, K+1 ), 1 )
+                  CALL SCOPY( IMAX1-K, A( IMAX1, K ), LDA,
+     $                     W( K, K+1 ), 1 )
 
-                  W( IMAX1, K+1 ) = -A( IMAX1, K+1 )
+                  CALL SSCAL( IMAX1-K, -ONE, W( K, K+1 ), 1)
+
+                  W( IMAX1, K+1 ) = ZERO
 
                   CALL SCOPY( N-IMAX1, A( IMAX1+1, IMAX1 ), 1,
      $                     W( IMAX1+1, K+1 ), 1 )
@@ -556,15 +558,19 @@
 *                 
 *                 Update the column K+1 of W
 *     
-                  CALL SGEMV( 'No transpose', N-K, K-1, ONE,
-     $                     A( K+1, 1 ), LDA, W( IMAX1, 1 ), LDW, ONE,
-     $                     W( K+1, K+1 ), 1 )
+                  CALL SGEMV( 'No transpose', N-K+1, K-1, ONE,
+     $                     A( K, 1 ), LDA, W( IMAX1, 1 ), LDW, ONE,
+     $                     W( K, K+1 ), 1 )
+
+*                  W( K, K+1 ) = -W( K+1, K )
 
 *                 
 *                 Write the column IMAX1 of A with elements in column K+1 of A
 *
-                  CALL SAXPY( IMAX1-K-2, -ONE, A( K+2, K+1 ), 1,
+                  CALL SCOPY( IMAX1-K-2, A( K+2, K+1 ), 1,
      $                     A( IMAX1, K+2 ), LDA )
+
+                  CALL SSCAL( IMAX1-K-2, -ONE, A( IMAX1, K+2 ), LDA)
 
                   CALL SCOPY( N-IMAX1, A( IMAX1+1, K+1 ), 1,
      $                     A( IMAX1+1, IMAX1 ), 1 ) 
@@ -578,7 +584,7 @@
 *                 
 *                 Interchange rows K+1 and IMAX1 in first K-1 columns of W
 *
-                  CALL SSWAP( K-1, W( K+1, 1 ), LDW, W( IMAX1, 1 ),
+                  CALL SSWAP( K+1, W( K+1, 1 ), LDW, W( IMAX1, 1 ),
      $                     LDW )
 
                ELSE
@@ -593,11 +599,15 @@
 *                 
 *                 Interchange columns K and K+1, then write the column K+1 of W with elements in column IMAX2
 *       
-                  CALL SSWAP( N-K, W( K+1, K ), LDW, W( K+1, K+1 ),
-     $                     LDW )
+                  CALL SSWAP( N-K+1, W( K, K ), 1, W( K, K+1 ),
+     $                     1 )
 
-                  CALL SAXPY( IMAX2-K-2, -ONE, A( IMAX2, K+2 ), LDA,
-     $                     W( K+2, K+1 ), 1 )
+                  CALL SCOPY( IMAX2-K, A( IMAX2, K ), LDA,
+     $                     W( K, K+1 ), 1 )
+
+                  CALL SSCAL( IMAX2-K, -ONE, W( K, K+1 ), 1)
+
+                  W( IMAX2, K+1 ) = ZERO
 
                   CALL SCOPY( N-IMAX2, A( IMAX2+1, IMAX2 ), 1,
      $                     W( IMAX2+1, K+1 ), 1 ) 
@@ -605,22 +615,26 @@
 *                 
 *                 Update the column K+1 of W
 *     
-                  CALL SGEMV( 'No transpose', N-K, K-1, ONE,
-     $                     A( K+1, 1 ), LDA, W( IMAX2, 1 ), LDW, ONE,
-     $                     W( K+1, K+1 ), 1 )
+                  CALL SGEMV( 'No transpose', N-K+1, K-1, ONE,
+     $                     A( K, 1 ), LDA, W( IMAX2, 1 ), LDW, ONE,
+     $                     W( K, K+1 ), 1 )
+
+*                  W( K, K+1 ) = -W( K+1, K )
 
 *                 Interchange rows K and K+1 columns of A
 *
-                  CALL SSWAP( N-K-2, A( K+2, 1 ), 1, A( K+2, 1 ),
+                  CALL SSWAP( N-K-1, A( K+2, K ), 1, A( K+2, K+1 ),
      $                     1 )
 
-                  A( K+1, 1 ) = -A( K+1, 1 )
+                  A( K+1, K ) = -A( K+1, K )
 
 *                 
 *                 Write the column IMAX2 of A with elements in column K+1 of A
 *
-                  CALL SAXPY( IMAX2-K-2, -ONE, A( K+2, K+1 ), 1,
+                  CALL SCOPY( IMAX2-K-2, A( K+2, K+1 ), 1,
      $                     A( IMAX2, K+2 ), LDA )
+
+                  CALL SSCAL( IMAX2-K-2, -ONE, A( IMAX2, K+2 ), LDA)
 
                   CALL SCOPY( N-IMAX2, A( IMAX2+1, K+1 ), 1,
      $                     A( IMAX2+1, IMAX2 ), 1 ) 
@@ -637,10 +651,10 @@
 *                 
 *                 Interchange rows K and K+1, then K+1 and IMAX2 in first K-1 columns of W
 *
-                  CALL SSWAP( K-1, W( K, 1 ), LDW, W( K+1, 1 ),
+                  CALL SSWAP( K+1, W( K, 1 ), LDW, W( K+1, 1 ),
      $                     LDW )
 
-                  CALL SSWAP( K-1, W( K+1, 1 ), LDW, W( IMAX2, 1 ),
+                  CALL SSWAP( K+1, W( K+1, 1 ), LDW, W( IMAX2, 1 ),
      $                     LDW )
 
                END IF
