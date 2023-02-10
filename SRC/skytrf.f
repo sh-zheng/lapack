@@ -293,7 +293,7 @@
          IF( K.LT.2 )
      $      GO TO 40
 *
-         IF( K.GT.NB ) THEN
+         IF( .true. ) THEN
 *
 *           Factorize columns k-kb+1:k of A and use blocked code to
 *           update columns 1:k-kb
@@ -334,7 +334,7 @@
          IF( K.GT.N )
      $      GO TO 40
 *
-         IF( K.LE.N-NB ) THEN
+         IF( .true. ) THEN
 *
 *           Factorize columns k:k+kb-1 of A and use blocked code to
 *           update columns k+kb:n
