@@ -78,9 +78,9 @@
 *>          On exit, the block diagonal matrix D and the multipliers used
 *>          to obtain the factor U or L (see below for further details).
 *>
-*>          The block diagonal matrix D is always 2-by-2 unless the order
-*>          of A is odd, what means the first (if UPLO = 'U') or
-*>          the last block (if UPLO = 'L') is just 0.
+*>          The block diagonal matrix D is always 2-by-2 unless A is
+*>          singular. In this case the fore (if UPLO = 'U') or the
+*>          back (if UPLO = 'L') blocks are all 0.
 *> \endverbatim
 *>
 *> \param[in] LDA
@@ -94,8 +94,10 @@
 *>          IPIV is INTEGER array, dimension (N)
 *>          Details of the interchanges of D.
 *>
-*>          The elements of array IPIV are combined in pair, and the first 
-*>          (if UPLO = 'U') or the second (if UPLO = 'L') element in
+*>          The elements of array IPIV are combined in pair,
+*>          starting from the last (if UPLO = 'U') element,
+*>          or the first (if UPLO = 'L') element, and the second
+*>          (if UPLO = 'U') or the first (if UPLO = 'L') element in
 *>          the pair always keeps the value 0.  If the order of A
 *>          is odd, the first (if UPLO = 'U') or the last (if UPLO = 'L')
 *>          element of IPIV is 0, which is the only element not in pair.
@@ -193,7 +195,7 @@
 *>  A(k+2:n,k:k+1).
 *>
 *>  If n is odd or INFO > 0, A is singular. In this situation, D may have
-*>  1-by-1 diagonal blocks(the value be regarded as 0) after all 2-by-2
+*>  1-by-1 diagonal blocks(the values are all 0) after all 2-by-2
 *>  diagonal blocks are found.
 *> \endverbatim
 *>
@@ -293,7 +295,7 @@
          IF( K.LT.2 )
      $      GO TO 40
 *
-         IF( .true. ) THEN
+         IF( K.GT.NB ) THEN
 *
 *           Factorize columns k-kb+1:k of A and use blocked code to
 *           update columns 1:k-kb
@@ -334,7 +336,7 @@
          IF( K.GT.N )
      $      GO TO 40
 *
-         IF( .true. ) THEN
+         IF( K.LE.N-NB ) THEN
 *
 *           Factorize columns k:k+kb-1 of A and use blocked code to
 *           update columns k+kb:n

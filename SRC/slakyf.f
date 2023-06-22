@@ -204,10 +204,9 @@
       PARAMETER          ( ZERO = 0.0E+0, ONE = 1.0E+0 )
 *     ..
 *     .. Local Scalars ..
-      INTEGER            IMAX1, IMAX2, J, JB, JJ, JMAX, JP, K, KK, KKW,
-     $                   KP, KW
-      REAL               ABSAKP1K, COLMAX1, COLMAX2, D11, D21,
-     $                   D22, R1, ROWMAX, T
+      INTEGER            IMAX1, IMAX2, J, JB, JJ, JMAX, JP, K,
+     $                   KP, KW, KADJ
+      REAL               ABSAKP1K, COLMAX1, COLMAX2
 *     ..
 *     .. External Functions ..
       LOGICAL            LSAME
@@ -218,11 +217,12 @@
       EXTERNAL           SCOPY, SGEMM, SGEMV, SSCAL, SSWAP
 *     ..
 *     .. Intrinsic Functions ..
-      INTRINSIC          ABS, MAX, MIN, SQRT
+      INTRINSIC          ABS, MAX, MIN
 *     ..
 *     .. Executable Statements ..
 *
       INFO = 0
+      KADJ = 0
 
 *
       IF( LSAME( UPLO, 'U' ) ) THEN
@@ -258,7 +258,8 @@
             ELSEIF ( NB.GE.N .AND. K.EQ.1 ) THEN
                IF( INFO.EQ.0 )
      $            INFO = K
-               K = K-1
+*               K = K-1
+               KADJ = 1
             END IF
             GO TO 30
          END IF
@@ -531,7 +532,7 @@
 *
 *        Set KB to the number of columns factorized
 *
-         KB = N - K
+         KB = N - K + KADJ
 *         
       ELSE
 *
@@ -563,7 +564,8 @@
             ELSEIF( NB.GE.N .AND. K.EQ.N ) THEN
                IF( INFO.EQ.0 )
      $            INFO = K
-               K = K+1
+*               K = K+1
+               KADJ = 1
             END IF
             GO TO 90
          END IF
@@ -817,7 +819,7 @@
 *
 *        Set KB to the number of columns factorized
 *
-         KB = K - 1
+         KB = K - 1 + KADJ
 *
       END IF
       RETURN
