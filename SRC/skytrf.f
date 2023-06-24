@@ -195,8 +195,7 @@
 *>  A(k+2:n,k:k+1).
 *>
 *>  If n is odd or INFO > 0, A is singular. In this situation, D may have
-*>  1-by-1 diagonal blocks(the values are all 0) after all 2-by-2
-*>  diagonal blocks are found.
+*>  1-by-1 diagonal blocks(the values are all 0).
 *> \endverbatim
 *>
 *  =====================================================================
