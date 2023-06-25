@@ -38,7 +38,7 @@
 *> SKYTF2 computes the factorization of a real skew-symmetric matrix A using
 *> the Bunch block diagonal pivoting method:
 *>
-*>    A = U*D*(-U)**T  or  A = L*D*(-L)**T
+*>    A = U*D*U**T  or  A = L*D*L**T
 *>
 *> where U (or L) is a product of permutation and unit upper (lower)
 *> triangular matrices, U**T is the transpose of U, and D is skew-symmetric
@@ -146,7 +146,7 @@
 *>
 *> \verbatim
 *>
-*>  If UPLO = 'U', then A = U*D*(-U)**T, where
+*>  If UPLO = 'U', then A = U*D*U**T, where
 *>     U = P(n)*U(n)* ... *P(k)U(k)* ...,
 *>  i.e., U is a product of terms P(k)*U(k), where k decreases from n to
 *>  1 in steps of 2, and D is a block diagonal matrix with 2-by-2
@@ -162,7 +162,7 @@
 *>  The upper triangle of D(k) overwrites A(k-1,k), and v overwrites
 *>  A(1:k-2,k-1:k).
 *>
-*>  If UPLO = 'L', then A = L*D*(-L)**T, where
+*>  If UPLO = 'L', then A = L*D*L**T, where
 *>     L = P(1)*L(1)* ... *P(k)*L(k)* ...,
 *>  i.e., L is a product of terms P(k)*L(k), where k increases from 1 to
 *>  n in steps of 2, and D is a block diagonal matrix with 2-by-2
@@ -229,10 +229,9 @@
 *     ..
 *     .. Local Scalars ..
       LOGICAL            UPPER
-      INTEGER            I, IMAX1, IMAX2, J, JMAX, K, KK, KP, KSTEP
-     $                   JP, JJ
-      REAL               ABSAKP1K, ALPHA, COLMAX1, COLMAX2, D11, D12,
-     $                   D21, D22, R1, ROWMAX, T, WK, WKM1, WKP1
+      INTEGER            I, IMAX1, IMAX2, J,KSTEP
+      REAL               ABSAKP1K, COLMAX1, COLMAX2,
+     $                   D21, T, WK, WKM1, WKP1
 *     ..
 *     .. External Functions ..
       LOGICAL            LSAME, SISNAN
@@ -265,7 +264,7 @@
 
       IF( UPPER ) THEN
 *
-*        Factorize A as U*D*(-U)**T using the upper triangle of A
+*        Factorize A as U*D*U**T using the upper triangle of A
 *        K is the main loop index, decreasing from N to 1 in steps
 *        of 2
 *
@@ -279,11 +278,11 @@
      $         INFO = K
             KP = 0
             IPIV( K ) = KP
-            GO TO 100
+            GO TO 70
          END IF
 
          IF( K.LT.1 )
-     $      GO TO 100
+     $      GO TO 70
          KSTEP = 2
 *
 *        Determine rows and columns to be interchanged
@@ -341,10 +340,11 @@
                   A( IMAX1, K-1 ) = -A( IMAX1, K-1 )
 
 *                 
-*                 Interchange rows K-1 and IMAX1 in last K-1 columns of A
+*                 Interchange rows K-1 and IMAX1 in column K of A
 *     
-                  CALL SSWAP( N-K+1, A( K-1, K ), LDA,
-     $                        A( IMAX1, K ), LDA )
+                  T = A( K-1, K )
+                  A( K-1, K ) = A( IMAX1, K )
+                  A( IMAX1, K ) = T
                ELSE
 *
 *                 Absolute value largest element is in column K-1
@@ -371,18 +371,13 @@
      $                     A( 1, K-1 ), 1 ) 
 
                   A( IMAX2, K-1 ) = -A( IMAX2, K-1 )
-
 *                 
-*                 Interchange rows K and K-1, then K-1 and IMAX2 in last K+1 columns of A
+*                 Interchange rows K-1 and IMAX2 in column K of A
+*     
+                  T = A( K-1, K )
+                  A( K-1, K ) = A( IMAX2, K )
+                  A( IMAX2, K ) = T
 *
-                  IF( K.LT.N ) THEN
-                     CALL SSWAP( N-K, A( K, K+1 ), LDA, A( K-1, K+1 ),
-     $                           LDA )
-                  END IF
-
-                  CALL SSWAP( N-K+1, A( K-1, K ), LDA,
-     $                        A( IMAX2, K ), LDA )
-
                END IF
             END IF
 *
@@ -398,9 +393,9 @@
                DO 30 I = J+1, K-2
                   A( J, I ) = A( J, I ) + A( I, K )*WK +
      $               A( I, K-1 )*WKM1
-30             CONTINUE
+   30          CONTINUE
 
-20          CONTINUE
+   20       CONTINUE
 
 *
 *           Update C*S^-1
@@ -409,7 +404,7 @@
                T = A( J, K-1 )
                A( J, K-1 ) = A( J, K )*D21
                A( J, K ) = -T*D21
-80          CONTINUE
+   80       CONTINUE
          END IF
 *
 *        Decrease K and return to the start of the main loop
@@ -417,48 +412,9 @@
          K = K - KSTEP
          GO TO 10
 *
-100      CONTINUE
-*
-*
-*        Put U12 in standard form by partially undoing the interchanges
-*        of rows in columns 1:k-1 looping backwards from k-1 to 1
-*
-         J = N - K - 1
-110      CONTINUE
-*
-*           Undo the interchanges (if any) of rows JJ and JP at each
-*           step J
-*
-*           (Here, J is a diagonal index)
-
-            IF( J.GT.1 ) THEN
-               JJ = N-J+1
-               JP = IPIV( N-J+1 )
-
-               IF( JP.LT.0 ) THEN
-                  JP = -JP
-*                 (Here, J is a diagonal index)
-                  CALL SSWAP( J-1, A( JP, N-J+2 ), LDA,
-     $                  A( JJ-1, N-J+2 ), LDA )
-                  CALL SSWAP( J-1, A( JJ-1, N-J+2 ), LDA,
-     $                  A( JJ, N-J+2 ), LDA )
-               ELSEIF( JP.GT.0 ) THEN
-                  CALL SSWAP( J-1, A( JP, N-J+2 ), LDA,
-     $                  A( JJ-1, N-J+2 ), LDA )
-               END IF
-               
-            END IF
-*        (NOTE: Here, J is used to determine row length. Length J
-*        of the rows to swap back doesn't include diagonal element)
-
-         J = J - 2
-         IF( J.GT.1 )
-     $      GO TO 110
-     
-*
       ELSE
 *
-*        Factorize A as L*D*(-L)**T using the lower triangle of A
+*        Factorize A as L*D*L**T using the lower triangle of A
 *        K is the main loop index, increasing from 1 to N in steps
 *        of 2
 *
@@ -533,13 +489,13 @@
      $                     A( IMAX1+1, K+1 ), 1 ) 
 
                   A( IMAX1, K+1 ) = -A( IMAX1, K+1 )
-
 *                 
-*                 Interchange rows K+1 and IMAX1 in first K-1 columns of A
+*                 Interchange rows K+1 and IMAX1 in column K of A
 *     
-                  CALL SSWAP( K, A( K+1, 1 ), LDA, A( IMAX1, 1 ),
-     $                     LDA )
-
+                  T = A( K+1, K )
+                  A( K+1, K ) = A( IMAX1, K )
+                  A( IMAX1, K ) = T
+*
                ELSE
 *
 *                 Absolute value largest element is in column K+1
@@ -566,17 +522,13 @@
      $                     A( IMAX2+1, K+1 ), 1 ) 
 
                   A( IMAX2, K+1 ) = -A( IMAX2, K+1 )
-
 *                 
-*                 Interchange rows K and K+1, then K+1 and IMAX2 in first K-1 columns of A
+*                 Interchange rows K+1 and IMAX2 in column K of A
+*     
+                  T = A( K+1, K )
+                  A( K+1, K ) = A( IMAX2, K )
+                  A( IMAX2, K ) = T
 *
-                  CALL SSWAP( K-1, A( K, 1 ), LDA, A( K+1, 1 ),
-     $                     LDA )
-
-                  CALL SSWAP( K, A( K+1, 1 ), LDA, A( IMAX2, 1 ),
-     $                     LDA )
-
-
                END If
             END If
 
@@ -593,9 +545,9 @@
                DO 50 I = K+2, J-1
                   A( J, I ) = A( J, I ) + A( I, K )*WK +
      $               A( I, K+1 )*WKP1
-50             CONTINUE
+   50          CONTINUE
 
-60          CONTINUE
+   60       CONTINUE
 
 *
 *           Update C*S^-1
@@ -604,50 +556,16 @@
                T = A( J, K )
                A( J, K ) = -A( J, K+1 )*D21
                A( J, K+1 ) = T*D21
-90          CONTINUE
+   90       CONTINUE
          END IF
 
          K = K + KSTEP
          GO TO 40
 *
-   70    CONTINUE
-*
-*
-*        Put L21 in standard form by partially undoing the interchanges
-*        of rows in columns 1:k-1 looping backwards from k-1 to 1
-*
-         J = K - 2
-120      CONTINUE
-*
-*           Undo the interchanges (if any) of rows JJ and JP at each
-*           step J
-*
-*           (Here, J is a diagonal index)
-
-            IF( J.GT.1 ) THEN
-               JJ = J
-               JP = IPIV( J )
-
-               IF( JP.LT.0 ) THEN
-                  JP = -JP
-*                 (Here, J is a diagonal index)
-                  CALL SSWAP( J-1, A( JP, 1 ), LDA, A( JJ+1, 1 ), LDA )
-                  CALL SSWAP( J-1, A( JJ+1, 1 ), LDA, A( JJ, 1 ), LDA )
-               ELSEIF( JP.GT.0 ) THEN
-                  CALL SSWAP( J-1, A( JP, 1 ), LDA, A( JJ+1, 1 ), LDA )
-               END IF
-               
-            END IF
-*        (NOTE: Here, J is used to determine row length. Length J
-*        of the rows to swap back doesn't include diagonal element)
-
-         J = J - 2
-         IF( J.GT.1 )
-     $      GO TO 120
-
-*
       END IF
-
+*
+   70 CONTINUE
+*
       RETURN
 *
 *     End of SKYTF2

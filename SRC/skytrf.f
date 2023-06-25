@@ -39,7 +39,7 @@
 *> the Bunch partial pivoting method.  The form of the
 *> factorization is
 *>
-*>    A = U*D*(-U)**T  or  A = L*D*(-L)**T
+*>    A = U*D*U**T  or  A = L*D*L**T
 *>
 *> where U (or L) is a product of permutation and unit upper (lower)
 *> triangular matrices, and D is skew-symmetric and block diagonal with
@@ -162,7 +162,7 @@
 *>
 *> \verbatim
 *>
-*>  If UPLO = 'U', then A = U*D*(-U)**T, where
+*>  If UPLO = 'U', then A = U*D*U**T, where
 *>     U = P(n)*U(n)* ... *P(k)U(k)* ...,
 *>  i.e., U is a product of terms P(k)*U(k), where k decreases from n to
 *>  1 in steps of 2, and D is a block diagonal matrix with 2-by-2
@@ -178,7 +178,7 @@
 *>  The upper triangle of D(k) overwrites A(k-1,k), and v overwrites
 *>  A(1:k-2,k-1:k).
 *>
-*>  If UPLO = 'L', then A = L*D*(-L)**T, where
+*>  If UPLO = 'L', then A = L*D*L**T, where
 *>     L = P(1)*L(1)* ... *P(k)*L(k)* ...,
 *>  i.e., L is a product of terms P(k)*L(k), where k increases from 1 to
 *>  n in steps of 2, and D is a block diagonal matrix with 2-by-2
@@ -280,7 +280,7 @@
 *
       IF( UPPER ) THEN
 *
-*        Factorize A as U*D*(-U)**T using the upper triangle of A
+*        Factorize A as U*D*U**T using the upper triangle of A
 *
 *        K is the main loop index, decreasing from N to 1 in steps of
 *        KB, where KB is the number of columns factorized by SLAKYF;
@@ -321,7 +321,7 @@
 *
       ELSE
 *
-*        Factorize A as L*D*(-L)**T using the lower triangle of A
+*        Factorize A as L*D*L**T using the lower triangle of A
 *
 *        K is the main loop index, increasing from 1 to N in steps of
 *        KB, where KB is the number of columns factorized by SLAKYF;
