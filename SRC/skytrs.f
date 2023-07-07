@@ -6,12 +6,12 @@
 *            http://www.netlib.org/lapack/explore-html/
 *
 *> \htmlonly
-*> Download SSYTRS + dependencies
-*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.tgz?format=tgz&filename=/lapack/lapack_routine/ssytrs.f">
+*> Download SKYTRS + dependencies
+*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.tgz?format=tgz&filename=/lapack/lapack_routine/skytrs.f">
 *> [TGZ]</a>
-*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.zip?format=zip&filename=/lapack/lapack_routine/ssytrs.f">
+*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.zip?format=zip&filename=/lapack/lapack_routine/skytrs.f">
 *> [ZIP]</a>
-*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.txt?format=txt&filename=/lapack/lapack_routine/ssytrs.f">
+*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.txt?format=txt&filename=/lapack/lapack_routine/skytrs.f">
 *> [TXT]</a>
 *> \endhtmlonly
 *
@@ -35,9 +35,9 @@
 *>
 *> \verbatim
 *>
-*> SSYTRS solves a system of linear equations A*X = B with a real
-*> symmetric matrix A using the factorization A = U*D*(-U)**T or
-*> A = L*D*(-L)**T computed by SSYTRF.
+*> SKYTRS solves a system of linear equations A*X = B with a real
+*> skew-symmetric matrix A using the factorization A = U*D*U**T or
+*> A = L*D*L**T computed by SKYTRF.
 *> \endverbatim
 *
 *  Arguments:
@@ -48,8 +48,8 @@
 *>          UPLO is CHARACTER*1
 *>          Specifies whether the details of the factorization are stored
 *>          as an upper or lower triangular matrix.
-*>          = 'U':  Upper triangular, form is A = U*D*(-U)**T;
-*>          = 'L':  Lower triangular, form is A = L*D*(-L)**T.
+*>          = 'U':  Upper triangular, form is A = U*D*U**T;
+*>          = 'L':  Lower triangular, form is A = L*D*L**T.
 *> \endverbatim
 *>
 *> \param[in] N
@@ -69,7 +69,7 @@
 *> \verbatim
 *>          A is REAL array, dimension (LDA,N)
 *>          The block diagonal matrix D and the multipliers used to
-*>          obtain the factor U or L as computed by SSYTRF.
+*>          obtain the factor U or L as computed by SKYTRF.
 *> \endverbatim
 *>
 *> \param[in] LDA
@@ -82,7 +82,7 @@
 *> \verbatim
 *>          IPIV is INTEGER array, dimension (N)
 *>          Details of the interchanges and the block structure of D
-*>          as determined by SSYTRF.
+*>          as determined by SKYTRF.
 *> \endverbatim
 *>
 *> \param[in,out] B
@@ -113,7 +113,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup realSYcomputational
+*> \ingroup realKYcomputational
 *
 *  =====================================================================
       SUBROUTINE SKYTRS( UPLO, N, NRHS, A, LDA, IPIV, B, LDB, INFO )
@@ -158,7 +158,7 @@
       UPPER = LSAME( UPLO, 'U' )
       IF( .NOT.UPPER .AND. .NOT.LSAME( UPLO, 'L' ) ) THEN
          INFO = -1
-      ELSE IF( N.LT.0 ) THEN
+      ELSE IF( (N.LT.0) .OR. (MOD(N,2).NE.0) ) THEN
          INFO = -2
       ELSE IF( NRHS.LT.0 ) THEN
          INFO = -3
@@ -168,7 +168,7 @@
          INFO = -8
       END IF
       IF( INFO.NE.0 ) THEN
-         CALL XERBLA( 'SSYTRS', -INFO )
+         CALL XERBLA( 'SKYTRS', -INFO )
          RETURN
       END IF
 *
@@ -183,10 +183,10 @@
 *
 *        First solve U*D*X = B, overwriting B with X.
 *
-*        K is the main loop index, decreasing from N to 1 in steps of
-*        1 or 2, depending on the size of the diagonal blocks.
+*        K is the main loop index, decreasing from N to 1
+*        in steps of 2.
 *
-         K = N-1
+         K = N
    10    CONTINUE
 *
 *        If K < 1, exit from loop.
@@ -196,198 +196,255 @@
 *
          IF( IPIV( K ).GT.0 ) THEN
 *
-*           Interchange rows K+1 and IPIV(K).
+*           2 x 2 diagonal block
+*
+*           Interchange rows K-1 and IPIV(K).
 *
             KP = IPIV( K )
-            CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
+            IF( KP.NE.K-1 ) THEN
+               CALL SSWAP( NRHS, B( K-1, 1 ), LDB, B( KP, 1 ), LDB )
+            END IF
 *
 *           Multiply by inv(U(K)), where U(K) is the transformation
-*           stored in column K of A.
+*           stored in columns K-1 and K of A.
 *
-            IF( K.LT.N-1 )
-     $         CALL SGEMM( 'N', 'N', N-K+1, 2, NRHS, -ONE, A( 1, K+2 ),
-     $                    LDA, B( K+2, 1 ), LDB, ONE, B( 1, 1 ), LDB )
+            CALL SGER( K-2, NRHS, -ONE, A( 1, K ), 1, B( K, 1 ), LDB,
+     $                 B( 1, 1 ), LDB )
+            CALL SGER( K-2, NRHS, -ONE, A( 1, K-1 ), 1, B( K-1, 1 ),
+     $                 LDB, B( 1, 1 ), LDB )
 *
 *           Multiply by the inverse of the diagonal block.
 *
-            CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
-            CALL SSCAL( NRHS, ONE / A( K, K ), B( K, 1 ), LDB )
-			CALL SSCAL( NRHS, ONE / A( K+1, K+1 ), B( K+1, 1 ), LDB )
+            CALL SSCAL( NRHS, -ONE / A( K-1, K ), B( K, 1 ), LDB )
+            CALL SSCAL( NRHS, ONE / A( K-1, K ), B( K-1, 1 ), LDB )
+            CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K-1, 1 ), LDB )
+*
+            K = K - 2
          ELSEIF( IPIV( K ).LT.0 ) THEN
 *
-*           Interchange rows K and K+1, then K+1 and -IPIV(K).
+*           2 x 2 diagonal block
+*
+*           Interchange rows K and K-1, then K-1 and -IPIV(K).
 *
             KP = -IPIV( K )
-			CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
-            CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
+            IF( KP.NE.K-1 ) THEN
+               CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K-1, 1 ), LDB )
+               CALL SSWAP( NRHS, B( K-1, 1 ), LDB, B( KP, 1 ), LDB )
+            END IF
 *
 *           Multiply by inv(U(K)), where U(K) is the transformation
-*           stored in column K of A.
+*           stored in columns K-1 and K of A.
 *
-            IF( K.LT.N-1 )
-     $         CALL SGEMM( 'N', 'N', N-K+1, 2, NRHS, -ONE, A( 1, K+2 ),
-     $                    LDA, B( K+2, 1 ), LDB, ONE, B( 1, 1 ), LDB )
+            CALL SGER( K-2, NRHS, -ONE, A( 1, K ), 1, B( K, 1 ), LDB,
+     $                 B( 1, 1 ), LDB )
+            CALL SGER( K-2, NRHS, -ONE, A( 1, K-1 ), 1, B( K-1, 1 ),
+     $                 LDB, B( 1, 1 ), LDB )
 *
 *           Multiply by the inverse of the diagonal block.
 *
-            CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
-            CALL SSCAL( NRHS, ONE / A( K, K ), B( K, 1 ), LDB )
-			CALL SSCAL( NRHS, ONE / A( K+1, K+1 ), B( K+1, 1 ), LDB )
-		 ELSE
+            CALL SSCAL( NRHS, -ONE / A( K-1, K ), B( K, 1 ), LDB )
+            CALL SSCAL( NRHS, ONE / A( K-1, K ), B( K-1, 1 ), LDB )
+            CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K-1, 1 ), LDB )
+*
+            K = K - 2
+         ELSE
+*
+*           2 x 2 diagonal block
 *
 *           Multiply by inv(U(K)), where U(K) is the transformation
-*           stored in column K of A.
+*           stored in columns K-1 and K of A.
 *
-            IF( K.LT.N-1 )
-     $         CALL SGEMM( 'N', 'N', N-K+1, 2, NRHS, -ONE, A( 1, K+2 ),
-     $                    LDA, B( K+2, 1 ), LDB, ONE, B( 1, 1 ), LDB )
+            CALL SGER( K-2, NRHS, -ONE, A( 1, K ), 1, B( K, 1 ), LDB,
+     $                 B( 1, 1 ), LDB )
+            CALL SGER( K-2, NRHS, -ONE, A( 1, K-1 ), 1, B( K-1, 1 ),
+     $                 LDB, B( 1, 1 ), LDB )
 *
 *           Multiply by the inverse of the diagonal block.
 *
-            CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
-            CALL SSCAL( NRHS, ONE / A( K, K ), B( K, 1 ), LDB )
-		CALL SSCAL( NRHS, ONE / A( K+1, K+1 ), B( K+1, 1 ), LDB )
+            CALL SSCAL( NRHS, -ONE / A( K-1, K ), B( K, 1 ), LDB )
+            CALL SSCAL( NRHS, ONE / A( K-1, K ), B( K-1, 1 ), LDB )
+            CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K-1, 1 ), LDB )
+*
+            K = K - 2
          END IF
-		 K = K - 2
 *
          GO TO 10
    30    CONTINUE
 *
 *        Next solve U**T *X = B, overwriting B with X.
 *
-*        K is the main loop index, increasing from 1 to N in steps of 2
+*        K is the main loop index, increasing from 1 to N in steps of
+*        1 or 2, depending on the size of the diagonal blocks.
 *
          K = 1
    40    CONTINUE
 *
 *        If K > N, exit from loop.
 *
-         IF( K.GT.N-1 )
+         IF( K.GT.N )
      $      GO TO 50
 *
-         IF( IPIV( K ).GT.0 ) THEN
+         IF( IPIV( K+1 ).GT.0 ) THEN
 *
-*           Multiply by inv(U**T(K)), where U(K) is the transformation
-*           stored in column K of A.
+*           2 x 2 diagonal block
 *
-            IF( K.LT.N-1 )
-     $         CALL SGEMM( 'N', 'N', N-K-1, 2, NRHS, -ONE, A( K+2, K ),
-     $                    LDA, B( K, 1 ), LDB, ONE, B( K+2, 1 ), LDB )
+*           Multiply by inv(U**T(K+1)), where U(K+1) is the transformation
+*           stored in columns K and K+1 of A.
 *
-*           Interchange rows K+1 and IPIV(K).
+            CALL SGEMV( 'Transpose', K-1, NRHS, -ONE, B, LDB, A( 1, K ),
+     $                  1, ONE, B( K, 1 ), LDB )
+            CALL SGEMV( 'Transpose', K-1, NRHS, -ONE, B, LDB,
+     $                  A( 1, K+1 ), 1, ONE, B( K+1, 1 ), LDB )
 *
-            KP = IPIV( K )
-            CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
-         ELSEIF( IPIV( K ).LT.0 ) THEN
+*           Interchange rows K and IPIV(K).
 *
-*           Multiply by inv(U**T(K)), where U(K) is the transformation
-*           stored in column K of A.
+            KP = IPIV( K+1 )
+            IF( KP.NE.K ) THEN
+               CALL SSWAP( NRHS, B( K, 1 ), LDB, B( KP, 1 ), LDB )
+            END IF
+            K = K + 2
+         ELSEIF( IPIV( K+1 ).LT.0 ) THEN
 *
-            IF( K.LT.N-1 )
-     $         CALL SGEMM( 'N', 'N', N-K-1, 2, NRHS, -ONE, A( K+2, K ),
-     $                    LDA, B( K, 1 ), LDB, ONE, B( K+2, 1 ), LDB )
+*           2 x 2 diagonal block
 *
-*           Interchange rows K+1 and -IPIV(K), then K and K+1.
+*           Multiply by inv(U**T(K+1)), where U(K+1) is the transformation
+*           stored in columns K and K+1 of A.
 *
-            KP = -IPIV( K )
-            CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
-			CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
-		 ELSE
+            CALL SGEMV( 'Transpose', K-1, NRHS, -ONE, B, LDB, A( 1, K ),
+     $                  1, ONE, B( K, 1 ), LDB )
+            CALL SGEMV( 'Transpose', K-1, NRHS, -ONE, B, LDB,
+     $                  A( 1, K+1 ), 1, ONE, B( K+1, 1 ), LDB )
 *
-*           Multiply by inv(U**T(K)), where U(K) is the transformation
-*           stored in column K of A.
+*           Interchange rows K and -IPIV(K), then K and K+1.
 *
-            IF( K.LT.N-1 )
-     $         CALL SGEMM( 'N', 'N', N-K-1, 2, NRHS, -ONE, A( K+2, K ),
-     $                    LDA, B( K, 1 ), LDB, ONE, B( K+2, 1 ), LDB )
+            KP = -IPIV( K+1 )
+            IF( KP.NE.K ) THEN
+               CALL SSWAP( NRHS, B( K, 1 ), LDB, B( KP, 1 ), LDB )
+               CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( K, 1 ), LDB )
+            END IF
+            K = K + 2
+         ELSE
+*
+*           2 x 2 diagonal block
+*
+*           Multiply by inv(U**T(K+1)), where U(K+1) is the transformation
+*           stored in columns K and K+1 of A.
+*
+            CALL SGEMV( 'Transpose', K-1, NRHS, -ONE, B, LDB, A( 1, K ),
+     $                  1, ONE, B( K, 1 ), LDB )
+            CALL SGEMV( 'Transpose', K-1, NRHS, -ONE, B, LDB,
+     $                  A( 1, K+1 ), 1, ONE, B( K+1, 1 ), LDB )
+            K = K + 2
          END IF
-		 K = K + 2
 *
          GO TO 40
    50    CONTINUE
 *
       ELSE
 *
-*        Solve A*X = B, where A = L*D*(-L)**T.
+*        Solve A*X = B, where A = L*D*L**T.
 *
 *        First solve L*D*X = B, overwriting B with X.
 *
-*        K is the main loop index, increasing from 1 to N in steps of
-*        1 or 2, depending on the size of the diagonal blocks.
+*        K is the main loop index, increasing from 1 to N
+*        in steps of 2.
 *
          K = 1
    60    CONTINUE
 *
 *        If K > N, exit from loop.
 *
-         IF( K.GT.N-1 )
+         IF( K.GT.N )
      $      GO TO 80
 *
          IF( IPIV( K ).GT.0 ) THEN
 *
+*           2 x 2 diagonal block
+*
 *           Interchange rows K+1 and IPIV(K).
 *
             KP = IPIV( K )
-            CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
+            IF( KP.NE.K+1 ) THEN
+               CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
+            END IF
 *
 *           Multiply by inv(L(K)), where L(K) is the transformation
-*           stored in column K of A.
+*           stored in columns K and K+1 of A.
 *
-            IF( K.LT.N-1 )
-     $         CALL SGEMM( 'N', 'N', N-K-1, 2, NRHS, -ONE, A( K+2, K ),
-     $                    LDA, B( K, 1 ), LDB, ONE, B( K+2, 1 ), LDB )
+            IF( K.LT.N-1 ) THEN
+               CALL SGER( N-K-1, NRHS, -ONE, A( K+2, K ), 1, B( K, 1 ),
+     $                    LDB, B( K+2, 1 ), LDB )
+               CALL SGER( N-K-1, NRHS, -ONE, A( K+2, K+1 ), 1,
+     $                    B( K+1, 1 ), LDB, B( K+2, 1 ), LDB )
+            END IF
 *
 *           Multiply by the inverse of the diagonal block.
 *
-			CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
-            CALL SSCAL( NRHS, ONE / A( K, K ), B( K, 1 ), LDB )
-			CALL SSCAL( NRHS, ONE / A( K+1, K+1 ), B( K+1, 1 ), LDB )
+            CALL SSCAL( NRHS, -ONE / A( K+1, K ), B( K, 1 ), LDB )
+            CALL SSCAL( NRHS, ONE / A( K+1, K ), B( K+1, 1 ), LDB )
+            CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
+*
+            K = K + 2
          ELSEIF( IPIV( K ).LT.0 ) THEN
+*
+*           2 x 2 diagonal block
 *
 *           Interchange rows K and K+1, then K+1 and -IPIV(K).
 *
             KP = -IPIV( K )
-			CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
-            CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
+            IF( KP.NE.K+1 ) THEN
+               CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
+               CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
+            END IF
 *
 *           Multiply by inv(L(K)), where L(K) is the transformation
 *           stored in columns K and K+1 of A.
 *
-            IF( K.LT.N-1 )
-     $         CALL SGEMM( 'N', 'N', N-K-1, 2, NRHS, -ONE, A( K+2, K ),
-     $                    LDA, B( K, 1 ), LDB, ONE, B( K+2, 1 ), LDB )
+            IF( K.LT.N-1 ) THEN
+               CALL SGER( N-K-1, NRHS, -ONE, A( K+2, K ), 1, B( K, 1 ),
+     $                    LDB, B( K+2, 1 ), LDB )
+               CALL SGER( N-K-1, NRHS, -ONE, A( K+2, K+1 ), 1,
+     $                    B( K+1, 1 ), LDB, B( K+2, 1 ), LDB )
+            END IF
 *
 *           Multiply by the inverse of the diagonal block.
 *
+            CALL SSCAL( NRHS, -ONE / A( K+1, K ), B( K, 1 ), LDB )
+            CALL SSCAL( NRHS, ONE / A( K+1, K ), B( K+1, 1 ), LDB )
             CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
-            CALL SSCAL( NRHS, ONE / A( K, K ), B( K, 1 ), LDB )
-			CALL SSCAL( NRHS, ONE / A( K+1, K+1 ), B( K+1, 1 ), LDB )
-		 ELSE
+*
+            K = K + 2
+         ELSE
+*
+*           2 x 2 diagonal block
 *
 *           Multiply by inv(L(K)), where L(K) is the transformation
 *           stored in columns K and K+1 of A.
 *
-            IF( K.LT.N-1 )
-     $         CALL SGEMM( 'N', 'N', N-K-1, 2, NRHS, -ONE, A( K+2, K ),
-     $                    LDA, B( K, 1 ), LDB, ONE, B( K+2, 1 ), LDB )
+            IF( K.LT.N-1 ) THEN
+               CALL SGER( N-K-1, NRHS, -ONE, A( K+2, K ), 1, B( K, 1 ),
+     $                    LDB, B( K+2, 1 ), LDB )
+               CALL SGER( N-K-1, NRHS, -ONE, A( K+2, K+1 ), 1,
+     $                    B( K+1, 1 ), LDB, B( K+2, 1 ), LDB )
+            END IF
 *
 *           Multiply by the inverse of the diagonal block.
-*
+            CALL SSCAL( NRHS, -ONE / A( K+1, K ), B( K, 1 ), LDB )
+            CALL SSCAL( NRHS, ONE / A( K+1, K ), B( K+1, 1 ), LDB )
             CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
-            CALL SSCAL( NRHS, ONE / A( K, K ), B( K, 1 ), LDB )
-			CALL SSCAL( NRHS, ONE / A( K+1, K+1 ), B( K+1, 1 ), LDB )
+*
+            K = K + 2
          END IF
-
-		 K = K + 2
 *
          GO TO 60
    80    CONTINUE
 *
 *        Next solve L**T *X = B, overwriting B with X.
 *
-*        K is the main loop index
+*        K is the main loop index, decreasing from N to 1 in steps of
+*        1 or 2, depending on the size of the diagonal blocks.
 *
-         K = N-1
+         K = N
    90    CONTINUE
 *
 *        If K < 1, exit from loop.
@@ -395,42 +452,67 @@
          IF( K.LT.1 )
      $      GO TO 100
 *
-         IF( IPIV( K ).GT.0 ) THEN
+         IF( IPIV( K-1 ).GT.0 ) THEN
 *
-*           Multiply by inv(L**T(K)), where L(K) is the transformation
-*           stored in column K of A.
+*           2 x 2 diagonal block
 *
-            IF( K.LT.N-1 )
-     $         CALL SGEMM( 'N', 'N', N-K+1, 2, NRHS, -ONE, A( 1, K+2 ),
-     $                    LDA, B( K+2, 1 ), LDB, ONE, B( 1, 1 ), LDB )
+*           Multiply by inv(L**T(K-1)), where L(K-1) is the transformation
+*           stored in columns K-1 and K of A.
 *
-*           Interchange rows K+1 and IPIV(K).
+            IF( K.LT.N ) THEN
+               CALL SGEMV( 'Transpose', N-K, NRHS, -ONE, B( K+1, 1 ),
+     $                     LDB, A( K+1, K ), 1, ONE, B( K, 1 ), LDB )
+               CALL SGEMV( 'Transpose', N-K, NRHS, -ONE, B( K+1, 1 ),
+     $                     LDB, A( K+1, K-1 ), 1, ONE, B( K-1, 1 ),
+     $                     LDB )
+            END IF
 *
-            KP = IPIV( K )
-            CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
-         ELSEIF( IPIV( K ).LT.0 ) THEN
+*           Interchange rows K and IPIV(K).
 *
-*           Multiply by inv(L**T(K)), where L(K) is the transformation
-*           stored in column K of A.
+            KP = IPIV( K-1 )
+            IF( KP.NE.K ) THEN
+               CALL SSWAP( NRHS, B( K, 1 ), LDB, B( KP, 1 ), LDB )
+            END IF
+            K = K - 2
+         ELSEIF( IPIV( K-1 ).LT.0 ) THEN
 *
-            CALL SGEMM( 'N', 'N', N-K+1, 2, NRHS, -ONE, A( 1, K+2 ),
-     $                    LDA, B( K+2, 1 ), LDB, ONE, B( 1, 1 ), LDB )
+*           2 x 2 diagonal block
 *
-*           Interchange rows K+1 and -IPIV(K), then K and K+1.
+*           Multiply by inv(L**T(K-1)), where L(K-1) is the transformation
+*           stored in columns K-1 and K of A.
 *
-            KP = -IPIV( K )
-            CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
-		CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
-	   ELSE
+            IF( K.LT.N ) THEN
+               CALL SGEMV( 'Transpose', N-K, NRHS, -ONE, B( K+1, 1 ),
+     $                     LDB, A( K+1, K ), 1, ONE, B( K, 1 ), LDB )
+               CALL SGEMV( 'Transpose', N-K, NRHS, -ONE, B( K+1, 1 ),
+     $                     LDB, A( K+1, K-1 ), 1, ONE, B( K-1, 1 ),
+     $                     LDB )
+            END IF
 *
-*           Multiply by inv(L**T(K)), where L(K) is the transformation
-*           stored in column K of A.
+*           Interchange rows K and -IPIV(K), then K and K-1.
 *
-            IF( K.LT.N-1 )
-     $         CALL SGEMM( 'N', 'N', N-K+1, 2, NRHS, -ONE, A( 1, K+2 ),
-     $                    LDA, B( K+2, 1 ), LDB, ONE, B( 1, 1 ), LDB )
+            KP = -IPIV( K-1 )
+            IF( KP.NE.K ) THEN
+               CALL SSWAP( NRHS, B( K, 1 ), LDB, B( KP, 1 ), LDB )
+               CALL SSWAP( NRHS, B( K-1, 1 ), LDB, B( K, 1 ), LDB )
+            END IF
+            K = K - 2
+         ELSE
+*
+*           2 x 2 diagonal block
+*
+*           Multiply by inv(L**T(K-1)), where L(K-1) is the transformation
+*           stored in columns K-1 and K of A.
+*
+            IF( K.LT.N ) THEN
+               CALL SGEMV( 'Transpose', N-K, NRHS, -ONE, B( K+1, 1 ),
+     $                     LDB, A( K+1, K ), 1, ONE, B( K, 1 ), LDB )
+               CALL SGEMV( 'Transpose', N-K, NRHS, -ONE, B( K+1, 1 ),
+     $                     LDB, A( K+1, K-1 ), 1, ONE, B( K-1, 1 ),
+     $                     LDB )
+            END IF
+            K = K - 2
          END IF
-		 K = K - 2
 *
          GO TO 90
   100    CONTINUE
@@ -438,6 +520,6 @@
 *
       RETURN
 *
-*     End of SKYTRS
+*     End of SSYTRS
 *
       END
