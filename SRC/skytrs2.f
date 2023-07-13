@@ -6,12 +6,12 @@
 *            http://www.netlib.org/lapack/explore-html/
 *
 *> \htmlonly
-*> Download SSYTRS2 + dependencies
-*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.tgz?format=tgz&filename=/lapack/lapack_routine/ssytrs2.f">
+*> Download SKYTRS2 + dependencies
+*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.tgz?format=tgz&filename=/lapack/lapack_routine/skytrs2.f">
 *> [TGZ]</a>
-*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.zip?format=zip&filename=/lapack/lapack_routine/ssytrs2.f">
+*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.zip?format=zip&filename=/lapack/lapack_routine/skytrs2.f">
 *> [ZIP]</a>
-*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.txt?format=txt&filename=/lapack/lapack_routine/ssytrs2.f">
+*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.txt?format=txt&filename=/lapack/lapack_routine/skytrs2.f">
 *> [TXT]</a>
 *> \endhtmlonly
 *
@@ -36,9 +36,9 @@
 *>
 *> \verbatim
 *>
-*> SSYTRS2 solves a system of linear equations A*X = B with a real
-*> skew symmetric matrix A using the factorization A = U*D*(-U)**T or
-*> A = L*D*(-L)**T computed by SKYTRF and converted by SKYCONV.
+*> SKYTRS2 solves a system of linear equations A*X = B with a real
+*> skew-symmetric matrix A using the factorization A = U*D*U**T or
+*> A = L*D*L**T computed by SKYTRF and converted by SKYCONV.
 *> \endverbatim
 *
 *  Arguments:
@@ -88,7 +88,7 @@
 *> \verbatim
 *>          IPIV is INTEGER array, dimension (N)
 *>          Details of the interchanges and the block structure of D
-*>          as determined by SSYTRF.
+*>          as determined by SKYTRF.
 *> \endverbatim
 *>
 *> \param[in,out] B
@@ -124,7 +124,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup realSYcomputational
+*> \ingroup realKYcomputational
 *
 *  =====================================================================
       SUBROUTINE SKYTRS2( UPLO, N, NRHS, A, LDA, IPIV, B, LDB,
@@ -151,15 +151,14 @@
 *     ..
 *     .. Local Scalars ..
       LOGICAL            UPPER
-      INTEGER            I, IINFO, J, K, KP
-      REAL               AK, AKM1, AKM1K, BK, BKM1, DENOM
+      INTEGER            I, IINFO, K, KP
 *     ..
 *     .. External Functions ..
       LOGICAL            LSAME
       EXTERNAL           LSAME
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           SSCAL, SSYCONV, SSWAP, STRSM, XERBLA
+      EXTERNAL           SSCAL, SKYCONV, SSWAP, STRSM, XERBLA
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          MAX
@@ -180,7 +179,7 @@
          INFO = -8
       END IF
       IF( INFO.NE.0 ) THEN
-         CALL XERBLA( 'SSYTRS2', -INFO )
+         CALL XERBLA( 'SKYTRS2', -INFO )
          RETURN
       END IF
 *
@@ -195,22 +194,24 @@
 *
       IF( UPPER ) THEN
 *
-*        Solve A*X = B, where A = U*D*(-U)**T.
+*        Solve A*X = B, where A = U*D*U**T.
 *
 *       P**T * B
-        K=N-1
-        DO WHILE ( K .GE. 1 )
+        K=N
+        DO WHILE ( K .GE. 2 )
          IF( IPIV( K ).GT.0 ) THEN
-*           Interchange rows K+1 and IPIV(K).
+*           2 x 2 diagonal block
+*           Interchange rows K-1 and IPIV(K).
             KP = IPIV( K )
-			CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
-         ELSEIF( IPIV( K ).LT.0 ) THEN
-*           Interchange rows K and K+1, then K+1 and -IPIV(K).
+            CALL SSWAP( NRHS, B( K-1, 1 ), LDB, B( KP, 1 ), LDB )
+         ELSEIF ( IPIV( K ).LT.0) THEN
+*           2 x 2 diagonal block
+*           Interchange rows K-1 and -IPIV(K), then K and K-1.
             KP = -IPIV( K )
-			CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
-	        CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
+            CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K-1, 1 ), LDB )
+            CALL SSWAP( NRHS, B( K-1, 1 ), LDB, B( KP, 1 ), LDB )
          END IF
-		 K=K-2
+         K=K-2
         END DO
 *
 *  Compute (U \P**T * B) -> B    [ (U \P**T * B) ]
@@ -219,13 +220,12 @@
 *
 *  Compute D \ B -> B   [ D \ (U \P**T * B) ]
 *
-         I=N-1
-         DO WHILE ( I .GE. 1 )
-             DO 15 J = 1, NRHS
-                B( I, J ) = B( I+1, J ) / A(I, I)
-                B( I+1, J ) = B( I, J ) / A(I+1, I+1)
- 15         CONTINUE
-            I = I-2
+         I=N
+         DO WHILE ( I .GE. 2 )
+            CALL SSCAL( NRHS, -ONE / WORK( I ), B( I, 1 ), LDB )
+            CALL SSCAL( NRHS, ONE / WORK( I ), B( I-1, 1 ), LDB )
+            CALL SSWAP( NRHS, B( I, 1 ), LDB, B( I-1, 1 ), LDB )
+            I = I - 2
          END DO
 *
 *      Compute (U**T \ B) -> B   [ U**T \ (D \ (U \P**T * B) ) ]
@@ -234,39 +234,43 @@
 *
 *       P * B  [ P * (U**T \ (D \ (U \P**T * B) )) ]
 *
-        K=1
-        DO WHILE ( K .LE. N-1 )
+        K=2
+        DO WHILE ( K .LE. N )
          IF( IPIV( K ).GT.0 ) THEN
-*           Interchange rows K+1 and IPIV(K).
+*           2 x 2 diagonal block
+*           Interchange rows K-1 and IPIV(K).
             KP = IPIV( K )
-	        CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
-         ELSE
-*           Interchange rows K and K+1, then K+1 and -IPIV(K).
+            CALL SSWAP( NRHS, B( K-1, 1 ), LDB, B( KP, 1 ), LDB )  
+         ELSEIF ( IPIV( K ).LT.0) THEN
+*           2 x 2 diagonal block
+*           Interchange rows K and K-1, then K-1 and -IPIV(K).
             KP = -IPIV( K )
-			CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
-	        CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
+            CALL SSWAP( NRHS, B( K-1, 1 ), LDB, B( KP, 1 ), LDB )
+            CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K-1, 1 ), LDB )
          ENDIF
-		 K=K+2
+         K=K+2
         END DO
 *
       ELSE
 *
-*        Solve A*X = B, where A = L*D*(-L)**T.
+*        Solve A*X = B, where A = L*D*L**T.
 *
 *       P**T * B
         K=1
         DO WHILE ( K .LE. N-1 )
          IF( IPIV( K ).GT.0 ) THEN
+*           2 x 2 diagonal block
 *           Interchange rows K+1 and IPIV(K).
             KP = IPIV( K )
-	        CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
-         ELSEIF( IPIV( K ).LT.0 ) THEN
-*           Interchange rows K and K+1, then K+1 and IPIV(K).
+            CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
+         ELSEIF ( IPIV( K ).LT.0) THEN
+*           2 x 2 diagonal block
+*           Interchange rows K+1 and -IPIV(K), then K and K+1.
             KP = -IPIV( K )
-			CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
-			CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
+            CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
+            CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
          ENDIF
-		 K=K+2
+         K=K+2
         END DO
 *
 *  Compute (L \P**T * B) -> B    [ (L \P**T * B) ]
@@ -277,11 +281,10 @@
 *
          I=1
          DO WHILE ( I .LE. N-1 )
-            DO 25 J = 1, NRHS
-               B( I, J ) = B( I+1, J ) / A(I, I)
-               B( I+1, J ) = B( I, J ) / A(I+1, I+1)
- 25         CONTINUE
-            I = I+2
+            CALL SSCAL( NRHS, -ONE / WORK( I ), B( I, 1 ), LDB )
+            CALL SSCAL( NRHS, ONE / WORK( I ), B( I+1, 1 ), LDB )
+            CALL SSWAP( NRHS, B( I, 1 ), LDB, B( I+1, 1 ), LDB )
+            I = I + 2
          END DO
 *
 *  Compute (L**T \ B) -> B   [ L**T \ (D \ (L \P**T * B) ) ]
@@ -293,16 +296,18 @@
         K=N-1
         DO WHILE ( K .GE. 1 )
          IF( IPIV( K ).GT.0 ) THEN
+*           2 x 2 diagonal block
 *           Interchange rows K+1 and IPIV(K).
             KP = IPIV( K )
-	        CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
-         ELSEIF( IPIV( K ).LT.0 ) THEN
+            CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
+         ELSEIF ( IPIV( K ).LT.0) THEN
+*           2 x 2 diagonal block
 *           Interchange rows K and K+1, then K+1 and -IPIV(K).
             KP = -IPIV( K )
-			CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
-	        CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
+            CALL SSWAP( NRHS, B( K+1, 1 ), LDB, B( KP, 1 ), LDB )
+            CALL SSWAP( NRHS, B( K, 1 ), LDB, B( K+1, 1 ), LDB )
          ENDIF
-		 K=K-2
+         K=K-2
         END DO
 *
       END IF
@@ -313,6 +318,6 @@
 *
       RETURN
 *
-*     End of SSYTRS2
+*     End of SKYTRS2
 *
       END

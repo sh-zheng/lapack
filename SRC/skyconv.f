@@ -7,11 +7,11 @@
 *
 *> \htmlonly
 *> Download SKYCONV + dependencies
-*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.tgz?format=tgz&filename=/lapack/lapack_routine/ssyconv.f">
+*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.tgz?format=tgz&filename=/lapack/lapack_routine/skyconv.f">
 *> [TGZ]</a>
-*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.zip?format=zip&filename=/lapack/lapack_routine/ssyconv.f">
+*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.zip?format=zip&filename=/lapack/lapack_routine/skyconv.f">
 *> [ZIP]</a>
-*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.txt?format=txt&filename=/lapack/lapack_routine/ssyconv.f">
+*> <a href="http://www.netlib.org/cgi-bin/netlibfiles.txt?format=txt&filename=/lapack/lapack_routine/skyconv.f">
 *> [TXT]</a>
 *> \endhtmlonly
 *
@@ -48,8 +48,8 @@
 *>          UPLO is CHARACTER*1
 *>          Specifies whether the details of the factorization are stored
 *>          as an upper or lower triangular matrix.
-*>          = 'U':  Upper triangular, form is A = U*D*(-U)**T;
-*>          = 'L':  Lower triangular, form is A = L*D*(-L)**T.
+*>          = 'U':  Upper triangular, form is A = U*D*U**T;
+*>          = 'L':  Lower triangular, form is A = L*D*L**T.
 *> \endverbatim
 *>
 *> \param[in] WAY
@@ -69,7 +69,7 @@
 *> \verbatim
 *>          A is REAL array, dimension (LDA,N)
 *>          The block diagonal matrix D and the multipliers used to
-*>          obtain the factor U or L as computed by SSYTRF.
+*>          obtain the factor U or L as computed by SKYTRF.
 *> \endverbatim
 *>
 *> \param[in] LDA
@@ -82,14 +82,14 @@
 *> \verbatim
 *>          IPIV is INTEGER array, dimension (N)
 *>          Details of the interchanges and the block structure of D
-*>          as determined by SSYTRF.
+*>          as determined by SKYTRF.
 *> \endverbatim
 *>
 *> \param[out] E
 *> \verbatim
 *>          E is REAL array, dimension (N)
-*>          E stores the supdiagonal/subdiagonal of the symmetric 1-by-1
-*>          or 2-by-2 block diagonal matrix D in LDLT.
+*>          E stores the supdiagonal/subdiagonal of the skew-symmetric
+*>          2-by-2 block diagonal matrix D in LDLT.
 *> \endverbatim
 *>
 *> \param[out] INFO
@@ -158,7 +158,7 @@
 
       END IF
       IF( INFO.NE.0 ) THEN
-         CALL XERBLA( 'SSYCONV', -INFO )
+         CALL XERBLA( 'SKYCONV', -INFO )
          RETURN
       END IF
 *
@@ -176,43 +176,39 @@
 *        Convert VALUE
 *
          IF ( CONVERT ) THEN
-            I=N-1
-            DO WHILE ( I .GE. 1 )
-               A(I,I) = A(I+1,I)
-			   A(I+1,I+1) = -A(I,I)
-			   A(I+1,I) = ZERO
+            I=N
+            E(1)=ZERO
+            DO WHILE ( I .GT. 1 )
+               E(I)=A(I-1,I)
+               A(I-1,I)=ZERO
                I=I-2
             END DO
 *
 *        Convert PERMUTATIONS
 *
-         I=N-1
-         DO WHILE ( I .GE. 1 )
+         I=N-2
+         DO WHILE ( I .GT. 1 )
             IF( IPIV(I) .GT. 0) THEN
                IP=IPIV(I)
-               IF( I .LT. N-1) THEN
-                  DO 12 J= I+2,N
-                    TEMP=A(IP,J)
-                    A(IP,J)=A(I+1,J)
-                    A(I+1,J)=TEMP
+                  DO 12 J= I+1,N
+                     TEMP=A(IP,J)
+                     A(IP,J)=A(I-1,J)
+                     A(I-1,J)=TEMP
  12            CONTINUE
-               ENDIF
             ELSEIF( IPIV(I) .LT. 0) THEN
-              IP=-IPIV(I)
-               IF( I .LT. N-1) THEN
-				DO 13 J= I+2,N
-				 TEMP=A(I,J)
-                 A(I,J)=A(I+1,J)
-                 A(I+1,J)=TEMP
-
-                 TEMP=A(IP,J)
-                 A(IP,J)=A(I+1,J)
-                 A(I+1,J)=TEMP
+               IP=-IPIV(I)
+				   DO 13 J= I+1,N
+                  TEMP=A(I,J)
+                  A(I,J)=A(I-1,J)
+                  A(I-1,J)=TEMP
+                  
+                  TEMP=A(IP,J)
+                  A(IP,J)=A(I-1,J)
+                  A(I-1,J)=TEMP
  13            CONTINUE
-                ENDIF
-           ENDIF
-           I=I-2
-        END DO
+            ENDIF
+            I=I-2
+         END DO
 
          ELSE
 *
@@ -221,25 +217,25 @@
 *
 *        Revert PERMUTATIONS
 *
-            I=1
-            DO WHILE ( I .LE. N-3 )
+            I=2
+            DO WHILE ( I .LT. N-1 )
                IF( IPIV(I) .GT. 0 ) THEN
                   IP=IPIV(I)
-                  DO J= I,N
-                    TEMP=A(IP,J)
-                    A(IP,J)=A(I+1,J)
-                    A(I+1,J)=TEMP
+                  DO J= I+1,N
+                     TEMP=A(IP,J)
+                     A(IP,J)=A(I-1,J)
+                     A(I-1,J)=TEMP
                   END DO
                ELSEIF( IPIV(I) .LT. 0 ) THEN
-                 IP=-IPIV(I)
-                 DO J= I,N
-					TEMP=A(I,J)
-                    A(I,J)=A(I+1,J)
-                    A(I+1,J)=TEMP
+                  IP=-IPIV(I)
+                  DO J= I+1,N
+                     TEMP=A(IP,J)
+                     A(IP,J)=A(I-1,J)
+                     A(I-1,J)=TEMP
 
-                    TEMP=A(IP,J)
-                    A(IP,J)=A(I+1,J)
-                    A(I+1,J)=TEMP
+                     TEMP=A(I,J)
+                     A(I,J)=A(I-1,J)
+                     A(I-1,J)=TEMP
                  END DO
                ENDIF
                I=I+2
@@ -247,11 +243,9 @@
 *
 *        Revert VALUE
 *
-            I=N-1
-            DO WHILE ( I .GE. 1 )
-               A(I+1,I) = A(I,I)
-			   A(I,I) = ZERO
-			   A(I+1,I+1) = ZERO
+            I=N
+            DO WHILE ( I .GT. 1 )
+               A(I-1,I)=E(I)
                I=I-2
             END DO
          END IF
@@ -267,42 +261,38 @@
 *        Convert VALUE
 *
             I=1
-            DO WHILE ( I .LE. N-1 )
-               A(I,I) = A(I+1,I)
-			   A(I+1,I+1) = -A(I,I)
-			   A(I+1,I) = ZERO
+            E(N)=ZERO
+            DO WHILE ( I .LT. N )
+               E(I)=A(I+1,I)
+               A(I+1,I)=ZERO
                I=I+2
             END DO
 *
 *        Convert PERMUTATIONS
 *
-         I=1
-         DO WHILE ( I .LE. N )
+         I=3
+         DO WHILE ( I .LT. N )
             IF( IPIV(I) .GT. 0 ) THEN
                IP=IPIV(I)
-               IF (I .GT. 2) THEN
                DO 22 J= 1,I-1
-                 TEMP=A(IP,J)
-                 A(IP,J)=A(I+1,J)
-                 A(I+1,J)=TEMP
+                  TEMP=A(IP,J)
+                  A(IP,J)=A(I+1,J)
+                  A(I+1,J)=TEMP
  22            CONTINUE
-               ENDIF
             ELSEIF( IPIV(I) .LT. 0 ) THEN
-              IP=-IPIV(I)
-              IF (I .GT. 2) THEN
-              DO 23 J= 1,I-1
-				 TEMP=A(I,J)
-                 A(I,J)=A(I+1,J)
-                 A(I+1,J)=TEMP
+               IP=-IPIV(I)
+               DO 23 J= 1,I-1
+                  TEMP=A(I,J)
+                  A(I,J)=A(I+1,J)
+                  A(I+1,J)=TEMP
 
-                 TEMP=A(IP,J)
-                 A(IP,J)=A(I+1,J)
-                 A(I+1,J)=TEMP
+                  TEMP=A(IP,J)
+                  A(IP,J)=A(I+1,J)
+                  A(I+1,J)=TEMP
  23           CONTINUE
-              ENDIF
            ENDIF
            I=I+2
-        END DO
+         END DO
          ELSE
 *
 *      Revert A (A is lower)
@@ -311,7 +301,7 @@
 *        Revert PERMUTATIONS
 *
             I=N-1
-            DO WHILE ( I .GE. 3 )
+            DO WHILE ( I .GT. 2 )
                IF( IPIV(I) .GT. 0 ) THEN
                   IP=IPIV(I)
                   DO J= 1,I-1
@@ -321,15 +311,14 @@
                   END DO
                ELSEIF( IPIV(I) .LT. 0 ) THEN
                   IP=-IPIV(I)
-                  I=I-1
                   DO J= 1,I-1
-					 TEMP=A(I+1,J)
-                     A(I+1,J)=A(I,J)
-                     A(I,J)=TEMP
-
                      TEMP=A(I+1,J)
                      A(I+1,J)=A(IP,J)
                      A(IP,J)=TEMP
+
+                     TEMP=A(I+1,J)
+                     A(I+1,J)=A(I,J)
+                     A(I,J)=TEMP
                   END DO
                ENDIF
                I=I-2
@@ -338,10 +327,8 @@
 *        Revert VALUE
 *
             I=1
-            DO WHILE ( I .LE. N-1 )
-               A(I+1,I) = A(I,I)
-			   A(I,I) = ZERO
-			   A(I+1,I+1) = ZERO
+            DO WHILE ( I .LT. N )
+               A(I+1,I)=E(I)
                I=I+2
             END DO
          END IF
