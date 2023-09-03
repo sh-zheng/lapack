@@ -103,9 +103,9 @@ $(ALLBLAS): $(FRC)
 #  Comment out the next 4 definitions if you already have
 #  the Level 2 BLAS.
 #---------------------------------------------------------
-SBLAS2 = sgemv.o sgbmv.o ssymv.o ssbmv.o sspmv.o \
+SBLAS2 = sgemv.o sgbmv.o ssymv.o skymv.o ssbmv.o sspmv.o \
 	strmv.o stbmv.o stpmv.o strsv.o stbsv.o stpsv.o \
-	sger.o ssyr.o sspr.o ssyr2.o sspr2.o
+	sger.o ssyr.o sspr.o ssyr2.o skyr2.o sspr2.o
 $(SBLAS2): $(FRC)
 
 CBLAS2 = cgemv.o cgbmv.o chemv.o chbmv.o chpmv.o \
@@ -127,7 +127,8 @@ $(ZBLAS2): $(FRC)
 #  Comment out the next 4 definitions if you already have
 #  the Level 3 BLAS.
 #---------------------------------------------------------
-SBLAS3 = sgemm.o ssymm.o ssyrk.o ssyr2k.o strmm.o strsm.o
+SBLAS3 = sgemm.o ssymm.o ssyrk.o ssyr2k.o strmm.o strsm.o \
+	skymm.o skyr2k.o
 $(SBLAS3): $(FRC)
 
 CBLAS3 = cgemm.o csymm.o csyrk.o csyr2k.o ctrmm.o ctrsm.o \
