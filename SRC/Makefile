@@ -141,7 +141,7 @@ SLASRC = \
    slargv.o slarmm.o slarrv.o slartv.o \
    slarz.o  slarzb.o slarzt.o slaswp.o slasy2.o slasyf.o slakyf.o slasyf_rook.o \
    slasyf_rk.o \
-   slatbs.o slatdf.o slatps.o slatrd.o slatrs.o slatrs3.o slatrz.o \
+   slatbs.o slatdf.o slatps.o slatrd.o slatrdk.o slatrs.o slatrs3.o slatrz.o \
    slauu2.o slauum.o sopgtr.o sopmtr.o sorg2l.o sorg2r.o \
    sorgbr.o sorghr.o sorgl2.o sorglq.o sorgql.o sorgqr.o sorgr2.o \
    sorgrq.o sorgtr.o sorgtsqr.o sorgtsqr_row.o sorm2l.o sorm2r.o sorm22.o \
@@ -158,9 +158,9 @@ SLASRC = \
    sspgv.o  sspgvd.o sspgvx.o ssprfs.o sspsv.o  sspsvx.o ssptrd.o \
    ssptrf.o ssptri.o ssptrs.o sstegr.o sstein.o sstev.o  sstevd.o sstevr.o \
    sstevx.o \
-   ssycon.o ssyev.o  ssyevd.o ssyevr.o ssyevx.o ssygs2.o \
+   ssycon.o ssyev.o skyev.o ssyevd.o ssyevr.o ssyevx.o ssygs2.o \
    ssygst.o ssygv.o  ssygvd.o ssygvx.o ssyrfs.o ssysv.o skysv.o  ssysvx.o \
-   ssytd2.o ssytf2.o skytf2.o ssytrd.o ssytrf.o skytrf.o ssytri.o ssytri2.o ssytri2x.o \
+   ssytd2.o skytd2.o ssytf2.o skytf2.o ssytrd.o skytrd.o ssytrf.o skytrf.o ssytri.o ssytri2.o ssytri2x.o \
    ssyswapr.o ssytrs.o skytrs.o ssytrs2.o skytrs2.o \
    ssyconv.o skyconv.o ssyconvf.o ssyconvf_rook.o \
    ssytf2_rook.o ssytrf_rook.o ssytrs_rook.o \
