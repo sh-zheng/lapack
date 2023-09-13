@@ -96,7 +96,8 @@
 *>          If the matrix is not singular, the elements in W are always
 *>          organized in pairs, and the positive imaginary part of the
 *>          eigenvalues are stored in the first element in pairs, in
-*>          ascending order.
+*>          ascending order. The conjugate negative imaginary part are
+*>          stored in the second element in pairs.
 *>          If the matrix is singular, the 0 eigenvalues are stored
 *>          firstly in W, each takes one element, and the other
 *>          eigenvalues are stored in pairs, as mentioned above.
@@ -294,8 +295,11 @@
             J = J+1
          END IF
          DO 20 I = (N+1)/2+1, N
+            IF( W( I ) .LE. ZERO ) THEN
+               W( I ) = ZERO
+            END IF
             W( J ) = W( I )
-            W( J+1 ) = ZERO
+            W( J+1 ) = -W( J )
             J = J+2
    20    CONTINUE
       ELSE
@@ -341,11 +345,12 @@
          END IF
          DO 50 I = (N+1)/2+1, N
             IF( W( I ) .LE. ZERO ) THEN
+               W( I ) = ZERO
                RECZ = RECZ - 1
                RECP = RECP + 1
             END IF
             W( J ) = W( I )
-            W( J+1 ) = ZERO
+            W( J+1 ) = -W( J )
             J = J+2
    50    CONTINUE
 *
