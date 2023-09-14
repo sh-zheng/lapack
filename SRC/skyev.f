@@ -71,13 +71,14 @@
 *>          the lower triangular part of the matrix A.
 *>          On exit, if JOBZ = 'V', then if INFO = 0, A contains the
 *>          orthonormal eigenvectors of the matrix A.
-*>          Since the eigenvectors of skew-symmetric matrix are conjugate
+*>          The eigenvectors of skew-symmetric matrix are conjugate
 *>          complex (if the corresponding eigenvalues are conjugate pure
-*>          imaginary) or real (if the corresponding eigenvalues are 0),
-*>          A stores half of the complex (The other half are conjugates)
-*>          and all the real eigenvectors. The complex eigenvector needs
-*>          twice the storage than the real eigenvector. They are stored
-*>          in the same order as the eigenvalues in W.
+*>          imaginary) or real (if the corresponding eigenvalues are 0).
+*>          A stores half of the complex (corresponding to the eigenvalues
+*>          with positive imaginary part) and all the real eigenvectors.
+*>          The complex eigenvector needs twice the storage than the real
+*>          eigenvector. They are stored in the same position as the
+*>          eigenvalues in W.
 *>          If JOBZ = 'N', then on exit the strictly lower triangle
 *>          (if UPLO='L') or the upper triangle (if UPLO='U') of A,
 *>          is destroyed.
