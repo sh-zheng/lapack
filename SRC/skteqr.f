@@ -455,7 +455,7 @@
                VB = ONE
                VC = ONE
                VD = ZERO
-               E(I-1) = ZERO
+               E(I) = ZERO
             ELSE
                VA = -P/S
                VB = -VA + R*R/TEMP
@@ -499,7 +499,7 @@
             VB = ONE
             VC = ONE
             VD = ZERO
-            E(I-1) = ZERO
+            E(I) = ZERO
          ELSE
             VA = -P/S
             VB = -VA + R*R/TEMP
@@ -712,7 +712,7 @@
                VB = ONE
                VC = ONE
                VD = ZERO
-               E(I) = ZERO
+               E(I-1) = ZERO
             ELSE
                VA = -P/S
                VB = -VA + R*R/TEMP
@@ -756,7 +756,7 @@
             VB = ONE
             VC = ONE
             VD = ZERO
-            E(I) = ZERO
+            E(I-1) = ZERO
          ELSE
             VA = -P/S
             VB = -VA + R*R/TEMP
