@@ -69,16 +69,10 @@
 *>          upper triangular part of the matrix A.  If UPLO = 'L',
 *>          the strictly N-by-N lower triangular part of A contains
 *>          the lower triangular part of the matrix A.
-*>          On exit, if JOBZ = 'V', then if INFO = 0, A contains the
-*>          orthonormal eigenvectors of the matrix A.
-*>          The eigenvectors of skew-symmetric matrix are conjugate
-*>          complex (if the corresponding eigenvalues are conjugate pure
-*>          imaginary) or real (if the corresponding eigenvalues are 0).
-*>          A stores half of the complex (corresponding to the eigenvalues
-*>          with positive imaginary part) and all the real eigenvectors.
-*>          The complex eigenvector needs twice the storage than the real
-*>          eigenvector. They are stored in the same position as the
-*>          eigenvalues in W.
+*>          On exit, if JOBZ = 'V', then if INFO = 0, A is the
+*>          orthogonal matrix transforming the original skew-symmetric
+*>          matrix to block skew-symmetric form in W.
+*>          The eigenvectors of each blocks can be evaluated directly.
 *>          If JOBZ = 'N', then on exit the strictly lower triangle
 *>          (if UPLO='L') or the upper triangle (if UPLO='U') of A,
 *>          is destroyed.
@@ -93,15 +87,12 @@
 *> \param[out] W
 *> \verbatim
 *>          W is REAL array, dimension (N)
-*>          If INFO = 0, the eigenvalues.
-*>          If the matrix is not singular, the elements in W are always
-*>          organized in pairs, and the positive imaginary part of the
-*>          eigenvalues are stored in the first element in pairs, in
-*>          ascending order. The conjugate negative imaginary part are
-*>          stored in the second element in pairs.
-*>          If the matrix is singular, the 0 eigenvalues are stored
-*>          firstly in W, each takes one element, and the other
-*>          eigenvalues are stored in pairs, as mentioned above.
+*>          If INFO = 0, the (N-1) lower subdiagonal elements of the
+*>          iterated tridiagonal matrix at front, and zero at last.
+*>			The matrix consists of 2-by-2 skew-symmetric blocks, and zeros.
+*>          The values in W, which represent blocks, are always
+*>          positive, and sorted in absolute-descending order.
+*>          The eigenvalues of each blocks can be evaluated directly.
 *> \endverbatim
 *>
 *> \param[out] WORK
@@ -113,11 +104,9 @@
 *> \param[in] LWORK
 *> \verbatim
 *>          LWORK is INTEGER
-*>          The length of the array WORK.  If JOBZ = 'N',
-*>          LWORK >= max(1,3*N). For optimal efficiency, LWORK >= (NB+2)*N.
-*>          If JOBZ = 'V', LWORK >= max(1,N**2+3*N). For optimal efficiency,
-*>          LWORK >= N**2+(NB+2)*N. where NB is the blocksize for SKYTRD
-*>          returned by ILAENV.
+*>          The length of the array WORK.  LWORK >= max(1,3*N-1).
+*>          For optimal efficiency, LWORK >= (NB+2)*N,
+*>          where NB is the blocksize for SSYTRD returned by ILAENV.
 *>
 *>          If LWORK = -1, then a workspace query is assumed; the routine
 *>          only calculates the optimal size of the WORK array, returns
@@ -169,8 +158,7 @@
 *     .. Local Scalars ..
       LOGICAL            LOWER, LQUERY, WANTZ
       INTEGER            IINFO, IMAX, INDE, INDTAU, INDWRK, ISCALE,
-     $                   LLWORK, LWKOPT, NB, MADDI, LMWORK, I, J,
-     $                   RECZ, RECP, LTWORK, NBT, CRES
+     $                   LLWORK, LWKOPT, NB
       REAL               ANRM, BIGNUM, EPS, RMAX, RMIN, SAFMIN, SIGMA,
      $                   SMLNUM
 *     ..
@@ -182,7 +170,7 @@
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           SLASCL, SORGTR, SSCAL, SSTEQR, SSTERF, SKYTRD,
-     $                   SCOPY, SAXPY, SGEMM, XERBLA
+     $                   XERBLA
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          MAX, SQRT
@@ -206,16 +194,12 @@
          INFO = -5
       END IF
 *
-      MADDI = 0
-      IF( WANTZ )
-     $   MADDI = N**2
-
       IF( INFO.EQ.0 ) THEN
          NB = ILAENV( 1, 'SKYTRD', UPLO, N, -1, -1, -1 )
-         LWKOPT = MAX( 1, MADDI+( NB+2 )*N )
+         LWKOPT = MAX( 1, ( NB+2 )*N )
          WORK( 1 ) = LWKOPT
 *
-         IF( LWORK.LT.MAX( 1, MADDI+3*N ) .AND. .NOT.LQUERY )
+         IF( LWORK.LT.MAX( 1, 3*N-1 ) .AND. .NOT.LQUERY )
      $      INFO = -8
       END IF
 *
@@ -234,7 +218,7 @@
 *
       IF( N.EQ.1 ) THEN
          W( 1 ) = ZERO
-         WORK( 1 ) = 3
+         WORK( 1 ) = 2
          IF( WANTZ )
      $      A( 1, 1 ) = ONE
          RETURN
@@ -265,174 +249,20 @@
 *
 *     Call SKYTRD to reduce skew-symmetric matrix to tridiagonal form.
 *
-      LMWORK = 1
-      INDE = LMWORK + MADDI
+      INDE = 1
       INDTAU = INDE + N
       INDWRK = INDTAU + N
       LLWORK = LWORK - INDWRK + 1
-      LTWORK = LWORK - INDE + 1
-      NBT = LTWORK / (2*N)
-      CALL SKYTRD( UPLO, N, A, LDA, W, WORK( INDE ), WORK( INDTAU ),
+      CALL SKYTRD( UPLO, N, A, LDA, WORK( INDE ), W, WORK( INDTAU ),
      $             WORK( INDWRK ), LLWORK, IINFO )
 *
-*     For eigenvalues only, call SSTERF.  For eigenvectors, first call
-*     SORGTR to generate the orthogonal matrix, then call SSTEQR.
+*     Call SORGTR to generate the orthogonal matrix, then call SKTEQR.
 *
-      IF( .NOT.WANTZ ) THEN
-*
-*        Convert W into symmetric tridiagonal form, using the upper off-diagonal elements.
-*        
-         IF( LOWER ) THEN
-            CALL SSCAL( N-1, -ONE, WORK( INDE ), 1)
-         END IF
-*
-         CALL SSTERF( N, W, WORK( INDE ), INFO )
-*
-*        Restore W into skew-symmetric form.
-*   
-         J = 1
-         IF( MOD(N,2) .NE. 0 ) THEN
-            W( J ) = ZERO
-            J = J+1
-         END IF
-         DO 20 I = (N+1)/2+1, N
-            IF( W( I ) .LE. ZERO ) THEN
-               W( I ) = ZERO
-            END IF
-            W( J ) = W( I )
-            W( J+1 ) = -W( J )
-            J = J+2
-   20    CONTINUE
-      ELSE
-         CALL SORGTR( UPLO, N, A, LDA, WORK( INDTAU ), WORK( INDWRK ),
+	CALL SORGTR( UPLO, N, A, LDA, WORK( INDTAU ), WORK( INDWRK ),
      $                LLWORK, IINFO )
-*
-*        Rearrange A.
-*  
-         DO 30 I = 1, (N-1)/2+1
-            CALL SCOPY( N, A(1, 2*(I-1)+1), 1, WORK(LMWORK+(I-1)*N), 1 )
-            IF( MOD(I+1, 2).EQ.1 )
-     $         CALL SSCAL( N, -ONE, WORK(LMWORK+(I-1)*N), 1)
-   30    CONTINUE
-*
-         DO 40 I = (N-1)/2+2, N
-            CALL SCOPY( N, A(1, 2*(I-((N-1)/2+1))), 1,
-     $           WORK(LMWORK+(I-1)*N), 1 )
-            IF( MOD(I-((N-1)/2), 2).EQ.1 )
-     $         CALL SSCAL( N, -ONE, WORK(LMWORK+(I-1)*N), 1)
-   40    CONTINUE
-*
-         CALL SCOPY( N**2, WORK(LMWORK), 1, A, 1 )
-*
-*        Convert W into symmetric tridiagonal form, using the upper off-diagonal elements.
-*        
-         IF( LOWER ) THEN
-            CALL SSCAL( N-1, -ONE, WORK( INDE ), 1)
-         END IF
-*
-         CALL SSTEQR( 'I', N, W, WORK( INDE ), WORK( LMWORK ), LDA,
-     $               WORK( INDTAU ), INFO )
-*
-*        Restore W into skew-symmetric form and evaluate corresponding eigenvectors.
-*  
-         J = 1
-         RECZ = N/2+1
-         RECP = N/2+1
-         IF( MOD(N,2) .NE. 0 ) THEN
-            W( J ) = ZERO
-            J = J+1
-            RECZ = N/2+1
-            RECP = N/2+2
-         END IF
-         DO 50 I = (N+1)/2+1, N
-            IF( W( I ) .LE. ZERO ) THEN
-               W( I ) = ZERO
-               RECZ = RECZ - 1
-               RECP = RECP + 1
-            END IF
-            W( J ) = W( I )
-            W( J+1 ) = -W( J )
-            J = J+2
-   50    CONTINUE
-*
-         DO 60 I = RECZ, RECP-1
-            CALL SCOPY( (N-1)/2+1, WORK(LMWORK+(I-1)*N), 2,
-     $                 WORK(INDE), 1 )
-            CALL SCOPY( N-((N-1)/2+1), WORK(LMWORK+(I-1)*N+1), 2,
-     $                 WORK(INDE+(N-1)/2+1), 1 )
-            CALL SCOPY( N, WORK(INDE), 1, WORK(LMWORK+(I-RECZ)*N), 1 )
-   60    CONTINUE
-*
-         DO 70 I = RECP, N
-            CALL SCOPY( (N-1)/2+1, WORK(LMWORK+(I-1)*N), 2,
-     $                 WORK(INDE), 1 )
-            CALL SCOPY( N-((N-1)/2+1), WORK(LMWORK+(I-1)*N+1), 2,
-     $                 WORK(INDE+(N-1)/2+1), 1 )
-            CALL SCOPY( N, WORK(INDE), 1, WORK(LMWORK+(I-1)*N), 1 )
-   70    CONTINUE
-*
-         CRES = RECP-RECZ
-         J = 0
-         DO 80 I = 1, CRES/NBT
-            CALL SGEMM( 'N', 'N', N, NBT, (N-1)/2+1, ONE, A(1, 1),
-     $                 LDA, WORK(LMWORK+J*NBT*N), N,
-     $                 ZERO, WORK(INDE), N )
-            CALL SGEMM( 'N', 'N', N, NBT, N-((N-1)/2+1), ONE,
-     $                 A(1, (N-1)/2+2), LDA,
-     $                 WORK(LMWORK+J*NBT*N+(N-1)/2+1),
-     $                 N, ZERO, WORK(INDE+NBT*N), N )
-            CALL SCOPY( NBT*N, WORK(INDE), 1,
-     $                 WORK(LMWORK+J*NBT*N), 1 )
-            CALL SAXPY( NBT*N, ONE, WORK(INDE+NBT*N), 1,
-     $                 WORK(LMWORK+J*NBT*N), 1 )
-            J = J+1
-   80    CONTINUE
-         IF (CRES-J*NBT > 0) THEN
-            CALL SGEMM( 'N', 'N', N, CRES-J*NBT, (N-1)/2+1, ONE,
-     $                 A(1, 1), LDA, WORK(LMWORK+J*NBT*N),
-     $                 N, ZERO, WORK(INDE), N )
-            CALL SGEMM( 'N', 'N', N, CRES-J*NBT, N-((N-1)/2+1),
-     $                 ONE, A(1, (N-1)/2+2), LDA,
-     $                 WORK(LMWORK+J*NBT*N+(N-1)/2+1),
-     $                 N, ZERO, WORK(INDE+NBT*N), N )
-            CALL SCOPY( (CRES-J*NBT)*N, WORK(INDE), 1,
-     $                 WORK( LMWORK+J*NBT*N ), 1 )
-            CALL SAXPY( (CRES-J*NBT)*N, ONE, WORK(INDE+NBT*N),
-     $                 1, WORK( LMWORK+J*NBT*N ), 1 )
-         END IF
-*
-         CRES = MIN(RECZ-1, N-RECP+1)
-         J = 0
-         DO 90 I = 1, CRES/NBT
-            CALL SGEMM( 'N', 'N', N, NBT, (N-1)/2+1, ONE, A(1, 1),
-     $                 LDA, WORK(LMWORK+(RECP-1+J*NBT)*N),
-     $                 N, ZERO, WORK(INDE), N )
-            CALL SGEMM( 'N', 'N', N, NBT, N-((N-1)/2+1),
-     $                 ONE, A(1, (N-1)/2+2), LDA, 
-     $                 WORK(LMWORK+(RECP-1+J*NBT)*N+(N-1)/2+1),
-     $                 N, ZERO, WORK(INDE+NBT*N), N )
-            CALL SCOPY( NBT*N, WORK(INDE), 1,
-     $                 WORK(LMWORK+(N-2*CRES+J*2*NBT)*N), 2)
-            CALL SCOPY( NBT*N, WORK(INDE+NBT*N), 1,
-     $                 WORK(LMWORK+(N-2*CRES+J*2*NBT)*N+1), 2)
-            J = J+1
-   90    CONTINUE
-         IF (CRES-J*NBT > 0) THEN
-            CALL SGEMM( 'N', 'N', N, CRES-J*NBT, (N-1)/2+1, ONE,
-     $                 A(1, 1), LDA, WORK(LMWORK+(RECP-1+J*NBT)*N),
-     $                 N, ZERO, WORK(INDE), N )
-            CALL SGEMM( 'N', 'N', N, CRES-J*NBT, N-((N-1)/2+1),
-     $                 ONE, A(1, (N-1)/2+2), LDA,
-     $                 WORK(LMWORK+(RECP-1+J*NBT)*N+(N-1)/2+1),
-     $                 N, ZERO, WORK(INDE+NBT*N), N )
-            CALL SCOPY( (CRES-J*NBT)*N, WORK(INDE), 1,
-     $                 WORK(LMWORK+(N-2*CRES+J*2*NBT)*N), 2 )
-            CALL SCOPY( (CRES-J*NBT)*N, WORK(INDE+NBT*N), 1,
-     $                 WORK(LMWORK+(N-2*CRES+J*2*NBT)*N+1), 2 )
-         END IF
-*
-         CALL SCOPY( N**2, WORK(LMWORK), 1, A, 1 )
-      END IF
+      CALL SKTEQR( JOBZ, N, WORK( INDE ), W, A, LDA, WORK( INDTAU ),
+     $                INFO )
+      W(N) = ZERO
 *
 *     If matrix was scaled, then rescale eigenvalues appropriately.
 *
