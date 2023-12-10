@@ -80,7 +80,7 @@ SCLAUX = \
    sbdsqr.o sdisna.o slabad.o slacpy.o sladiv.o slae2.o  slaebz.o \
    slaed0.o slaed1.o slaed2.o slaed3.o slaed4.o slaed5.o slaed6.o \
    slaed7.o slaed8.o slaed9.o slaeda.o slaev2.o slagtf.o \
-   slagts.o slamrg.o slanst.o \
+   slagts.o slamrg.o slanst.o slankt.o \
    slapy2.o slapy3.o slarnv.o \
    slarra.o slarrb.o slarrc.o slarrd.o slarre.o slarrf.o slarrj.o \
    slarrk.o slarrr.o slaneg.o \
@@ -89,7 +89,7 @@ SCLAUX = \
    slasd7.o slasd8.o slasda.o slasdq.o slasdt.o \
    slaset.o slasq1.o slasq2.o slasq3.o slasq4.o slasq5.o slasq6.o \
    slasr.o  slasrt.o slassq.o slasv2.o spttrf.o sstebz.o sstedc.o \
-   ssteqr.o ssterf.o slaisnan.o sisnan.o \
+   ssteqr.o skteqr.o ssterf.o slaisnan.o sisnan.o \
    slartgp.o slartgs.o ../INSTALL/sroundup_lwork.o \
    ../INSTALL/second_$(TIMER).o
 
