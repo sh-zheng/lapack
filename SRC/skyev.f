@@ -72,7 +72,7 @@
 *>          On exit, if JOBZ = 'V', then if INFO = 0, A is the
 *>          orthogonal matrix transforming the original skew-symmetric
 *>          matrix to block skew-symmetric form in W.
-*>          The eigenvectors of each blocks can be evaluated directly.
+*>          The eigenvectors of the matrix can be evaluated directly.
 *>          If JOBZ = 'N', then on exit the strictly lower triangle
 *>          (if UPLO='L') or the upper triangle (if UPLO='U') of A,
 *>          is destroyed.
@@ -88,8 +88,8 @@
 *> \verbatim
 *>          W is REAL array, dimension (N)
 *>          If INFO = 0, the (N-1) lower subdiagonal elements of the
-*>          iterated tridiagonal matrix at front, and zero at last.
-*>			The matrix consists of 2-by-2 skew-symmetric blocks, and zeros.
+*>          block diagonal matrix at front, and zero at last.
+*>		The matrix consists of 2-by-2 skew-symmetric blocks, and zeros.
 *>          The values in W, which represent blocks, are always
 *>          positive, and sorted in absolute-descending order.
 *>          The eigenvalues of each blocks can be evaluated directly.
@@ -256,10 +256,13 @@
       CALL SKYTRD( UPLO, N, A, LDA, WORK( INDE ), W, WORK( INDTAU ),
      $             WORK( INDWRK ), LLWORK, IINFO )
 *
-*     Call SORGTR to generate the orthogonal matrix, then call SKTEQR.
+*     For eigenvalues only, call SKTEQR, For eigenvectors, first call
+*     SORGTR to generate the orthogonal matrix, then call SKTEQR.
 *
-	CALL SORGTR( UPLO, N, A, LDA, WORK( INDTAU ), WORK( INDWRK ),
+      IF( WANTZ ) THEN
+	   CALL SORGTR( UPLO, N, A, LDA, WORK( INDTAU ), WORK( INDWRK ),
      $                LLWORK, IINFO )
+      END IF
       CALL SKTEQR( JOBZ, N, WORK( INDE ), W, A, LDA, WORK( INDTAU ),
      $                INFO )
       W(N) = ZERO

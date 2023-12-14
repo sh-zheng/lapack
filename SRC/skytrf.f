@@ -43,7 +43,9 @@
 *>
 *> where U (or L) is a product of permutation and unit upper (lower)
 *> triangular matrices, and D is skew-symmetric and block diagonal with
-*> 1-by-1 and 2-by-2 diagonal blocks.  All 1-by-1 diagonal blocks are 0.
+*> 1-by-1 and 2-by-2 diagonal blocks.  All 2-by-2 diagonal blocks are
+*> nonsingular and all 1-by-1 diagonal blocks are 0. If N is odd, there
+*> is at least one 1-by-1 diagonal block.
 *>
 *> This is the blocked version of the algorithm, calling Level 3 BLAS.
 *> \endverbatim
@@ -77,10 +79,6 @@
 *>
 *>          On exit, the block diagonal matrix D and the multipliers used
 *>          to obtain the factor U or L (see below for further details).
-*>
-*>          The block diagonal matrix D is always 2-by-2 unless A is
-*>          singular. In this case the fore (if UPLO = 'U') or the
-*>          back (if UPLO = 'L') blocks are all 0.
 *> \endverbatim
 *>
 *> \param[in] LDA
@@ -92,21 +90,17 @@
 *> \param[out] IPIV
 *> \verbatim
 *>          IPIV is INTEGER array, dimension (N)
-*>          Details of the interchanges of D.
+*>          Details of the interchanges of D, as determined by SKYTRF.
 *>
-*>          The elements of array IPIV are combined in pair,
-*>          starting from the last (if UPLO = 'U') element,
-*>          or the first (if UPLO = 'L') element, and the second
-*>          (if UPLO = 'U') or the first (if UPLO = 'L') element in
-*>          the pair always keeps the value 0.  If the order of A
-*>          is odd, the first (if UPLO = 'U') or the last (if UPLO = 'L')
-*>          element of IPIV is 0, which is the only element not in pair.
-*>          
-*>          In the following, we only use the first (if UPLO = 'L') or
-*>          the second (if UPLO = 'U') element k in the pair value 
-*>          to refer to IPIV(k).
+*>          The elements of array IPIV are combined in pair, and the first 
+*>          (if UPLO = 'U') or the second (if UPLO = 'L') element in
+*>          the pair always keeps the value 0.  If N is odd, the first
+*>          (if UPLO = 'U') or the last (if UPLO = 'L') element of IPIV is
+*>          0, which is the only element not in pair. So we only use the
+*>          first (if UPLO = 'L') or the second (if UPLO = 'U') element in
+*>          the pair to determine the interchanges.
 *>
-*>          IPIV(k) as an INTEGER
+*>          If IPIV(k)
 *>          = 0: there was no interchange.
 *>          > 0: rows and columns k-1 and IPIV(k) were interchanged, if
 *>               UPLO = 'U', and rows and columns k+1 and IPIV(k) were
@@ -168,14 +162,14 @@
 *>  1 in steps of 2, and D is a block diagonal matrix with 2-by-2
 *>  diagonal blocks D(k).  P(k) is a permutation matrix as defined by
 *>  IPIV(k), and U(k) is a unit upper triangular matrix, such that if
-*>  the diagonal block D(k) is of order 2, then
+*>  the diagonal block D(k) is of order 2, namely s = 2, then
 *>
 *>             (   I    v    0   )   k-s
 *>     U(k) =  (   0    I    0   )   s
 *>             (   0    0    I   )   n-k
 *>                k-s   s   n-k
 *>
-*>  The upper triangle of D(k) overwrites A(k-1,k), and v overwrites
+*>  The strictly upper triangle of D(k) overwrites A(k-1,k), and v overwrites
 *>  A(1:k-2,k-1:k).
 *>
 *>  If UPLO = 'L', then A = L*D*L**T, where
@@ -184,18 +178,17 @@
 *>  n in steps of 2, and D is a block diagonal matrix with 2-by-2
 *>  diagonal blocks D(k).  P(k) is a permutation matrix as defined by
 *>  IPIV(k), and L(k) is a unit lower triangular matrix, such that if
-*>  the diagonal block D(k) is of order 2, then
+*>  the diagonal block D(k) is of order 2, namely s = 2, then
 *>
 *>             (   I    0     0   )  k-1
 *>     L(k) =  (   0    I     0   )  s
 *>             (   0    v     I   )  n-k-s+1
 *>                k-1   s  n-k-s+1
 *>
-*>  The lower triangle of D(k) overwrites A(k+1,k), and v overwrites
+*>  The strictly lower triangle of D(k) overwrites A(k+1,k), and v overwrites
 *>  A(k+2:n,k:k+1).
 *>
-*>  If n is odd or INFO > 0, A is singular. In this situation, D may have
-*>  1-by-1 diagonal blocks(the values are all 0).
+*>  Remind that if n is odd, A is always singular.
 *> \endverbatim
 *>
 *  =====================================================================

@@ -42,13 +42,14 @@
 *> matrices.
 *>
 *> The partial pivoting method is used to factor A as
-*>    A = U * D * (-U)**T,  if UPLO = 'U', or
-*>    A = L * D * (-L)**T,  if UPLO = 'L',
+*>    A = U * D * U**T,  if UPLO = 'U', or
+*>    A = L * D * L**T,  if UPLO = 'L',
 *> where U (or L) is a product of permutation and unit upper (lower)
 *> triangular matrices, and D is skew-symmetric and block diagonal with
-*> 1-by-1 and 2-by-2 diagonal blocks.  All 1-by-1 diagonal blocks are 0.
-*> The factored form of A is then used to solve the system of equations
-*> A * X = B.
+*> 1-by-1 and 2-by-2 diagonal blocks. All 2-by-2 diagonal blocks are
+*> nonsingular and all 1-by-1 diagonal blocks are 0. If N is odd, there
+*> is at least one 1-by-1 diagonal block. The factored form of A is then
+*> used to solve the system of equations A * X = B.
 *> \endverbatim
 *
 *  Arguments:
@@ -90,10 +91,6 @@
 *>          multipliers used to obtain the factor U or L from the
 *>          factorization A = U*D*U**T or A = L*D*L**T as computed by
 *>          SKYTRF.
-*>
-*>          The block diagonal matrix D is always 2-by-2 unless the order
-*>          of A is odd, what means the first (if UPLO = 'U') or
-*>          the last block (if UPLO = 'L') is just 0.
 *> \endverbatim
 *>
 *> \param[in] LDA
@@ -109,15 +106,13 @@
 *>
 *>          The elements of array IPIV are combined in pair, and the first 
 *>          (if UPLO = 'U') or the second (if UPLO = 'L') element in
-*>          the pair always keeps the value 0.  If the order of A
-*>          is odd, the first (if UPLO = 'U') or the last (if UPLO = 'L')
-*>          element of IPIV is 0, which is the only element not in pair.
-*>          
-*>          In the following, we only use the first (if UPLO = 'L') or
-*>          the second (if UPLO = 'U') element k in the pair value 
-*>          to refer to IPIV(k).
+*>          the pair always keeps the value 0.  If N is odd, the first
+*>          (if UPLO = 'U') or the last (if UPLO = 'L') element of IPIV is
+*>          0, which is the only element not in pair. So we only use the
+*>          first (if UPLO = 'L') or the second (if UPLO = 'U') element in
+*>          the pair to determine the interchanges.
 *>
-*>          IPIV(k) as an INTEGER
+*>          If IPIV(k)
 *>          = 0: there was no interchange.
 *>          > 0: rows and columns k-1 and IPIV(k) were interchanged, if
 *>               UPLO = 'U', and rows and columns k+1 and IPIV(k) were

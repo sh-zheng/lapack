@@ -36,7 +36,7 @@
 *>
 *> SKTEQR computes all eigenvalues and, optionally, eigenvectors of a
 *> skew-symmetric tridiagonal matrix using the implicit QL or QR method.
-*> The eigenvectors of a full skew-symmetric matrix can also be found if
+*> The eigenvectors of a full skew-symmetric matrix can be found if
 *> SKYTRD has been used to reduce this matrix to tridiagonal form.
 *> \endverbatim
 *
@@ -65,8 +65,7 @@
 *> \param[in,out] D
 *> \verbatim
 *>          D is REAL array, dimension (N)
-*>          On entry, arbitary values. D is not referenced.
-*>          On exit, D has been destroyed.
+*>          D is not referenced.
 *> \endverbatim
 *>
 *> \param[in,out] E
@@ -75,8 +74,8 @@
 *>          On entry, the (n-1) lower subdiagonal elements of the
 *>          tridiagonal matrix.
 *>          On exit, the (n-1) lower subdiagonal elements of the
-*>          iterated tridiagonal matrix. If INFO = 0, the matrix
-*>			   consists of 2-by-2 skew-symmetric blocks, and zeros.
+*>          block diagonal matrix. If INFO = 0, the matrix consists
+*>			   of 2-by-2 skew-symmetric blocks, and zeros.
 *>          The values in E, which represent blocks, are always
 *>          positive, and sorted in absolute-descending order.
 *>          The eigenvalues of each blocks can be evaluated directly.
@@ -89,8 +88,11 @@
 *>          matrix used in the reduction to tridiagonal form.
 *>          On exit, if INFO = 0, then if  COMPZ = 'V', Z is the
 *>          orthogonal matrix transforming the original skew-symmetric
-*>          matrix, and if COMPZ = 'I', Z is the orthogonal matrix
-*>          transforming the skew-symmetric tridiagonal matrix.
+*>          matrix to the block diagonal matrix, and if COMPZ = 'I',
+*>          Z is the orthogonal matrix transforming the skew-symmetric
+*>          tridiagonal matrix to the block diagonal matrix.
+*>          The eigenvectors of corresponding matrix can be evaluated
+*>          directly.
 *>          If COMPZ = 'N', then Z is not referenced.
 *> \endverbatim
 *>
@@ -841,7 +843,9 @@
                IF(E(K).EQ.ZERO) THEN
                   DO I = II, K-2
                      E(I) = E(I+1)
-                     CALL SSWAP( N, Z( 1, I ), 1, Z( 1, I+1 ), 1 )
+                     IF( ICOMPZ.GT.0 ) THEN
+                        CALL SSWAP( N, Z( 1, I ), 1, Z( 1, I+1 ), 1 )
+                     END IF
                   END DO
                   E(K-1) = ZERO
                   II = K+1
@@ -849,18 +853,26 @@
                ELSEIF(MOD(N,2).EQ.1 .AND. K.EQ.(N-1)) THEN
                   DO I = II, K-1
                      E(I) = E(I+1)
-                     CALL SSWAP( N, Z( 1, I ), 1, Z( 1, I+1 ), 1 )
+                     IF( ICOMPZ.GT.0 ) THEN
+                        CALL SSWAP( N, Z( 1, I ), 1, Z( 1, I+1 ), 1 )
+                     END IF
                   END DO
-                  CALL SSWAP( N, Z( 1, K ), 1, Z( 1, K+1 ), 1 )
+                  IF( ICOMPZ.GT.0 ) THEN
+                     CALL SSWAP( N, Z( 1, K ), 1, Z( 1, K+1 ), 1 )
+                  END IF
                   E(K) = ZERO
                   II = K+1
                   EXIT
                ELSEIF(MOD(N,2).EQ.0 .AND. K.EQ.(N-2)) THEN
                   DO I = II, K-1
                      E(I) = E(I+1)
-                     CALL SSWAP( N, Z( 1, I ), 1, Z( 1, I+1 ), 1 )
+                     IF( ICOMPZ.GT.0 ) THEN
+                        CALL SSWAP( N, Z( 1, I ), 1, Z( 1, I+1 ), 1 )
+                     END IF
                   END DO
-                  CALL SSWAP( N, Z( 1, K ), 1, Z( 1, K+1 ), 1 )
+                  IF( ICOMPZ.GT.0 ) THEN
+                     CALL SSWAP( N, Z( 1, K ), 1, Z( 1, K+1 ), 1 )
+                  END IF
                   E(K) = ZERO
                   II = K+1
                   EXIT
@@ -891,7 +903,9 @@
          END IF
          IF(E(II).LT.ZERO) THEN
             E(II) = -E(II)
-            CALL SSWAP( N, Z( 1, II ), 1, Z( 1, II+1 ), 1 )
+            IF( ICOMPZ.GT.0 ) THEN
+               CALL SSWAP( N, Z( 1, II ), 1, Z( 1, II+1 ), 1 )
+            END IF
          END IF
   180 CONTINUE
 *

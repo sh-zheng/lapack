@@ -35,19 +35,18 @@
 *>
 *> \verbatim
 *>
-*> SLASYF computes a partial factorization of a real skew-symmetric matrix A
+*> SLAKYF computes a partial factorization of a real skew-symmetric matrix A
 *> using the Bunch partial pivoting method. The partial factorization has
 *> the form:
 *>
 *> A  =  ( I  U12 ) ( A11  0  ) (  I       0       )  if UPLO = 'U', or:
-*>       ( 0  U22 ) (  0   D  ) ( -U12**T  -U22**T )
+*>       ( 0  U22 ) (  0   D  ) (  U12**T  U22**T )
 *>
-*> A  =  ( L11  0 ) (  D   0  ) ( -L11**T  -L21**T )  if UPLO = 'L'
+*> A  =  ( L11  0 ) (  D   0  ) (  L11**T  L21**T )  if UPLO = 'L'
 *>       ( L21  I ) (  0  A22 ) (  0       I       )
 *>
 *> where the order of D is at most NB. The actual order is returned in the
-*> argument KB, and is either NB (if NB is even) or NB-1 (if NB is odd),
-*> or N if N <= NB.
+*> argument KB, and is either NB or NB-1, or N if N <= NB.
 *>
 *> SLAKYF is an auxiliary routine called by SKYTRF. It uses blocked code
 *> (calling Level 3 BLAS) to update the submatrix A11 (if UPLO = 'U') or
@@ -84,8 +83,7 @@
 *> \verbatim
 *>          KB is INTEGER
 *>          The number of columns of A that were actually factored.
-*>          KB is either NB (if NB is even) or NB-1 (if NB is odd),
-*>          or N if N <= NB.
+*>          KB is either NB-1 or NB, or N if N <= NB.
 *> \endverbatim
 *>
 *> \param[in,out] A
@@ -110,33 +108,37 @@
 *> \param[out] IPIV
 *> \verbatim
 *>          IPIV is INTEGER array, dimension (N)
-*>          Details of the interchanges.
+*>          Details of the interchanges and the block structure of D.
 *>
-*>          If UPLO = 'U', only the last KB elements of IPIV are set,
-*>          and If UPLO = 'U', only the last KB elements of IPIV are set.
+*>          If UPLO = 'U':
+*>             Only the last KB elements of IPIV are set.
 *>
-*>          The elements of array IPIV are combined in pair,
-*>          starting from the last (if UPLO = 'U') element, or
-*>          the first (if UPLO = 'L') element, and the second
-*>          (if UPLO = 'U') or the first (if UPLO = 'L') element in
-*>          the pair always keeps the value 0.  If the order of A
-*>          is odd, the first (if UPLO = 'U') or the last (if UPLO = 'L')
-*>          element of IPIV is 0, which is the only element not in pair.
-*>          
-*>          In the following, we only use the second (if UPLO = 'U') or
-*>          the first (if UPLO = 'L') element k in the pair value 
-*>          to refer to IPIV(k).
+*>             The elements of array IPIV are combined in pair, and the first 
+*>             element in the pair always keeps the value 0.  If N is odd, the
+*>             first element of IPIV is 0, which is the only element not in pair.
+*>             So we only use the second element in the pair to determine the
+*>             interchanges.
 *>
-*>          IPIV(k) as an INTEGER
-*>          = 0: there was no interchange.
-*>          > 0: rows and columns k-1 and IPIV(k) were interchanged, if
-*>               UPLO = 'U', and rows and columns k+1 and IPIV(k) were
-*>               interchanged, if UPLO = 'L'.
-*>          < 0: rows and columns k and k-1 were interchanged,
-*>               then rows and columns k-1 and -IPIV(k) were interchanged, if
-*>               UPLO = 'U', and rows and columns k and k+1 were interchanged,
-*>               then rows and columns k+1 and -IPIV(k) were interchanged, if
-*>               UPLO = 'L'.
+*>             If IPIV(k)
+*>             = 0: there was no interchange.
+*>             > 0: rows and columns k-1 and IPIV(k) were interchanged.
+*>             < 0: rows and columns k and k-1 were interchanged,
+*>                  then rows and columns k-1 and -IPIV(k) were interchanged.
+*>
+*>          If UPLO = 'L':
+*>             Only the first KB elements of IPIV are set.
+*>
+*>             The elements of array IPIV are combined in pair, and the second
+*>             element in the pair always keeps the value 0.  If N is odd, the
+*>             last element of IPIV is 0, which is the only element not in pair.
+*>             So we only use the first element in the pair to determine the
+*>             interchanges.
+*>
+*>             If IPIV(k)
+*>             = 0: there was no interchange.
+*>             > 0: rows and columns k+1 and IPIV(k) were interchanged。
+*>             < 0: rows and columns k and k+1 were interchanged,
+*>                  then rows and columns k+1 and -IPIV(k) were interchanged.
 *> \endverbatim
 *>
 *> \param[out] W
@@ -179,6 +181,7 @@
 *>  November 2013,  Igor Kozachenko,
 *>                  Computer Science Division,
 *>                  University of California, Berkeley
+*>  December 2023,  Shuo Zheng
 *> \endverbatim
 *
 *  =====================================================================

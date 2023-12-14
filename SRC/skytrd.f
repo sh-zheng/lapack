@@ -66,15 +66,14 @@
 *>          strictly N-by-N lower triangular part of A contains the lower
 *>          triangular part of the matrix A, and the leading upper
 *>          triangular part of A is not referenced.
-*>          On exit, if UPLO = 'U', the diagonal and first superdiagonal
-*>          of A are overwritten by the corresponding elements of the
-*>          tridiagonal matrix T, and the elements above the first
-*>          superdiagonal, with the array TAU, represent the orthogonal
-*>          matrix Q as a product of elementary reflectors; if UPLO
-*>          = 'L', the diagonal and first subdiagonal of A are over-
-*>          written by the corresponding elements of the tridiagonal
-*>          matrix T, and the elements below the first subdiagonal, with
+*>          On exit, if UPLO = 'U', the first superdiagonal of A are
+*>          overwritten by the corresponding elements of the tridiagonal
+*>          matrix T, and the elements above the first superdiagonal, with
 *>          the array TAU, represent the orthogonal matrix Q as a product
+*>          of elementary reflectors; if UPLO = 'L', the first subdiagonal
+*>          of A are overwritten by the corresponding elements of the
+*>          tridiagonal matrix T, and the elements below the first subdiagonal,
+*>          with the array TAU, represent the orthogonal matrix Q as a product        
 *>          of elementary reflectors. See Further Details.
 *> \endverbatim
 *>

@@ -59,12 +59,12 @@
 *> \param[in,out] A
 *> \verbatim
 *>          A is REAL array, dimension (LDA,N)
-*>          On entry, the skew-symmetric matrix A.  If UPLO = 'U', the leading
+*>          On entry, the skew-symmetric matrix A.  If UPLO = 'U', the strictly
 *>          n-by-n upper triangular part of A contains the upper
-*>          triangular part of the matrix A, and the strictly lower
+*>          triangular part of the matrix A, and the leading lower
 *>          triangular part of A is not referenced.  If UPLO = 'L', the
-*>          leading n-by-n lower triangular part of A contains the lower
-*>          triangular part of the matrix A, and the strictly upper
+*>          strictly n-by-n lower triangular part of A contains the lower
+*>          triangular part of the matrix A, and the leading upper
 *>          triangular part of A is not referenced.
 *>          On exit, if UPLO = 'U', the diagonal and first superdiagonal
 *>          of A are overwritten by the corresponding elements of the
@@ -257,7 +257,7 @@
                CALL SAXPY( I, ALPHA, A( 1, I+1 ), 1, TAU, 1 )
 *
 *              Apply the transformation as a rank-2 update:
-*                 A := A - v * w**T - w * v**T
+*                 A := A - v * w**T + w * v**T
 *
                CALL SKYR2( UPLO, I, -ONE, A( 1, I+1 ), 1, TAU, 1, A,
      $                     LDA )
@@ -299,7 +299,7 @@
                CALL SAXPY( N-I, ALPHA, A( I+1, I ), 1, TAU( I ), 1 )
 *
 *              Apply the transformation as a rank-2 update:
-*                 A := A - v * w**T - w * v**T
+*                 A := A - v * w**T + w * v**T
 *
                CALL SKYR2( UPLO, N-I, -ONE, A( I+1, I ), 1, TAU( I ), 1,
      $                     A( I+1, I+1 ), LDA )
