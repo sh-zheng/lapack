@@ -263,6 +263,8 @@
 	   CALL SORGTR( UPLO, N, A, LDA, WORK( INDTAU ), WORK( INDWRK ),
      $                LLWORK, IINFO )
       END IF
+      IF(.NOT.LOWER)
+     $   CALL SSCAL(N-1, -ONE, W, 1)
       CALL SKTEQR( JOBZ, N, WORK( INDE ), W, A, LDA, WORK( INDTAU ),
      $                INFO )
       W(N) = ZERO
