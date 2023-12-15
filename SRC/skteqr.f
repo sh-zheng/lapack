@@ -35,7 +35,8 @@
 *> \verbatim
 *>
 *> SKTEQR computes all eigenvalues and, optionally, eigenvectors of a
-*> skew-symmetric tridiagonal matrix using the implicit QL or QR method.
+*> skew-symmetric tridiagonal matrix using the implicit double shift
+*> QL or QR method.
 *> The eigenvectors of a full skew-symmetric matrix can be found if
 *> SKYTRD has been used to reduce this matrix to tridiagonal form.
 *> \endverbatim
