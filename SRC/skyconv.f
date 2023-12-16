@@ -107,7 +107,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup realSYcomputational
+*> \ingroup realKYcomputational
 *
 *  =====================================================================
       SUBROUTINE SKYCONV( UPLO, WAY, N, A, LDA, IPIV, E, INFO )
