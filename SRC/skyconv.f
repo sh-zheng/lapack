@@ -336,6 +336,6 @@
 
       RETURN
 *
-*     End of SSYCONV
+*     End of SKYCONV
 *
       END
