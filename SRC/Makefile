@@ -99,7 +99,7 @@ DZLAUX = \
    dbdsqr.o ddisna.o dlabad.o dlacpy.o dladiv.o dlae2.o  dlaebz.o \
    dlaed0.o dlaed1.o dlaed2.o dlaed3.o dlaed4.o dlaed5.o dlaed6.o \
    dlaed7.o dlaed8.o dlaed9.o dlaeda.o dlaev2.o dlagtf.o \
-   dlagts.o dlamrg.o dlanst.o \
+   dlagts.o dlamrg.o dlanst.o dlankt.o \
    dlapy2.o dlapy3.o dlarnv.o \
    dlarra.o dlarrb.o dlarrc.o dlarrd.o dlarre.o dlarrf.o dlarrj.o \
    dlarrk.o dlarrr.o dlaneg.o \
@@ -108,7 +108,7 @@ DZLAUX = \
    dlasd7.o dlasd8.o dlasda.o dlasdq.o dlasdt.o \
    dlaset.o dlasq1.o dlasq2.o dlasq3.o dlasq4.o dlasq5.o dlasq6.o \
    dlasr.o  dlasrt.o dlassq.o dlasv2.o dpttrf.o dstebz.o dstedc.o \
-   dsteqr.o dsterf.o dlaisnan.o disnan.o \
+   dsteqr.o dkteqr.o dsterf.o dlaisnan.o disnan.o \
    dlartgp.o dlartgs.o ../INSTALL/droundup_lwork.o \
    ../INSTALL/dlamch.o ../INSTALL/dsecnd_$(TIMER).o
 
@@ -342,8 +342,8 @@ DLASRC = \
    dlarf.o  dlarfb.o dlarfb_gett.o dlarfg.o dlarfgp.o dlarft.o dlarfx.o dlarfy.o \
    dlargv.o dlarmm.o dlarrv.o dlartv.o \
    dlarz.o  dlarzb.o dlarzt.o dlaswp.o dlasy2.o \
-   dlasyf.o dlasyf_rook.o dlasyf_rk.o \
-   dlatbs.o dlatdf.o dlatps.o dlatrd.o dlatrs.o dlatrs3.o dlatrz.o dlauu2.o \
+   dlasyf.o dlakyf.o dlasyf_rook.o dlasyf_rk.o \
+   dlatbs.o dlatdf.o dlatps.o dlatrd.o dlatrdk.o dlatrs.o dlatrs3.o dlatrz.o dlauu2.o \
    dlauum.o dopgtr.o dopmtr.o dorg2l.o dorg2r.o \
    dorgbr.o dorghr.o dorgl2.o dorglq.o dorgql.o dorgqr.o dorgr2.o \
    dorgrq.o dorgtr.o dorgtsqr.o dorgtsqr_row.o dorm2l.o dorm2r.o dorm22.o \
@@ -360,12 +360,12 @@ DLASRC = \
    dspgv.o  dspgvd.o dspgvx.o dsprfs.o dspsv.o  dspsvx.o dsptrd.o \
    dsptrf.o dsptri.o dsptrs.o dstegr.o dstein.o dstev.o  dstevd.o dstevr.o \
    dstevx.o \
-   dsycon.o dsyev.o  dsyevd.o dsyevr.o \
+   dsycon.o dsyev.o dkyev.o dsyevd.o dsyevr.o \
    dsyevx.o dsygs2.o dsygst.o dsygv.o  dsygvd.o dsygvx.o dsyrfs.o \
-   dsysv.o  dsysvx.o \
-   dsytd2.o dsytf2.o dsytrd.o dsytrf.o dsytri.o dsytri2.o dsytri2x.o \
-   dsyswapr.o dsytrs.o dsytrs2.o \
-   dsyconv.o dsyconvf.o dsyconvf_rook.o \
+   dsysv.o dkysv.o dsysvx.o \
+   dsytd2.o dkytd2.o dsytf2.o dkytf2.o dsytrd.o dkytrd.o dsytrf.o dkytrf.o dsytri.o dsytri2.o dsytri2x.o \
+   dsyswapr.o dsytrs.o dkytrs.o dsytrs2.o dkytrs2.o \
+   dsyconv.o dkyconv.o dsyconvf.o dsyconvf_rook.o \
    dsytf2_rook.o dsytrf_rook.o dsytrs_rook.o \
    dsytri_rook.o dsycon_rook.o dsysv_rook.o \
    dsytf2_rk.o dsytrf_rk.o dsytrs_3.o \

@@ -113,9 +113,9 @@ CBLAS2 = cgemv.o cgbmv.o chemv.o chbmv.o chpmv.o \
 	cgerc.o cgeru.o cher.o chpr.o cher2.o chpr2.o
 $(CBLAS2): $(FRC)
 
-DBLAS2 = dgemv.o dgbmv.o dsymv.o dsbmv.o dspmv.o \
+DBLAS2 = dgemv.o dgbmv.o dsymv.o dkymv.o dsbmv.o dspmv.o \
 	dtrmv.o dtbmv.o dtpmv.o dtrsv.o dtbsv.o dtpsv.o \
-	dger.o dsyr.o dspr.o dsyr2.o dspr2.o
+	dger.o dsyr.o dspr.o dsyr2.o dkyr2.o dspr2.o
 $(DBLAS2): $(FRC)
 
 ZBLAS2 = zgemv.o zgbmv.o zhemv.o zhbmv.o zhpmv.o \
@@ -135,7 +135,8 @@ CBLAS3 = cgemm.o csymm.o csyrk.o csyr2k.o ctrmm.o ctrsm.o \
 	chemm.o cherk.o cher2k.o
 $(CBLAS3): $(FRC)
 
-DBLAS3 = dgemm.o dsymm.o dsyrk.o dsyr2k.o dtrmm.o dtrsm.o
+DBLAS3 = dgemm.o dsymm.o dsyrk.o dsyr2k.o dtrmm.o dtrsm.o \
+	dkymm.o dkyr2k.o
 $(DBLAS3): $(FRC)
 
 ZBLAS3 = zgemm.o zsymm.o zsyrk.o zsyr2k.o ztrmm.o ztrsm.o \
