@@ -219,7 +219,7 @@
       EXTERNAL           LSAME, ILAENV
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           SLASYF, SSYTF2, XERBLA
+      EXTERNAL           SLAKYF, SKYTF2, XERBLA
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          MAX
