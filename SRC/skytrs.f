@@ -520,6 +520,6 @@
 *
       RETURN
 *
-*     End of SSYTRS
+*     End of SKYTRS
 *
       END
