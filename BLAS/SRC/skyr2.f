@@ -274,8 +274,8 @@
                   IF ((X(JX).NE.ZERO) .OR. (Y(JY).NE.ZERO)) THEN
                       TEMP1 = ALPHA*Y(JY)
                       TEMP2 = ALPHA*X(JX)
-                      IX = JX
-                      IY = JY
+                      IX = JX + INCX
+                      IY = JY + INCY
                       DO 70 I = J+1,N
                           A(I,J) = A(I,J) - X(IX)*TEMP1 + Y(IY)*TEMP2
                           IX = IX + INCX
