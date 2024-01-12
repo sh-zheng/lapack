@@ -132,7 +132,7 @@ SLASRC = \
    slaein.o slaexc.o slag2.o  slags2.o slagtm.o slagv2.o slahqr.o \
    slahr2.o slaic1.o slaln2.o slals0.o slalsa.o slalsd.o \
    slangb.o slange.o slangt.o slanhs.o slansb.o slansp.o \
-   slansy.o slantb.o slantp.o slantr.o slanv2.o \
+   slansy.o slanky.o slantb.o slantp.o slantr.o slanv2.o \
    slapll.o slapmt.o \
    slaqgb.o slaqge.o slaqp2.o slaqps.o slaqsb.o slaqsp.o slaqsy.o \
    slaqr0.o slaqr1.o slaqr2.o slaqr3.o slaqr4.o slaqr5.o \
@@ -334,7 +334,7 @@ DLASRC = \
    dlaein.o dlaexc.o dlag2.o  dlags2.o dlagtm.o dlagv2.o dlahqr.o \
    dlahr2.o dlaic1.o dlaln2.o dlals0.o dlalsa.o dlalsd.o \
    dlangb.o dlange.o dlangt.o dlanhs.o dlansb.o dlansp.o \
-   dlansy.o dlantb.o dlantp.o dlantr.o dlanv2.o \
+   dlansy.o dlanky.o dlantb.o dlantp.o dlantr.o dlanv2.o \
    dlapll.o dlapmt.o \
    dlaqgb.o dlaqge.o dlaqp2.o dlaqps.o dlaqsb.o dlaqsp.o dlaqsy.o \
    dlaqr0.o dlaqr1.o dlaqr2.o dlaqr3.o dlaqr4.o dlaqr5.o \
