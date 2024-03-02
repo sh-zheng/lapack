@@ -282,9 +282,9 @@
          K = N
    10    CONTINUE
 *
-*        If K < 2, exit from loop
+*        If K < 1, exit from loop
 *
-         IF( K.LT.2 )
+         IF( K.LT.1 )
      $      GO TO 40
 *
          IF( K.GT.NB ) THEN
