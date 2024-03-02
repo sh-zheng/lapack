@@ -292,10 +292,17 @@
 *        row 1 to K-2 column K-1.
 *        COLMAX1 and COLMAX2 are their absolute values.
 *
-         IMAX1 = IDAMAX( K-2, W( 1, KW ), 1 )
-         COLMAX1 = ABS( W( IMAX1, KW ) )
-         IMAX2 = IDAMAX( K-2, W( 1, KW-1 ), 1 )
-         COLMAX2 = ABS( W( IMAX2, KW-1 ) )
+         IF(K.GT.2) THEN
+            IMAX1 = ISAMAX( K-2, W( 1, KW ), 1 )
+            COLMAX1 = ABS( W( IMAX1, KW ) )
+            IMAX2 = ISAMAX( K-2, W( 1, KW-1 ), 1 )
+            COLMAX2 = ABS( W( IMAX2, KW-1 ) )
+         ELSE
+            IMAX1 = 0
+            COLMAX1 = ZERO
+            IMAX2 = 0
+            COLMAX2 = ZERO
+         ENDIF
 *
          IF( MAX(MAX( ABSAKP1K, COLMAX1 ), COLMAX2).EQ.ZERO ) THEN
 *
@@ -596,10 +603,17 @@
 *        row K+2 to N, column K+1.
 *        COLMAX1 and COLMAX2 are their absolute values.
 *
-         IMAX1 = K+1 + IDAMAX( N-K-1, W( K+2, K ), 1 )
-         COLMAX1 = ABS( W( IMAX1, K ) )
-         IMAX2 = K+1 + IDAMAX( N-K-1, W( K+2, K+1 ), 1 )
-         COLMAX2 = ABS( W( IMAX2, K+1 ) )
+         IF(K.LT.N-1) THEN
+            IMAX1 = K+1 + ISAMAX( N-K-1, W( K+2, K ), 1 )
+            COLMAX1 = ABS( W( IMAX1, K ) )
+            IMAX2 = K+1 + ISAMAX( N-K-1, W( K+2, K+1 ), 1 )
+            COLMAX2 = ABS( W( IMAX2, K+1 ) )
+         ELSE
+            IMAX1 = 0
+            COLMAX1 = ZERO
+            IMAX2 = 0
+            COLMAX2 = ZERO
+         ENDIF
 *
          IF( MAX(MAX( ABSAKP1K, COLMAX1 ), COLMAX2).EQ.ZERO ) THEN
 *
