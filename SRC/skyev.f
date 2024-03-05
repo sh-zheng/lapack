@@ -165,8 +165,8 @@
 *     .. External Functions ..
       LOGICAL            LSAME
       INTEGER            ILAENV
-      REAL               SLAMCH, SLANSY
-      EXTERNAL           ILAENV, LSAME, SLAMCH, SLANSY
+      REAL               SLAMCH, SLANKY
+      EXTERNAL           ILAENV, LSAME, SLAMCH, SLANKY
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           SLASCL, SORGTR, SSCAL, SSTEQR, SSTERF, SKYTRD,
@@ -235,7 +235,7 @@
 *
 *     Scale matrix to allowable range, if necessary.
 *
-      ANRM = SLANSY( 'M', UPLO, N, A, LDA, WORK )
+      ANRM = SLANKY( 'M', UPLO, N, A, LDA, WORK )
       ISCALE = 0
       IF( ANRM.GT.ZERO .AND. ANRM.LT.RMIN ) THEN
          ISCALE = 1

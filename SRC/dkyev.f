@@ -165,8 +165,8 @@
 *     .. External Functions ..
       LOGICAL            LSAME
       INTEGER            ILAENV
-      DOUBLE PRECISION   DLAMCH, DLANSY
-      EXTERNAL           ILAENV, LSAME, DLAMCH, DLANSY
+      DOUBLE PRECISION   DLAMCH, DLANKY
+      EXTERNAL           ILAENV, LSAME, DLAMCH, DLANKY
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           DLASCL, DORGTR, DSCAL, DSTEQR, DSTERF, DKYTRD,
@@ -235,7 +235,7 @@
 *
 *     Scale matrix to allowable range, if necessary.
 *
-      ANRM = DLANSY( 'M', UPLO, N, A, LDA, WORK )
+      ANRM = DLANKY( 'M', UPLO, N, A, LDA, WORK )
       ISCALE = 0
       IF( ANRM.GT.ZERO .AND. ANRM.LT.RMIN ) THEN
          ISCALE = 1

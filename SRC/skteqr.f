@@ -166,8 +166,8 @@
 *     ..
 *     .. External Functions ..
       LOGICAL            LSAME
-      REAL               SLAMCH, SLANST, SLAPY2
-      EXTERNAL           LSAME, SLAMCH, SLANST, SLAPY2
+      REAL               SLAMCH, SLAPY2
+      EXTERNAL           LSAME, SLAMCH, SLAPY2
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           SLAE2, SLAEV2, SLARTG, SLASCL, SLASET,

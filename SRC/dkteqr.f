@@ -166,8 +166,8 @@
 *     ..
 *     .. External Functions ..
       LOGICAL            LSAME
-      DOUBLE PRECISION   DLAMCH, DLANST, DLAPY2
-      EXTERNAL           LSAME, DLAMCH, DLANST, DLAPY2
+      DOUBLE PRECISION   DLAMCH, DLAPY2
+      EXTERNAL           LSAME, DLAMCH, DLAPY2
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           DLAE2, DLAEV2, DLARTG, DLASCL, DLASET,
