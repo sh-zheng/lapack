@@ -351,8 +351,7 @@
             R = E(M-1)*E(M-2)
             S = SIGN(DLAPY2( P, R ), P)
 *
-            TEMP = S*(P+S)
-            IF(S.EQ.ZERO .OR. TEMP.EQ.ZERO) THEN
+            IF(S*(P+S).EQ.ZERO) THEN
                VA = -ONE
                VB = ONE
                VC = ONE
@@ -360,7 +359,7 @@
                E(M-1) = ZERO
             ELSE
                VA = -P/S
-               VB = -VA + R*R/TEMP
+               VB = -VA + (R/S)*(R/(P+S))
                VC = -VA
                VD = -R/S
             END IF
@@ -407,8 +406,7 @@
          R = E(M-1)*E(M-2)
          S = SIGN(DLAPY2( P, R ), P)
 *
-         TEMP = S*(P+S)
-         IF(S.EQ.ZERO .OR. TEMP.EQ.ZERO) THEN
+         IF(S*(P+S).EQ.ZERO) THEN
             VA = -ONE
             VB = ONE
             VC = ONE
@@ -416,7 +414,7 @@
             E(M-1) = ZERO
          ELSE
             VA = -P/S
-            VB = -VA + R*R/TEMP
+            VB = -VA + (R/S)*(R/(P+S))
             VC = -VA
             VD = -R/S
          END IF
@@ -452,8 +450,7 @@
             S = SIGN(DLAPY2( P, R ), P)
             E(I) = -S
 *
-            TEMP = S*(P+S)
-            IF(S.EQ.ZERO .OR. TEMP.EQ.ZERO) THEN
+            IF(S*(P+S).EQ.ZERO) THEN
                VA = -ONE
                VB = ONE
                VC = ONE
@@ -461,7 +458,7 @@
                E(I) = ZERO
             ELSE
                VA = -P/S
-               VB = -VA + R*R/TEMP
+               VB = -VA + (R/S)*(R/(P+S))
                VC = -VA
                VD = -R/S
             END IF
@@ -496,8 +493,7 @@
          S = SIGN(DLAPY2( P, R ), P)
          E(I) = -S
 *
-         TEMP = S*(P+S)
-         IF(S.EQ.ZERO .OR. TEMP.EQ.ZERO) THEN
+         IF(S*(P+S).EQ.ZERO) THEN
             VA = -ONE
             VB = ONE
             VC = ONE
@@ -505,7 +501,7 @@
             E(I) = ZERO
          ELSE
             VA = -P/S
-            VB = -VA + R*R/TEMP
+            VB = -VA + (R/S)*(R/(P+S))
             VC = -VA
             VD = -R/S
          END IF
@@ -608,8 +604,7 @@
             R = E(M)*E(M+1)
             S = SIGN(DLAPY2( P, R ), P)
 *
-            TEMP = S*(P+S)
-            IF(S.EQ.ZERO .OR. TEMP.EQ.ZERO) THEN
+            IF(S*(P+S).EQ.ZERO) THEN
                VA = -ONE
                VB = ONE
                VC = ONE
@@ -617,7 +612,7 @@
                E(M) = ZERO
             ELSE
                VA = -P/S
-               VB = -VA + R*R/TEMP
+               VB = -VA + (R/S)*(R/(P+S))
                VC = -VA
                VD = -R/S
             END IF
@@ -664,8 +659,7 @@
          R = E(M)*E(M+1)
          S = SIGN(DLAPY2( P, R ), P)
 *
-         TEMP = S*(P+S)
-         IF(S.EQ.ZERO .OR. TEMP.EQ.ZERO) THEN
+         IF(S*(P+S).EQ.ZERO) THEN
             VA = -ONE
             VB = ONE
             VC = ONE
@@ -673,7 +667,7 @@
             E(M) = ZERO
          ELSE
             VA = -P/S
-            VB = -VA + R*R/TEMP
+            VB = -VA + (R/S)*(R/(P+S))
             VC = -VA
             VD = -R/S
          END IF
@@ -709,8 +703,7 @@
             S = SIGN(DLAPY2( P, R ), P)
             E(I-1) = -S
 *
-            TEMP = S*(P+S)
-            IF(S.EQ.ZERO .OR. TEMP.EQ.ZERO) THEN
+            IF(S*(P+S).EQ.ZERO) THEN
                VA = -ONE
                VB = ONE
                VC = ONE
@@ -718,7 +711,7 @@
                E(I-1) = ZERO
             ELSE
                VA = -P/S
-               VB = -VA + R*R/TEMP
+               VB = -VA + (R/S)*(R/(P+S))
                VC = -VA
                VD = -R/S
             END IF
@@ -753,8 +746,7 @@
          S = SIGN(DLAPY2( P, R ), P)
          E(I-1) = -S
 *
-         TEMP = S*(P+S)
-         IF(S.EQ.ZERO .OR. TEMP.EQ.ZERO) THEN
+         IF(S*(P+S).EQ.ZERO) THEN
             VA = -ONE
             VB = ONE
             VC = ONE
@@ -762,7 +754,7 @@
             E(I-1) = ZERO
          ELSE
             VA = -P/S
-            VB = -VA + R*R/TEMP
+            VB = -VA + (R/S)*(R/(P+S))
             VC = -VA
             VD = -R/S
          END IF
