@@ -206,8 +206,28 @@
 *
 *     Quick return if possible
 *
-      IF( N.EQ.0 .OR. N.EQ.1 .OR. N.EQ.2 )
+      IF( N.EQ.0)
      $   RETURN
+*
+      IF( N.EQ.1) THEN
+         IF( ICOMPZ.EQ.2 )
+     $      Z( 1, 1 ) = ONE
+         RETURN
+      END IF
+*
+      IF( N.EQ.2) THEN
+         IF( ICOMPZ.EQ.2 ) THEN
+            Z( 1, 1 ) = ONE
+            Z( 1, 2 ) = ZERO
+            Z( 2, 1 ) = ZERO
+            Z( 2, 2 ) = ONE
+         END IF
+         IF( E(1).LT.ZERO ) THEN
+            E(1) = -E(1)
+            CALL SSWAP( N, Z( 1, 1 ), 1, Z( 1, 2 ), 1 )
+         END IF
+         RETURN
+      END IF
 *
 *     Determine the unit roundoff and over/underflow thresholds.
 *
