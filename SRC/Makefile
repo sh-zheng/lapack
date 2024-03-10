@@ -158,8 +158,8 @@ SLASRC = \
    sspgv.o  sspgvd.o sspgvx.o ssprfs.o sspsv.o  sspsvx.o ssptrd.o \
    ssptrf.o ssptri.o ssptrs.o sstegr.o sstein.o sstev.o sktev.o sstevd.o sstevr.o \
    sstevx.o \
-   ssycon.o ssyev.o skyev.o ssyevd.o ssyevr.o ssyevx.o ssygs2.o \
-   ssygst.o ssygv.o  ssygvd.o ssygvx.o ssyrfs.o ssysv.o skysv.o  ssysvx.o \
+   ssycon.o ssyev.o skyev.o ssyevd.o ssyevr.o ssyevx.o ssygs2.o skygs2.o\
+   ssygst.o skygst.o ssygv.o skygv.o ssygvd.o ssygvx.o ssyrfs.o ssysv.o skysv.o  ssysvx.o \
    ssytd2.o skytd2.o ssytf2.o skytf2.o ssytrd.o skytrd.o ssytrf.o skytrf.o ssytri.o skytri.o ssytri2.o skytri2.o ssytri2x.o skytri2x.o \
    ssyswapr.o skyswapr.o ssytrs.o skytrs.o ssytrs2.o skytrs2.o \
    ssyconv.o skyconv.o ssyconvf.o ssyconvf_rook.o \
@@ -361,7 +361,7 @@ DLASRC = \
    dsptrf.o dsptri.o dsptrs.o dstegr.o dstein.o dstev.o dktev.o dstevd.o dstevr.o \
    dstevx.o \
    dsycon.o dsyev.o dkyev.o dsyevd.o dsyevr.o \
-   dsyevx.o dsygs2.o dsygst.o dsygv.o  dsygvd.o dsygvx.o dsyrfs.o \
+   dsyevx.o dsygs2.o dkygs2.o dsygst.o dkygst.o dsygv.o dkygv.o dsygvd.o dsygvx.o dsyrfs.o \
    dsysv.o dkysv.o dsysvx.o \
    dsytd2.o dkytd2.o dsytf2.o dkytf2.o dsytrd.o dkytrd.o dsytrf.o dkytrf.o dsytri.o dkytri.o dsytri2.o dkytri2.o dsytri2x.o dkytri2x.o \
    dsyswapr.o dkyswapr.o dsytrs.o dkytrs.o dsytrs2.o dkytrs2.o \
