@@ -91,7 +91,7 @@
 *>          block diagonal matrix at front, and zero at last.
 *>		The matrix consists of 2-by-2 skew-symmetric blocks, and zeros.
 *>          The values in W, which represent blocks, are always
-*>          positive, and sorted in absolute-descending order.
+*>          positive, and sorted in descending order.
 *>          The eigenvalues of each blocks can be evaluated directly.
 *> \endverbatim
 *>
