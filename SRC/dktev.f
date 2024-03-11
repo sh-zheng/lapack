@@ -54,7 +54,7 @@
 *>          The order of the matrix.  N >= 0.
 *> \endverbatim
 *>
-*> \param[in,out] D
+*> \param[out] D
 *> \verbatim
 *>          D is DOUBLE PRECISION array, dimension (N)
 *>          If INFO = 0, the (N-1) lower subdiagonal elements of the
