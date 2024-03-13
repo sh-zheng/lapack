@@ -295,9 +295,9 @@
 *        COLMAX1 and COLMAX2 are their absolute values.
 *
          IF(K.GT.2) THEN
-            IMAX1 = ISAMAX( K-2, A( 1, K ), 1 )
+            IMAX1 = IDAMAX( K-2, A( 1, K ), 1 )
             COLMAX1 = ABS( A( IMAX1, K ) )
-            IMAX2 = ISAMAX( K-2, A( 1, K-1 ), 1 )
+            IMAX2 = IDAMAX( K-2, A( 1, K-1 ), 1 )
             COLMAX2 = ABS( A( IMAX2, K-1 ) )
          ELSE
             IMAX1 = 0
@@ -452,9 +452,9 @@
 *        COLMAX1 and COLMAX2 are their absolute values.
 *
          IF(K.LT.N-1) THEN
-            IMAX1 = K+1 + ISAMAX( N-K-1, A( K+2, K ), 1 )
+            IMAX1 = K+1 + IDAMAX( N-K-1, A( K+2, K ), 1 )
             COLMAX1 = ABS( A( IMAX1, K ) )
-            IMAX2 = K+1 + ISAMAX( N-K-1, A( K+2, K+1 ), 1 )
+            IMAX2 = K+1 + IDAMAX( N-K-1, A( K+2, K+1 ), 1 )
             COLMAX2 = ABS( A( IMAX2, K+1 ) )
          ELSE
             IMAX1 = 0
