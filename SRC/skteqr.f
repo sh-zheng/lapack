@@ -161,7 +161,7 @@
       INTEGER            I, ICOMPZ, II, ISCALE, J, JTOT, K, L, L1, LEND,
      $                   LENDM1, LENDP1, LENDSV, LM3, LSV, M, MM, MM1,
      $                   NM1, NMAXIT
-      REAL               ANORM, B, EPS, EPS2, P, R, VA, VB, VC, VD, E3
+      REAL               ANORM, B, EPS, EPS2, P, R, VA, VB, VC, VD, E3,
      $                   S, SAFMAX, SAFMIN, SSFMAX, SSFMIN, TST, TEMP
 *     ..
 *     .. External Functions ..
