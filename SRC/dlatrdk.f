@@ -216,7 +216,7 @@
       DOUBLE PRECISION   ALPHA
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           DAXPY, DGEMV, DLARFG, DSCAL, DSYMV
+      EXTERNAL           DAXPY, DGEMV, DLARFG, DSCAL, DKYMV
 *     ..
 *     .. External Functions ..
       LOGICAL            LSAME
@@ -259,7 +259,7 @@
 *
 *              Compute W(1:i-1,i)
 *
-               CALL SKYMV( 'Upper', I-1, ONE, A, LDA, A( 1, I ), 1,
+               CALL DKYMV( 'Upper', I-1, ONE, A, LDA, A( 1, I ), 1,
      $                     ZERO, W( 1, IW ), 1 )
                IF( I.LT.N ) THEN
                   CALL DGEMV( 'Transpose', I-1, N-I, ONE, W( 1, IW+1 ),
@@ -304,7 +304,7 @@
 *
 *              Compute W(i+1:n,i)
 *
-               CALL SKYMV( 'Lower', N-I, ONE, A( I+1, I+1 ), LDA,
+               CALL DKYMV( 'Lower', N-I, ONE, A( I+1, I+1 ), LDA,
      $                     A( I+1, I ), 1, ZERO, W( I+1, I ), 1 )
                CALL DGEMV( 'Transpose', N-I, I-1, ONE, W( I+1, 1 ), LDW,
      $                     A( I+1, I ), 1, ZERO, W( 1, I ), 1 )

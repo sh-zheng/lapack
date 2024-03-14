@@ -166,8 +166,8 @@
 *     ..
 *     .. External Functions ..
       LOGICAL            LSAME
-      DOUBLE PRECISION   DLAMCH, DLAPY2
-      EXTERNAL           LSAME, DLAMCH, DLAPY2
+      DOUBLE PRECISION   DLAMCH, DLAPY2, DLANKT
+      EXTERNAL           LSAME, DLAMCH, DLAPY2, DLANKT
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           DLAE2, DLAEV2, DLARTG, DLASCL, DLASET,
@@ -224,7 +224,7 @@
          END IF
          IF( E(1).LT.ZERO ) THEN
             E(1) = -E(1)
-            CALL SSWAP( N, Z( 1, 1 ), 1, Z( 1, 2 ), 1 )
+            CALL DSWAP( N, Z( 1, 1 ), 1, Z( 1, 2 ), 1 )
          END IF
          RETURN
       END IF
@@ -292,7 +292,7 @@
 *
 *     Scale submatrix in rows and columns L to LEND
 *
-      ANORM = SLANKT( 'M', LEND-L+1, D( L ), E( L ) )
+      ANORM = DLANKT( 'M', LEND-L+1, D( L ), E( L ) )
       ISCALE = 0
       IF( ANORM.EQ.ZERO )
      $   GO TO 10
