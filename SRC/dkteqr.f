@@ -162,7 +162,8 @@
      $                   LENDM1, LENDP1, LENDSV, LM3, LSV, M, MM, MM1,
      $                   NM1, NMAXIT
       DOUBLE PRECISION   ANORM, B, EPS, EPS2, P, R, VA, VB, VC, VD, E3,
-     $                   S, SAFMAX, SAFMIN, SSFMAX, SSFMIN, TST, TEMP
+     $                   S, SAFMAX, SAFMIN, SSFMAX, SSFMIN, TST, TEMP,
+     $                   SQRT2
 *     ..
 *     .. External Functions ..
       LOGICAL            LSAME
@@ -237,6 +238,7 @@
       SAFMAX = ONE / SAFMIN
       SSFMAX = SQRT( SAFMAX ) / THREE
       SSFMIN = SQRT( SAFMIN ) / EPS2
+      SQRT2 = SQRT( TWO )
 *
 *     Compute the eigenvalues and eigenvectors of the tridiagonal
 *     matrix.
@@ -371,12 +373,36 @@
             R = E(M-1)*E(M-2)
             S = SIGN(DLAPY2( P, R ), P)
 *
-            IF(S*(P+S).EQ.ZERO) THEN
+            IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
                VA = -ONE
                VB = ONE
                VC = ONE
                VD = ZERO
                E(M-1) = ZERO
+            ELSEIF(E(M-2).EQ.E(M-1)) THEN
+               E(M-2) = SQRT2*E(M-2)
+               E(M-1) = ZERO
+               IF( ICOMPZ.GT.0 ) THEN
+                  DO J = 1, N
+                     TEMP = Z( J, M-2 )
+                     Z( J, M-2 ) = -Z( J, M-1 )
+                     Z( J, M-1 ) = (SQRT2*TEMP - SQRT2*Z(J, M))/TWO
+                     Z( J, M ) = (SQRT2*TEMP + SQRT2*Z(J, M))/TWO
+                  END DO
+               END IF
+               GO TO 40
+            ELSEIF(E(M-2).EQ.-E(M-1)) THEN
+               E(M-2) = SQRT2*E(M-2)
+               E(M-1) = ZERO
+               IF( ICOMPZ.GT.0 ) THEN
+                  DO J = 1, N
+                     TEMP = Z( J, M-2 )
+                     Z( J, M-2 ) = -Z( J, M-1 )
+                     Z( J, M-1 ) = (SQRT2*TEMP + SQRT2*Z(J, M))/TWO
+                     Z( J, M ) = (-SQRT2*TEMP + SQRT2*Z(J, M))/TWO
+                  END DO
+               END IF
+               GO TO 40
             ELSE
                VA = -P/S
                VB = -VA + (R/S)*(R/(P+S))
@@ -426,7 +452,7 @@
          R = E(M-1)*E(M-2)
          S = SIGN(DLAPY2( P, R ), P)
 *
-         IF(S*(P+S).EQ.ZERO) THEN
+         IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
             VA = -ONE
             VB = ONE
             VC = ONE
@@ -470,7 +496,7 @@
             S = SIGN(DLAPY2( P, R ), P)
             E(I) = -S
 *
-            IF(S*(P+S).EQ.ZERO) THEN
+            IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
                VA = -ONE
                VB = ONE
                VC = ONE
@@ -513,7 +539,7 @@
          S = SIGN(DLAPY2( P, R ), P)
          E(I) = -S
 *
-         IF(S*(P+S).EQ.ZERO) THEN
+         IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
             VA = -ONE
             VB = ONE
             VC = ONE
@@ -624,12 +650,36 @@
             R = E(M)*E(M+1)
             S = SIGN(DLAPY2( P, R ), P)
 *
-            IF(S*(P+S).EQ.ZERO) THEN
+            IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
                VA = -ONE
                VB = ONE
                VC = ONE
                VD = ZERO
                E(M) = ZERO
+            ELSEIF(E(M).EQ.E(M+1)) THEN
+               E(M) = SQRT2*E(M)
+               E(M+1) = ZERO
+               IF( ICOMPZ.GT.0 ) THEN
+                  DO J = 1, N
+                     TEMP = Z( J, M )
+                     Z( J, M ) = -Z( J, M+1 )
+                     Z( J, M+1 ) = (SQRT2*TEMP - SQRT2*Z(J, M+2))/TWO
+                     Z( J, M+2 ) = (SQRT2*TEMP + SQRT2*Z(J, M+2))/TWO
+                  END DO
+               END IF
+               GO TO 90
+            ELSEIF(E(M).EQ.-E(M+1)) THEN
+               E(M) = SQRT2*E(M)
+               E(M+1) = ZERO
+               IF( ICOMPZ.GT.0 ) THEN
+                  DO J = 1, N
+                     TEMP = Z( J, M )
+                     Z( J, M ) = -Z( J, M+1 )
+                     Z( J, M+1 ) = (SQRT2*TEMP + SQRT2*Z(J, M+2))/TWO
+                     Z( J, M+2 ) = (-SQRT2*TEMP + SQRT2*Z(J, M+2))/TWO
+                  END DO
+               END IF
+               GO TO 90
             ELSE
                VA = -P/S
                VB = -VA + (R/S)*(R/(P+S))
@@ -679,7 +729,7 @@
          R = E(M)*E(M+1)
          S = SIGN(DLAPY2( P, R ), P)
 *
-         IF(S*(P+S).EQ.ZERO) THEN
+         IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
             VA = -ONE
             VB = ONE
             VC = ONE
@@ -723,7 +773,7 @@
             S = SIGN(DLAPY2( P, R ), P)
             E(I-1) = -S
 *
-            IF(S*(P+S).EQ.ZERO) THEN
+            IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
                VA = -ONE
                VB = ONE
                VC = ONE
@@ -766,7 +816,7 @@
          S = SIGN(DLAPY2( P, R ), P)
          E(I-1) = -S
 *
-         IF(S*(P+S).EQ.ZERO) THEN
+         IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
             VA = -ONE
             VB = ONE
             VC = ONE
