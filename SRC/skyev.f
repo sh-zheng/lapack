@@ -169,7 +169,7 @@
       EXTERNAL           ILAENV, LSAME, SLAMCH, SLANKY
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           SLASCL, SORGTR, SSCAL, SSTEQR, SSTERF, SKYTRD,
+      EXTERNAL           SLASCL, SORGTR, SSCAL, SKTEQR, SKYTRD,
      $                   XERBLA
 *     ..
 *     .. Intrinsic Functions ..

@@ -169,7 +169,7 @@
       EXTERNAL           ILAENV, LSAME, DLAMCH, DLANKY
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           DLASCL, DORGTR, DSCAL, DSTEQR, DSTERF, DKYTRD,
+      EXTERNAL           DLASCL, DORGTR, DSCAL, DKTEQR, DKYTRD,
      $                   XERBLA
 *     ..
 *     .. Intrinsic Functions ..
@@ -256,8 +256,8 @@
       CALL DKYTRD( UPLO, N, A, LDA, WORK( INDE ), W, WORK( INDTAU ),
      $             WORK( INDWRK ), LLWORK, IINFO )
 *
-*     For eigenvalues only, call SKTEQR, For eigenvectors, first call
-*     DORGTR to generate the orthogonal matrix, then call SKTEQR.
+*     For eigenvalues only, call DKTEQR, For eigenvectors, first call
+*     DORGTR to generate the orthogonal matrix, then call DKTEQR.
 *
       IF( WANTZ ) THEN
 	   CALL DORGTR( UPLO, N, A, LDA, WORK( INDTAU ), WORK( INDWRK ),
@@ -265,7 +265,7 @@
       END IF
       IF(.NOT.LOWER)
      $   CALL DSCAL(N-1, -ONE, W, 1)
-      CALL SKTEQR( JOBZ, N, WORK( INDE ), W, A, LDA, WORK( INDTAU ),
+      CALL DKTEQR( JOBZ, N, WORK( INDE ), W, A, LDA, WORK( INDTAU ),
      $                INFO )
       W(N) = ZERO
 *
