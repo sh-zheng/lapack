@@ -374,11 +374,8 @@
             S = SIGN(SLAPY2( P, R ), P)
 *
             IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
-               VA = -ONE
-               VB = ONE
-               VC = ONE
-               VD = ZERO
                E(M-1) = ZERO
+               GO TO 40
             ELSEIF(E(M-2).EQ.E(M-1)) THEN
                E(M-2) = SQRT2*E(M-2)
                E(M-1) = ZERO
@@ -651,11 +648,8 @@
             S = SIGN(SLAPY2( P, R ), P)
 *
             IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
-               VA = -ONE
-               VB = ONE
-               VC = ONE
-               VD = ZERO
                E(M) = ZERO
+               GO TO 90
             ELSEIF(E(M).EQ.E(M+1)) THEN
                E(M) = SQRT2*E(M)
                E(M+1) = ZERO
