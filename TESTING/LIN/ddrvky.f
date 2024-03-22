@@ -250,7 +250,7 @@
          XTYPE = 'N'
          NIMAT = NTYPES
          IF( N.LE.0 )
-     $      NIMAT = 1
+     $      NIMAT = 2
 *
 *        Do for each value of matrix type IMAT, except IMAT.EQ.1
 *

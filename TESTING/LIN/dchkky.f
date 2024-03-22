@@ -262,7 +262,7 @@
          XTYPE = 'N'
          NIMAT = NTYPES
          IF( N.LE.0 )
-     $      NIMAT = 1
+     $      NIMAT = 2
 *
          IZERO = 0
 *
@@ -472,9 +472,8 @@
 *                 Form the inverse and compute the residual,
 *                 if the factorization was competed without INFO > 0
 *                 (i.e. there is no zero rows and columns).
-*                 Do it only for the first block size.
 *
-                  IF( INB.EQ.1 .AND. .NOT.TRFCON ) THEN
+                  IF( .NOT.TRFCON ) THEN
                      CALL DLACPY( UPLO, N, N, AFAC, LDA, AINV, LDA )
                      SRNAMT = 'DKYTRI2'
                      LWORK = (N+NB+1)*(NB+3)
