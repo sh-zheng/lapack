@@ -107,7 +107,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup doubleKYcomputational
+*> \ingroup kyconv
 *
 *  =====================================================================
       SUBROUTINE DKYCONV( UPLO, WAY, N, A, LDA, IPIV, E, INFO )

@@ -120,7 +120,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup doubleKYcomputational
+*> \ingroup kytd2
 *
 *> \par Further Details:
 *  =====================
@@ -249,7 +249,8 @@
 *
 *              Compute  x := tau * A * v  storing x in TAU(1:i)
 *
-               CALL DKYMV( UPLO, I, TAUI, A, LDA, A( 1, I+1 ), 1, ZERO,
+               CALL DKYMV( UPLO, I, TAUI, A, LDA, A( 1, I+1 ), 1,
+     $                     ZERO,
      $                     TAU, 1 )
 *
 *              Compute  w := x - 1/2 * tau * (x**T * v) * v
@@ -295,14 +296,16 @@
 *
 *              Compute  w := x - 1/2 * tau * (x**T * v) * v
 *
-               ALPHA = -HALF*TAUI*DDOT( N-I, TAU( I ), 1, A( I+1, I ),
+               ALPHA = -HALF*TAUI*DDOT( N-I, TAU( I ), 1, A( I+1,
+     $                                  I ),
      $                 1 )
                CALL DAXPY( N-I, ALPHA, A( I+1, I ), 1, TAU( I ), 1 )
 *
 *              Apply the transformation as a rank-2 update:
 *                 A := A - v * w**T + w * v**T
 *
-               CALL DKYR2( UPLO, N-I, -ONE, A( I+1, I ), 1, TAU( I ), 1,
+               CALL DKYR2( UPLO, N-I, -ONE, A( I+1, I ), 1, TAU( I ),
+     $                     1,
      $                     A( I+1, I+1 ), LDA )
 *
                A( I+1, I ) = E( I )

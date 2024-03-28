@@ -89,7 +89,7 @@
 *>          W is REAL array, dimension (N)
 *>          If INFO = 0, the (N-1) lower subdiagonal elements of the
 *>          block diagonal matrix at front, and zero at last.
-*>		The matrix consists of 2-by-2 skew-symmetric blocks, and zeros.
+*>		    The matrix consists of 2-by-2 skew-symmetric blocks, and zeros.
 *>          The values in W, which represent blocks, are always
 *>          positive, and sorted in descending order.
 *>          The eigenvalues of each blocks can be evaluated directly.
@@ -106,7 +106,7 @@
 *>          LWORK is INTEGER
 *>          The length of the array WORK.  LWORK >= max(1,3*N-1).
 *>          For optimal efficiency, LWORK >= (NB+2)*N,
-*>          where NB is the blocksize for SSYTRD returned by ILAENV.
+*>          where NB is the blocksize for SKYTRD returned by ILAENV.
 *>
 *>          If LWORK = -1, then a workspace query is assumed; the routine
 *>          only calculates the optimal size of the WORK array, returns
@@ -132,7 +132,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup realKYeigen
+*> \ingroup kyev
 *
 *  =====================================================================
       SUBROUTINE SKYEV( JOBZ, UPLO, N, A, LDA, W, WORK, LWORK, INFO )
@@ -165,8 +165,9 @@
 *     .. External Functions ..
       LOGICAL            LSAME
       INTEGER            ILAENV
-      REAL               SLAMCH, SLANKY
-      EXTERNAL           ILAENV, LSAME, SLAMCH, SLANKY
+      REAL               SLAMCH, SLANKY, SROUNDUP_LWORK
+      EXTERNAL           ILAENV, LSAME, SLAMCH, SLANKY,
+     $                   SROUNDUP_LWORK
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           SLASCL, SORGTR, SSCAL, SKTEQR, SKYTRD,
@@ -197,7 +198,7 @@
       IF( INFO.EQ.0 ) THEN
          NB = ILAENV( 1, 'SKYTRD', UPLO, N, -1, -1, -1 )
          LWKOPT = MAX( 1, ( NB+2 )*N )
-         WORK( 1 ) = LWKOPT
+         WORK( 1 ) = SROUNDUP_LWORK(LWKOPT)
 *
          IF( LWORK.LT.MAX( 1, 3*N-1 ) .AND. .NOT.LQUERY )
      $      INFO = -8
@@ -282,7 +283,7 @@
 *
 *     Set WORK(1) to optimal workspace size.
 *
-      WORK( 1 ) = LWKOPT
+      WORK( 1 ) = SROUNDUP_LWORK(LWKOPT)
 *
       RETURN
 *

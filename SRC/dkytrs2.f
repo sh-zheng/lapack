@@ -124,7 +124,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup doubleKYcomputational
+*> \ingroup kytrs2
 *
 *  =====================================================================
       SUBROUTINE DKYTRS2( UPLO, N, NRHS, A, LDA, IPIV, B, LDB,
@@ -158,7 +158,8 @@
       EXTERNAL           LSAME
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           DSCAL, DKYCONV, DSWAP, DTRSM, XERBLA
+      EXTERNAL           DSCAL, DKYCONV, DSWAP, DTRSM,
+     $                   XERBLA
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          MAX

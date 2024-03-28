@@ -18,7 +18,7 @@
 *  Definition:
 *  ===========
 *
-*       DOUBLE PRECISION             FUNCTION DLANKT( NORM, N, D, E )
+*       DOUBLE PRECISION FUNCTION DLANKT( NORM, N, D, E )
 *
 *       .. Scalar Arguments ..
 *       CHARACTER          NORM
@@ -93,10 +93,10 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup OTHERauxiliary
+*> \ingroup lankt
 *
 *  =====================================================================
-      DOUBLE PRECISION   FUNCTION DLANKT( NORM, N, D, E )
+      DOUBLE PRECISION FUNCTION DLANKT( NORM, N, D, E )
 *
 *  -- LAPACK auxiliary routine --
 *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
@@ -159,7 +159,8 @@
                IF( ANORM .LT. SUM .OR. DISNAN( SUM ) ) ANORM = SUM
    20       CONTINUE
          END IF
-      ELSE IF( ( LSAME( NORM, 'F' ) ) .OR. ( LSAME( NORM, 'E' ) ) ) THEN
+      ELSE IF( ( LSAME( NORM, 'F' ) ) .OR.
+     $         ( LSAME( NORM, 'E' ) ) ) THEN
 *
 *        Find normF(A).
 *

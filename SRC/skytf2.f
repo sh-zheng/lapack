@@ -139,7 +139,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup realKYcomputational
+*> \ingroup kytf2
 *
 *> \par Further Details:
 *  =====================

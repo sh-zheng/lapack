@@ -93,7 +93,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup OTHERauxiliary
+*> \ingroup lankt
 *
 *  =====================================================================
       REAL             FUNCTION SLANKT( NORM, N, D, E )
@@ -159,7 +159,8 @@
                IF( ANORM .LT. SUM .OR. SISNAN( SUM ) ) ANORM = SUM
    20       CONTINUE
          END IF
-      ELSE IF( ( LSAME( NORM, 'F' ) ) .OR. ( LSAME( NORM, 'E' ) ) ) THEN
+      ELSE IF( ( LSAME( NORM, 'F' ) ) .OR.
+     $         ( LSAME( NORM, 'E' ) ) ) THEN
 *
 *        Find normF(A).
 *

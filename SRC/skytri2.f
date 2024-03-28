@@ -120,7 +120,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup realKYcomputational
+*> \ingroup kytri2
 *
 *  =====================================================================
       SUBROUTINE SKYTRI2( UPLO, N, A, LDA, IPIV, WORK, LWORK, INFO )
@@ -147,7 +147,8 @@
 *     .. External Functions ..
       LOGICAL            LSAME
       INTEGER            ILAENV
-      EXTERNAL           LSAME, ILAENV
+      REAL               SROUNDUP_LWORK
+      EXTERNAL           LSAME, ILAENV, SROUNDUP_LWORK
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           SKYTRI, SKYTRI2X, XERBLA
@@ -160,8 +161,10 @@
       UPPER = LSAME( UPLO, 'U' )
       LQUERY = ( LWORK.EQ.-1 )
 *     Get blocksize
-      NBMAX = ILAENV( 1, 'SKYTRF', UPLO, N, -1, -1, -1 )
-      IF ( NBMAX .GE. N ) THEN
+      NBMAX = ILAENV( 1, 'SKYTRI2', UPLO, N, -1, -1, -1 )
+      IF( N.EQ.0 ) THEN
+         MINSIZE = 1
+      ELSE IF ( NBMAX .GE. N ) THEN
          MINSIZE = N
       ELSE
          MINSIZE = (N+NBMAX+1)*(NBMAX+3)
@@ -184,7 +187,7 @@
          CALL XERBLA( 'SKYTRI2', -INFO )
          RETURN
       ELSE IF( LQUERY ) THEN
-         WORK(1)=MINSIZE
+         WORK( 1 ) = SROUNDUP_LWORK( MINSIZE )
          RETURN
       END IF
       IF( N.EQ.0 )
@@ -195,6 +198,7 @@
       ELSE
          CALL SKYTRI2X( UPLO, N, A, LDA, IPIV, WORK, NBMAX, INFO )
       END IF
+*
       RETURN
 *
 *     End of SKYTRI2

@@ -107,7 +107,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup realKYcomputational
+*> \ingroup kytri
 *
 *  =====================================================================
       SUBROUTINE SKYTRI( UPLO, N, A, LDA, IPIV, WORK, INFO )
@@ -219,7 +219,8 @@
             CALL SKYMV( UPLO, K-1, -ONE, A, LDA, WORK, 1, ZERO,
      $                  A( 1, K ), 1 )
             A( K, K+1 ) = A( K, K+1 ) +
-     $                    SDOT( K-1, A( 1, K ), 1, A( 1, K+1 ), 1 )
+     $                    SDOT( K-1, A( 1, K ), 1, A( 1, K+1 ),
+     $                     1 )
             CALL SCOPY( K-1, A( 1, K+1 ), 1, WORK, 1 )
             CALL SKYMV( UPLO, K-1, -ONE, A, LDA, WORK, 1, ZERO,
      $                  A( 1, K+1 ), 1 )
@@ -281,14 +282,14 @@
 *
          IF( K.LT.N ) THEN
             CALL SCOPY( N-K, A( K+1, K ), 1, WORK, 1 )
-            CALL SKYMV( UPLO, N-K, -ONE, A( K+1, K+1 ), LDA, WORK, 1,
-     $                  ZERO, A( K+1, K ), 1 )
+            CALL SKYMV( UPLO, N-K, -ONE, A( K+1, K+1 ), LDA, WORK,
+     $                  1, ZERO, A( K+1, K ), 1 )
             A( K, K-1 ) = A( K, K-1 ) +
      $                    SDOT( N-K, A( K+1, K ), 1, A( K+1, K-1 ),
      $                    1 )
             CALL SCOPY( N-K, A( K+1, K-1 ), 1, WORK, 1 )
-            CALL SKYMV( UPLO, N-K, -ONE, A( K+1, K+1 ), LDA, WORK, 1,
-     $                  ZERO, A( K+1, K-1 ), 1 )
+            CALL SKYMV( UPLO, N-K, -ONE, A( K+1, K+1 ), LDA, WORK,
+     $                  1, ZERO, A( K+1, K-1 ), 1 )
          END IF
          KSTEP = 2
 *

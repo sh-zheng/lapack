@@ -120,7 +120,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup realKYcomputational
+*> \ingroup kygst
 *
 *  =====================================================================
       SUBROUTINE SKYGST( ITYPE, UPLO, N, A, LDA, B, LDB, INFO )
@@ -148,7 +148,8 @@
       INTEGER            K, KB, NB
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           SKYGS2, SKYMM, SKYR2K, STRMM, STRSM, XERBLA
+      EXTERNAL           SKYGS2, SKYMM, SKYR2K, STRMM, STRSM,
+     $                   XERBLA
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          MAX, MIN

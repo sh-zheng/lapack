@@ -39,7 +39,7 @@
 *> the Bunch partial pivoting method.  The form of the
 *> factorization is
 *>
-*>    A = U*D*U**T  or  A = L*D*L**T
+*>    A = U**T*D*U  or  A = L*D*L**T
 *>
 *> where U (or L) is a product of permutation and unit upper (lower)
 *> triangular matrices, and D is skew-symmetric and block diagonal with
@@ -149,14 +149,14 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup doubleKYcomputational
+*> \ingroup kytrf
 *
 *> \par Further Details:
 *  =====================
 *>
 *> \verbatim
 *>
-*>  If UPLO = 'U', then A = U*D*U**T, where
+*>  If UPLO = 'U', then A = U**T*D*U, where
 *>     U = P(n)*U(n)* ... *P(k)U(k)* ...,
 *>  i.e., U is a product of terms P(k)*U(k), where k decreases from n to
 *>  1 in steps of 2, and D is a block diagonal matrix with 2-by-2
@@ -246,7 +246,7 @@
 *        Determine the block size
 *
          NB = ILAENV( 1, 'DKYTRF', UPLO, N, -1, -1, -1 )
-         LWKOPT = N*NB
+         LWKOPT = MAX( 1, N*NB )
          WORK( 1 ) = LWKOPT
       END IF
 *
@@ -263,7 +263,8 @@
          IWS = LDWORK*NB
          IF( LWORK.LT.IWS ) THEN
             NB = MAX( LWORK / LDWORK, 1 )
-            NBMIN = MAX( 2, ILAENV( 2, 'DKYTRF', UPLO, N, -1, -1, -1 ) )
+            NBMIN = MAX( 2, ILAENV( 2, 'DKYTRF', UPLO, N, -1, -1,
+     $                   -1 ) )
          END IF
       ELSE
          IWS = 1
@@ -273,7 +274,7 @@
 *
       IF( UPPER ) THEN
 *
-*        Factorize A as U*D*U**T using the upper triangle of A
+*        Factorize A as U**T*D*U using the upper triangle of A
 *
 *        K is the main loop index, decreasing from N to 1 in steps of
 *        KB, where KB is the number of columns factorized by DLAKYF;
@@ -333,13 +334,15 @@
 *           Factorize columns k:k+kb-1 of A and use blocked code to
 *           update columns k+kb:n
 *
-            CALL DLAKYF( UPLO, N-K+1, NB, KB, A( K, K ), LDA, IPIV( K ),
+            CALL DLAKYF( UPLO, N-K+1, NB, KB, A( K, K ), LDA,
+     $                   IPIV( K ),
      $                   WORK, LDWORK, IINFO )
          ELSE
 *
 *           Use unblocked code to factorize columns k:n of A
 *
-            CALL DKYTF2( UPLO, N-K+1, A( K, K ), LDA, IPIV( K ), IINFO )
+            CALL DKYTF2( UPLO, N-K+1, A( K, K ), LDA, IPIV( K ),
+     $                   IINFO )
             KB = N - K + 1
          END IF
 *

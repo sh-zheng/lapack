@@ -137,7 +137,7 @@
 *>
 *> \param[in] BETA
 *> \verbatim
-*>          BETA is DOUBLE PRECISION
+*>          BETA is DOUBLE PRECISION.
 *>           On entry,  BETA  specifies the scalar  beta.  When  BETA  is
 *>           supplied as zero then C need not be set on input.
 *> \endverbatim
@@ -168,7 +168,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup double_blas_level3
+*> \ingroup kymm
 *
 *> \par Further Details:
 *  =====================
@@ -234,7 +234,8 @@
 *     Test the input parameters.
 *
       INFO = 0
-      IF ((.NOT.LSAME(SIDE,'L')) .AND. (.NOT.LSAME(SIDE,'R'))) THEN
+      IF ((.NOT.LSAME(SIDE,'L')) .AND.
+     +    (.NOT.LSAME(SIDE,'R'))) THEN
           INFO = 1
       ELSE IF ((.NOT.UPPER) .AND. (.NOT.LSAME(UPLO,'L'))) THEN
           INFO = 2

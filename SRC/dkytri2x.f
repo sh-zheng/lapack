@@ -113,7 +113,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup doubleKYcomputational
+*> \ingroup kytri2x
 *
 *  =====================================================================
       SUBROUTINE DKYTRI2X( UPLO, N, A, LDA, IPIV, WORK, NB, INFO )
@@ -513,13 +513,17 @@
             DO WHILE ( I .GT. 1 )
                IF( IPIV(I-1) .GT. 0 ) THEN
                  IP=IPIV(I-1)
-                 IF ( I .LT. IP) CALL DKYSWAPR( UPLO, N, A, LDA, I ,IP )
-                 IF ( I .GT. IP) CALL DKYSWAPR( UPLO, N, A, LDA, IP ,I )
+                 IF ( I .LT. IP) CALL DKYSWAPR( UPLO, N, A, LDA, I ,
+     $                IP  )
+                 IF ( I .GT. IP) CALL DKYSWAPR( UPLO, N, A, LDA, IP ,
+     $                I )
                  I=I-1
                ELSEIF( IPIV(I-1) .LT. 0 ) THEN
                  IP=-IPIV(I-1)
-                 IF ( I .LT. IP) CALL DKYSWAPR( UPLO, N, A, LDA, I ,IP )
-                 IF ( I .GT. IP) CALL DKYSWAPR( UPLO, N, A, LDA, IP ,I )
+                 IF ( I .LT. IP) CALL DKYSWAPR( UPLO, N, A, LDA, I ,
+     $                IP )
+                 IF ( I .GT. IP) CALL DKYSWAPR( UPLO, N, A, LDA, IP ,
+     $                I )
                  CALL DKYSWAPR( UPLO, N, A, LDA, I-1 ,I )
                  I=I-1
                ELSE

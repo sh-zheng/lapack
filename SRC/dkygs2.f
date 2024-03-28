@@ -120,7 +120,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup doubleKYcomputational
+*> \ingroup kygs2
 *
 *  =====================================================================
       SUBROUTINE DKYGS2( ITYPE, UPLO, N, A, LDA, B, LDB, INFO )
@@ -141,7 +141,7 @@
 *
 *     .. Parameters ..
       DOUBLE PRECISION   ONE, HALF
-      PARAMETER          ( ONE = 1.0, HALF = 0.5 )
+      PARAMETER          ( ONE = 1.0D0, HALF = 0.5D0 )
 *     ..
 *     .. Local Scalars ..
       LOGICAL            UPPER
@@ -149,7 +149,8 @@
       DOUBLE PRECISION   BKK
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           DAXPY, DSCAL, DKYR2, DTRMV, DTRSV, XERBLA
+      EXTERNAL           DAXPY, DSCAL, DKYR2, DTRMV, DTRSV,
+     $                   XERBLA
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          MAX

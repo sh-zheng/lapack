@@ -113,7 +113,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup realOTHEReigen
+*> \ingroup ktev
 *
 *  =====================================================================
       SUBROUTINE SKTEV( JOBZ, N, D, E, Z, LDZ, WORK, INFO )

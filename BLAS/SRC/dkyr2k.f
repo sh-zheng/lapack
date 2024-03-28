@@ -89,7 +89,7 @@
 *>
 *> \param[in] ALPHA
 *> \verbatim
-*>          ALPHA is DOUBLE PRECISION
+*>          ALPHA is DOUBLE PRECISION.
 *>           On entry, ALPHA specifies the scalar alpha.
 *> \endverbatim
 *>
@@ -133,7 +133,7 @@
 *>
 *> \param[in] BETA
 *> \verbatim
-*>          BETA is DOUBLE PRECISION
+*>          BETA is DOUBLE PRECISION.
 *>           On entry, BETA specifies the scalar beta.
 *> \endverbatim
 *>
@@ -170,7 +170,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup double_blas_level3
+*> \ingroup kyr2k
 *
 *> \par Further Details:
 *  =====================

@@ -101,7 +101,7 @@
 *>
 *> \param[in] BETA
 *> \verbatim
-*>          BETA is DOUBLE PRECISION
+*>          BETA is DOUBLE PRECISION.
 *>           On entry, BETA specifies the scalar beta. When BETA is
 *>           supplied as zero then Y need not be set on input.
 *> \endverbatim
@@ -130,7 +130,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup double_blas_level2
+*> \ingroup kymv
 *
 *> \par Further Details:
 *  =====================

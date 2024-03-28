@@ -120,7 +120,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup realKYcomputational
+*> \ingroup kygs2
 *
 *  =====================================================================
       SUBROUTINE SKYGS2( ITYPE, UPLO, N, A, LDA, B, LDB, INFO )
@@ -149,7 +149,8 @@
       REAL               BKK
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           SAXPY, SSCAL, SKYR2, STRMV, STRSV, XERBLA
+      EXTERNAL           SAXPY, SSCAL, SKYR2, STRMV, STRSV,
+     $                   XERBLA
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          MAX

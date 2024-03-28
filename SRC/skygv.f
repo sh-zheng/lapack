@@ -125,7 +125,7 @@
 *>          W is REAL array, dimension (N)
 *>          If INFO = 0, the (N-1) lower subdiagonal elements of the
 *>          block diagonal matrix at front, and zero at last.
-*>		The matrix consists of 2-by-2 skew-symmetric blocks, and zeros.
+*>		    The matrix consists of 2-by-2 skew-symmetric blocks, and zeros.
 *>          The values in W, which represent blocks, are always
 *>          positive, and sorted in descending order.
 *>          The eigenvalues of each blocks can be evaluated directly.
@@ -173,7 +173,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup realSYeigen
+*> \ingroup kygv
 *
 *  =====================================================================
       SUBROUTINE SKYGV( ITYPE, JOBZ, UPLO, N, A, LDA, B, LDB, W, WORK,
@@ -205,10 +205,12 @@
 *     .. External Functions ..
       LOGICAL            LSAME
       INTEGER            ILAENV
-      EXTERNAL           ILAENV, LSAME
+      REAL               SROUNDUP_LWORK
+      EXTERNAL           ILAENV, LSAME, SROUNDUP_LWORK
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           SPOTRF, SKYEV, SKYGST, STRMM, STRSM, XERBLA
+      EXTERNAL           SPOTRF, SKYEV, SKYGST, STRMM, STRSM,
+     $                   XERBLA
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          MAX
@@ -240,7 +242,7 @@
          LWKMIN = MAX( 1, 3*N - 1 )
          NB = ILAENV( 1, 'SSYTRD', UPLO, N, -1, -1, -1 )
          LWKOPT = MAX( LWKMIN, ( NB + 2 )*N )
-         WORK( 1 ) = LWKOPT
+         WORK( 1 ) = SROUNDUP_LWORK(LWKOPT)
 *
          IF( LWORK.LT.LWKMIN .AND. .NOT.LQUERY ) THEN
             INFO = -11
@@ -290,7 +292,8 @@
                TRANS = 'T'
             END IF
 *
-            CALL STRSM( 'Left', UPLO, TRANS, 'Non-unit', N, NEIG, ONE,
+            CALL STRSM( 'Left', UPLO, TRANS, 'Non-unit', N, NEIG,
+     $                  ONE,
      $                  B, LDB, A, LDA )
 *
          ELSE IF( ITYPE.EQ.3 ) THEN
@@ -304,12 +307,13 @@
                TRANS = 'N'
             END IF
 *
-            CALL STRMM( 'Left', UPLO, TRANS, 'Non-unit', N, NEIG, ONE,
+            CALL STRMM( 'Left', UPLO, TRANS, 'Non-unit', N, NEIG,
+     $                  ONE,
      $                  B, LDB, A, LDA )
          END IF
       END IF
 *
-      WORK( 1 ) = LWKOPT
+      WORK( 1 ) = SROUNDUP_LWORK(LWKOPT)
       RETURN
 *
 *     End of SKYGV

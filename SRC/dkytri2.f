@@ -120,7 +120,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup doubleKYcomputational
+*> \ingroup kytri2
 *
 *  =====================================================================
       SUBROUTINE DKYTRI2( UPLO, N, A, LDA, IPIV, WORK, LWORK, INFO )
@@ -160,8 +160,10 @@
       UPPER = LSAME( UPLO, 'U' )
       LQUERY = ( LWORK.EQ.-1 )
 *     Get blocksize
-      NBMAX = ILAENV( 1, 'DKYTRF', UPLO, N, -1, -1, -1 )
-      IF ( NBMAX .GE. N ) THEN
+      NBMAX = ILAENV( 1, 'DKYTRI2', UPLO, N, -1, -1, -1 )
+      IF( N.EQ.0 ) THEN
+         MINSIZE = 1
+      ELSE IF ( NBMAX .GE. N ) THEN
          MINSIZE = N
       ELSE
          MINSIZE = (N+NBMAX+1)*(NBMAX+3)
@@ -195,6 +197,7 @@
       ELSE
          CALL DKYTRI2X( UPLO, N, A, LDA, IPIV, WORK, NBMAX, INFO )
       END IF
+*
       RETURN
 *
 *     End of DKYTRI2

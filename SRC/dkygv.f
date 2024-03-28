@@ -125,7 +125,7 @@
 *>          W is DOUBLE PRECISION array, dimension (N)
 *>          If INFO = 0, the (N-1) lower subdiagonal elements of the
 *>          block diagonal matrix at front, and zero at last.
-*>		The matrix consists of 2-by-2 skew-symmetric blocks, and zeros.
+*>		    The matrix consists of 2-by-2 skew-symmetric blocks, and zeros.
 *>          The values in W, which represent blocks, are always
 *>          positive, and sorted in descending order.
 *>          The eigenvalues of each blocks can be evaluated directly.
@@ -173,7 +173,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup doubleSYeigen
+*> \ingroup kygv
 *
 *  =====================================================================
       SUBROUTINE DKYGV( ITYPE, JOBZ, UPLO, N, A, LDA, B, LDB, W, WORK,
@@ -205,10 +205,11 @@
 *     .. External Functions ..
       LOGICAL            LSAME
       INTEGER            ILAENV
-      EXTERNAL           ILAENV, LSAME
+      EXTERNAL           LSAME, ILAENV
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           DPOTRF, DKYEV, DKYGST, DTRMM, DTRSM, XERBLA
+      EXTERNAL           DPOTRF, DKYEV, DKYGST, DTRMM, DTRSM,
+     $                   XERBLA
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          MAX
@@ -290,7 +291,8 @@
                TRANS = 'T'
             END IF
 *
-            CALL DTRSM( 'Left', UPLO, TRANS, 'Non-unit', N, NEIG, ONE,
+            CALL DTRSM( 'Left', UPLO, TRANS, 'Non-unit', N, NEIG,
+     $                  ONE,
      $                  B, LDB, A, LDA )
 *
          ELSE IF( ITYPE.EQ.3 ) THEN
@@ -304,7 +306,8 @@
                TRANS = 'N'
             END IF
 *
-            CALL DTRMM( 'Left', UPLO, TRANS, 'Non-unit', N, NEIG, ONE,
+            CALL DTRMM( 'Left', UPLO, TRANS, 'Non-unit', N, NEIG,
+     $                  ONE,
      $                  B, LDB, A, LDA )
          END IF
       END IF

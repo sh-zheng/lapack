@@ -120,7 +120,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup doubleKYcomputational
+*> \ingroup kygst
 *
 *  =====================================================================
       SUBROUTINE DKYGST( ITYPE, UPLO, N, A, LDA, B, LDB, INFO )
@@ -148,7 +148,8 @@
       INTEGER            K, KB, NB
 *     ..
 *     .. External Subroutines ..
-      EXTERNAL           DKYGS2, DKYMM, DKYR2K, DTRMM, DTRSM, XERBLA
+      EXTERNAL           DKYGS2, DKYMM, DKYR2K, DTRMM, DTRSM,
+     $                   XERBLA
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          MAX, MIN

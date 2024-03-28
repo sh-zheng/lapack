@@ -171,7 +171,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup realKYcomputational
+*> \ingroup lakyf
 *
 *> \par Contributors:
 *  ==================
@@ -363,8 +363,8 @@
                   CALL SCOPY( K-IMAX1-2, A( IMAX1+1, K-1 ), 1,
      $                     A( IMAX1, IMAX1+1 ), LDA )
 
-                  CALL SSCAL( K-IMAX1-2, -ONE, A( IMAX1, IMAX1+1 ), LDA)
-
+                  CALL SSCAL( K-IMAX1-2, -ONE, A( IMAX1, IMAX1+1 ),
+     $                     LDA)
 *                 
 *                 Interchange rows K-1 and IMAX1 in last K-1 columns of A
 *
@@ -431,8 +431,8 @@
                   CALL SCOPY( K-IMAX2-2, A( IMAX2+1, K-1 ), 1,
      $                     A( IMAX2, IMAX2+1 ), LDA )
 
-                  CALL SSCAL( K-IMAX2-2, -ONE, A( IMAX2, IMAX2+1 ), LDA)
-
+                  CALL SSCAL( K-IMAX2-2, -ONE, A( IMAX2, IMAX2+1 ),
+     $					   LDA)
 *                 
 *                 Interchange rows K and K-1, then K-1 and IMAX2 in last K+1 columns of A
 *
@@ -586,10 +586,10 @@
          CALL SCOPY( N-K-1, A( K+2, K+1 ), 1, W( K+2, K+1 ), 1 )
          W( K, K ) = ZERO
          W( K+1, K+1 ) = ZERO
-         CALL SGEMV( 'No transpose', N-K+1, K-1, ONE, A( K, 1 ), LDA,
-     $               W( K, 1 ), LDW, ONE, W( K, K ), 1 )
-         CALL SGEMV( 'No transpose', N-K, K-1, ONE, A( K+1, 1 ), LDA,
-     $               W( K+1, 1 ), LDW, ONE, W( K+1, K+1 ), 1 )
+         CALL SGEMV( 'No transpose', N-K+1, K-1, ONE, A( K, 1 ),
+     $               LDA, W( K, 1 ), LDW, ONE, W( K, K ), 1 )
+         CALL SGEMV( 'No transpose', N-K, K-1, ONE, A( K+1, 1 ),
+     $               LDA, W( K+1, 1 ), LDW, ONE, W( K+1, K+1 ), 1 )
 
          W( K, K+1 ) = -W( K+1, K )
 *
@@ -790,16 +790,16 @@
 *
             DO 100 JJ = J, J + JB - 2
                CALL SGEMV( 'No transpose', J+JB-JJ-1, K-1, ONE,
-     $                     A( JJ+1, 1 ), LDA, W( JJ, 1 ), LDW, ONE,
-     $                     A( JJ+1, JJ ), 1 )
+     $                     A( JJ+1, 1 ), LDA, W( JJ, 1 ), LDW,
+     $                     ONE, A( JJ+1, JJ ), 1 )
   100       CONTINUE
 *
 *           Update the rectangular subdiagonal block
 *
             IF( J+JB.LE.N )
      $         CALL SGEMM( 'No transpose', 'Transpose', N-J-JB+1, JB,
-     $                     K-1, ONE, A( J+JB, 1 ), LDA, W( J, 1 ), LDW,
-     $                     ONE, A( J+JB, J ), LDA )
+     $                     K-1, ONE, A( J+JB, 1 ), LDA, W( J, 1 ),
+     $                     LDW, ONE, A( J+JB, J ), LDA )
   110    CONTINUE
 *
 *        Put L21 in standard form by partially undoing the interchanges
@@ -820,10 +820,13 @@
                IF( JP.LT.0 ) THEN
                   JP = -JP
 *                 (Here, J is a diagonal index)
-                  CALL SSWAP( J-1, A( JP, 1 ), LDA, A( JJ+1, 1 ), LDA )
-                  CALL SSWAP( J-1, A( JJ+1, 1 ), LDA, A( JJ, 1 ), LDA )
+                  CALL SSWAP( J-1, A( JP, 1 ), LDA, A( JJ+1, 1 ),
+     $				   LDA )
+                  CALL SSWAP( J-1, A( JJ+1, 1 ), LDA, A( JJ, 1 ),
+     $				   LDA )
                ELSEIF( JP.GT.0 ) THEN
-                  CALL SSWAP( J-1, A( JP, 1 ), LDA, A( JJ+1, 1 ), LDA )
+                  CALL SSWAP( J-1, A( JP, 1 ), LDA, A( JJ+1, 1 ),
+     $				   LDA )
                END IF
                
             END IF

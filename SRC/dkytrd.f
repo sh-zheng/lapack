@@ -138,7 +138,7 @@
 *> \author Univ. of Colorado Denver
 *> \author NAG Ltd.
 *
-*> \ingroup doubleKYcomputational
+*> \ingroup kytrd
 *
 *> \par Further Details:
 *  =====================
@@ -314,7 +314,8 @@
 *           Update the unreduced submatrix A(1:i-1,1:i-1), using an
 *           update of the form:  A := A - V*W**T + W*V**T
 *
-            CALL DKYR2K( UPLO, 'No transpose', I-1, NB, -ONE, A( 1, I ),
+            CALL DKYR2K( UPLO, 'No transpose', I-1, NB, -ONE, A( 1,
+     $                   I ),
      $                   LDA, WORK, LDWORK, ONE, A, LDA )
 *
 *           Copy superdiagonal elements back into A, and diagonal
