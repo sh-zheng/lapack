@@ -33,7 +33,7 @@
 #include "lapacke_utils.h"
 
 lapack_int API_SUFFIX(LAPACKE_dkteqr)( int matrix_layout, char compz, lapack_int n,
-                           double* d, double* e, double* z, lapack_int ldz )
+                           double* e, double* z, lapack_int ldz )
 {
     lapack_int info = 0;
     /* Additional scalars declarations for work arrays */
@@ -46,15 +46,12 @@ lapack_int API_SUFFIX(LAPACKE_dkteqr)( int matrix_layout, char compz, lapack_int
 #ifndef LAPACK_DISABLE_NAN_CHECK
     if( LAPACKE_get_nancheck() ) {
         /* Optionally check input matrices for NaNs */
-        if( API_SUFFIX(LAPACKE_d_nancheck)( n, d, 1 ) ) {
-            return -4;
-        }
         if( API_SUFFIX(LAPACKE_d_nancheck)( n-1, e, 1 ) ) {
-            return -5;
+            return -4;
         }
         if( API_SUFFIX(LAPACKE_lsame)( compz, 'v' ) ) {
             if( API_SUFFIX(LAPACKE_dge_nancheck)( matrix_layout, n, n, z, ldz ) ) {
-                return -6;
+                return -5;
             }
         }
     }
@@ -72,7 +69,7 @@ lapack_int API_SUFFIX(LAPACKE_dkteqr)( int matrix_layout, char compz, lapack_int
         goto exit_level_0;
     }
     /* Call middle-level interface */
-    info = API_SUFFIX(LAPACKE_dkteqr_work)( matrix_layout, compz, n, d, e, z, ldz, work );
+    info = API_SUFFIX(LAPACKE_dkteqr_work)( matrix_layout, compz, n, e, z, ldz, work );
     /* Release memory and exit */
     LAPACKE_free( work );
 exit_level_0:

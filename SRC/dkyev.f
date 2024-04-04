@@ -196,10 +196,10 @@
 *
       IF( INFO.EQ.0 ) THEN
          NB = ILAENV( 1, 'DKYTRD', UPLO, N, -1, -1, -1 )
-         LWKOPT = MAX( 1, ( NB+2 )*N )
+         LWKOPT = MAX( 1, ( NB+1 )*N )
          WORK( 1 ) = LWKOPT
 *
-         IF( LWORK.LT.MAX( 1, 3*N-1 ) .AND. .NOT.LQUERY )
+         IF( LWORK.LT.MAX( 1, 2*N-1 ) .AND. .NOT.LQUERY )
      $      INFO = -8
       END IF
 *
@@ -250,10 +250,10 @@
 *     Call DKYTRD to reduce skew-symmetric matrix to tridiagonal form.
 *
       INDE = 1
-      INDTAU = INDE + N
+      INDTAU = 1
       INDWRK = INDTAU + N
       LLWORK = LWORK - INDWRK + 1
-      CALL DKYTRD( UPLO, N, A, LDA, WORK( INDE ), W, WORK( INDTAU ),
+      CALL DKYTRD( UPLO, N, A, LDA, W, WORK( INDTAU ),
      $             WORK( INDWRK ), LLWORK, IINFO )
 *
 *     For eigenvalues only, call DKTEQR, For eigenvectors, first call
@@ -265,7 +265,7 @@
       END IF
       IF(.NOT.LOWER)
      $   CALL DSCAL(N-1, -ONE, W, 1)
-      CALL DKTEQR( JOBZ, N, WORK( INDE ), W, A, LDA, WORK( INDTAU ),
+      CALL DKTEQR( JOBZ, N, W, A, LDA, WORK( INDTAU ),
      $                INFO )
       W(N) = ZERO
 *

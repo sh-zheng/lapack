@@ -869,8 +869,9 @@
             CALL SLACPY( 'U', N, N, A, LDA, V, LDU )
 *
             NTEST = 1
-            CALL SKYTRD( 'U', N, V, LDU, SD, SE, TAU, WORK, LWORK,
+            CALL SKYTRD( 'U', N, V, LDU, SE, TAU, WORK, LWORK,
      $                   IINFO )
+            CALL SLASET( 'N', N, 1, ZERO, ZERO, SD, N)
 *
             IF( IINFO.NE.0 ) THEN
                WRITE( NOUNIT, FMT = 9999 )'SKYTRD(U)', IINFO, N, JTYPE,
@@ -913,8 +914,9 @@
             CALL SLACPY( 'L', N, N, A, LDA, V, LDU )
 *
             NTEST = 3
-            CALL SKYTRD( 'L', N, V, LDU, SD, SE, TAU, WORK, LWORK,
+            CALL SKYTRD( 'L', N, V, LDU, SE, TAU, WORK, LWORK,
      $                   IINFO )
+            CALL SLASET( 'N', N, 1, ZERO, ZERO, SD, N)
 *
             IF( IINFO.NE.0 ) THEN
                WRITE( NOUNIT, FMT = 9999 )'SKYTRD(L)', IINFO, N, JTYPE,
@@ -961,7 +963,7 @@
             CALL SLASET( 'Full', N, N, ZERO, ONE, Z, LDU )
 *
             NTEST = 5
-            CALL SKTEQR( 'V', N, D1, WORK, Z, LDU, WORK( N+1 ), IINFO )
+            CALL SKTEQR( 'V', N, WORK, Z, LDU, WORK( N+1 ), IINFO )
             IF( IINFO.NE.0 ) THEN
                WRITE( NOUNIT, FMT = 9999 )'SKTEQR(V)', IINFO, N, JTYPE,
      $            IOLDSD
@@ -983,7 +985,7 @@
      $         CALL SCOPY( N-1, SE, 1, WORK, 1 )
 *
             NTEST = 7
-            CALL SKTEQR( 'N', N, D2, WORK, WORK( N+1 ), LDU,
+            CALL SKTEQR( 'N', N, WORK, WORK( N+1 ), LDU,
      $                   WORK( N+1 ), IINFO )
             IF( IINFO.NE.0 ) THEN
                WRITE( NOUNIT, FMT = 9999 )'SKTEQR(N)', IINFO, N, JTYPE,

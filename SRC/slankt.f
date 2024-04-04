@@ -18,14 +18,14 @@
 *  Definition:
 *  ===========
 *
-*       REAL             FUNCTION SLANKT( NORM, N, D, E )
+*       REAL             FUNCTION SLANKT( NORM, N, E )
 *
 *       .. Scalar Arguments ..
 *       CHARACTER          NORM
 *       INTEGER            N
 *       ..
 *       .. Array Arguments ..
-*       REAL               D( * ), E( * )
+*       REAL               E( * )
 *       ..
 *
 *
@@ -73,12 +73,6 @@
 *>          set to zero.
 *> \endverbatim
 *>
-*> \param[in] D
-*> \verbatim
-*>          D is REAL array, dimension (N)
-*>          Arbitary values. D is not referenced.
-*> \endverbatim
-*>
 *> \param[in] E
 *> \verbatim
 *>          E is REAL array, dimension (N-1)
@@ -96,7 +90,7 @@
 *> \ingroup lankt
 *
 *  =====================================================================
-      REAL             FUNCTION SLANKT( NORM, N, D, E )
+      REAL             FUNCTION SLANKT( NORM, N, E )
 *
 *  -- LAPACK auxiliary routine --
 *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
@@ -107,7 +101,7 @@
       INTEGER            N
 *     ..
 *     .. Array Arguments ..
-      REAL               D( * ), E( * )
+      REAL               E( * )
 *     ..
 *
 *  =====================================================================

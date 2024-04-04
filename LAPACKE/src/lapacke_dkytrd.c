@@ -33,7 +33,7 @@
 #include "lapacke_utils.h"
 
 lapack_int API_SUFFIX(LAPACKE_dkytrd)( int matrix_layout, char uplo, lapack_int n, double* a,
-                           lapack_int lda, double* d, double* e, double* tau )
+                           lapack_int lda, double* e, double* tau )
 {
     lapack_int info = 0;
     lapack_int lwork = -1;
@@ -52,7 +52,7 @@ lapack_int API_SUFFIX(LAPACKE_dkytrd)( int matrix_layout, char uplo, lapack_int 
     }
 #endif
     /* Query optimal working array(s) size */
-    info = API_SUFFIX(LAPACKE_dkytrd_work)( matrix_layout, uplo, n, a, lda, d, e, tau,
+    info = API_SUFFIX(LAPACKE_dkytrd_work)( matrix_layout, uplo, n, a, lda, e, tau,
                                 &work_query, lwork );
     if( info != 0 ) {
         goto exit_level_0;
@@ -65,7 +65,7 @@ lapack_int API_SUFFIX(LAPACKE_dkytrd)( int matrix_layout, char uplo, lapack_int 
         goto exit_level_0;
     }
     /* Call middle-level interface */
-    info = API_SUFFIX(LAPACKE_dkytrd_work)( matrix_layout, uplo, n, a, lda, d, e, tau, work,
+    info = API_SUFFIX(LAPACKE_dkytrd_work)( matrix_layout, uplo, n, a, lda, e, tau, work,
                                 lwork );
     /* Release memory and exit */
     LAPACKE_free( work );

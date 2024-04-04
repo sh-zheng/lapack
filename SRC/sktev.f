@@ -212,9 +212,9 @@
 *     call SKTEQR.
 *
       IF( .NOT.WANTZ ) THEN
-         CALL SKTEQR( 'N', N, D, E, Z, LDZ, WORK, INFO )
+         CALL SKTEQR( 'N', N, E, Z, LDZ, WORK, INFO )
       ELSE
-         CALL SKTEQR( 'I', N, D, E, Z, LDZ, WORK, INFO )
+         CALL SKTEQR( 'I', N, E, Z, LDZ, WORK, INFO )
       END IF
 *
       CALL SCOPY(N-1, E, 1, D, 1)

@@ -3679,10 +3679,10 @@ lapack_int LAPACKE_zsteqr( int matrix_layout, char compz, lapack_int n,
                            double* d, double* e, lapack_complex_double* z,
                            lapack_int ldz );
 
-lapack_int LAPACKE_skteqr( int matrix_layout, char compz, lapack_int n, float* d,
+lapack_int LAPACKE_skteqr( int matrix_layout, char compz, lapack_int n,
                            float* e, float* z, lapack_int ldz );
 lapack_int LAPACKE_dkteqr( int matrix_layout, char compz, lapack_int n,
-                           double* d, double* e, double* z, lapack_int ldz );
+                           double* e, double* z, lapack_int ldz );
 
 lapack_int LAPACKE_ssterf( lapack_int n, float* d, float* e );
 lapack_int LAPACKE_dsterf( lapack_int n, double* d, double* e );
@@ -3999,9 +3999,9 @@ lapack_int LAPACKE_dsytrd( int matrix_layout, char uplo, lapack_int n, double* a
                            lapack_int lda, double* d, double* e, double* tau );
 
 lapack_int LAPACKE_skytrd( int matrix_layout, char uplo, lapack_int n, float* a,
-                           lapack_int lda, float* d, float* e, float* tau );
+                           lapack_int lda, float* e, float* tau );
 lapack_int LAPACKE_dkytrd( int matrix_layout, char uplo, lapack_int n, double* a,
-                           lapack_int lda, double* d, double* e, double* tau );
+                           lapack_int lda, double* e, double* tau );
 
 lapack_int LAPACKE_ssytrf( int matrix_layout, char uplo, lapack_int n, float* a,
                            lapack_int lda, lapack_int* ipiv );
@@ -9410,10 +9410,10 @@ lapack_int LAPACKE_zsteqr_work( int matrix_layout, char compz, lapack_int n,
                                 lapack_int ldz, double* work );
 
 lapack_int LAPACKE_skteqr_work( int matrix_layout, char compz, lapack_int n,
-                                float* d, float* e, float* z, lapack_int ldz,
+                                float* e, float* z, lapack_int ldz,
                                 float* work );
 lapack_int LAPACKE_dkteqr_work( int matrix_layout, char compz, lapack_int n,
-                                double* d, double* e, double* z, lapack_int ldz,
+                                double* e, double* z, lapack_int ldz,
                                 double* work );
 
 lapack_int LAPACKE_ssterf_work( lapack_int n, float* d, float* e );
@@ -9813,10 +9813,10 @@ lapack_int LAPACKE_dsytrd_work( int matrix_layout, char uplo, lapack_int n,
                                 double* tau, double* work, lapack_int lwork );
 
 lapack_int LAPACKE_skytrd_work( int matrix_layout, char uplo, lapack_int n,
-                                float* a, lapack_int lda, float* d, float* e,
+                                float* a, lapack_int lda, float* e,
                                 float* tau, float* work, lapack_int lwork );
 lapack_int LAPACKE_dkytrd_work( int matrix_layout, char uplo, lapack_int n,
-                                double* a, lapack_int lda, double* d, double* e,
+                                double* a, lapack_int lda, double* e,
                                 double* tau, double* work, lapack_int lwork );
 
 lapack_int LAPACKE_ssytrf_work( int matrix_layout, char uplo, lapack_int n,

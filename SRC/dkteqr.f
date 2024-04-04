@@ -18,14 +18,14 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE DKTEQR( COMPZ, N, D, E, Z, LDZ, WORK, INFO )
+*       SUBROUTINE DKTEQR( COMPZ, N, E, Z, LDZ, WORK, INFO )
 *
 *       .. Scalar Arguments ..
 *       CHARACTER          COMPZ
 *       INTEGER            INFO, LDZ, N
 *       ..
 *       .. Array Arguments ..
-*       DOUBLE PRECISION   D( * ), E( * ), WORK( * ), Z( LDZ, * )
+*       DOUBLE PRECISION   E( * ), WORK( * ), Z( LDZ, * )
 *       ..
 *
 *
@@ -61,12 +61,6 @@
 *> \verbatim
 *>          N is INTEGER
 *>          The order of the matrix.  N >= 0.
-*> \endverbatim
-*>
-*> \param[in,out] D
-*> \verbatim
-*>          D is DOUBLE PRECISION array, dimension (N)
-*>          D is not referenced.
 *> \endverbatim
 *>
 *> \param[in,out] E
@@ -134,7 +128,7 @@
 *> \ingroup kteqr
 *
 *  =====================================================================
-      SUBROUTINE DKTEQR( COMPZ, N, D, E, Z, LDZ, WORK, INFO )
+      SUBROUTINE DKTEQR( COMPZ, N, E, Z, LDZ, WORK, INFO )
 *
 *  -- LAPACK computational routine --
 *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
@@ -145,7 +139,7 @@
       INTEGER            INFO, LDZ, N
 *     ..
 *     .. Array Arguments ..
-      DOUBLE PRECISION   D( * ), E( * ), WORK( * ), Z( LDZ, * )
+      DOUBLE PRECISION   E( * ), WORK( * ), Z( LDZ, * )
 *     ..
 *
 *  =====================================================================
@@ -198,7 +192,7 @@
          INFO = -2
       ELSE IF( ( LDZ.LT.1 ) .OR. ( ICOMPZ.GT.0 .AND. LDZ.LT.MAX( 1,
      $         N ) ) ) THEN
-         INFO = -6
+         INFO = -5
       END IF
       IF( INFO.NE.0 ) THEN
          CALL XERBLA( 'DKTEQR', -INFO )
@@ -294,7 +288,7 @@
 *
 *     Scale submatrix in rows and columns L to LEND
 *
-      ANORM = DLANKT( 'M', LEND-L+1, D( L ), E( L ) )
+      ANORM = DLANKT( 'M', LEND-L+1, E( L ) )
       ISCALE = 0
       IF( ANORM.EQ.ZERO )
      $   GO TO 10

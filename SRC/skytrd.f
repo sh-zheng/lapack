@@ -18,14 +18,14 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE SKYTRD( UPLO, N, A, LDA, D, E, TAU, WORK, LWORK, INFO )
+*       SUBROUTINE SKYTRD( UPLO, N, A, LDA, E, TAU, WORK, LWORK, INFO )
 *
 *       .. Scalar Arguments ..
 *       CHARACTER          UPLO
 *       INTEGER            INFO, LDA, LWORK, N
 *       ..
 *       .. Array Arguments ..
-*       REAL               A( LDA, * ), D( * ), E( * ), TAU( * ),
+*       REAL               A( LDA, * ), E( * ), TAU( * ),
 *      $                   WORK( * )
 *       ..
 *
@@ -81,13 +81,6 @@
 *> \verbatim
 *>          LDA is INTEGER
 *>          The leading dimension of the array A.  LDA >= max(1,N).
-*> \endverbatim
-*>
-*> \param[out] D
-*> \verbatim
-*>          D is REAL array, dimension (N)
-*>          The diagonal elements of the tridiagonal matrix T:
-*>          D(i) = 0.
 *> \endverbatim
 *>
 *> \param[out] E
@@ -187,7 +180,7 @@
 *> \endverbatim
 *>
 *  =====================================================================
-      SUBROUTINE SKYTRD( UPLO, N, A, LDA, D, E, TAU, WORK, LWORK, INFO )
+      SUBROUTINE SKYTRD( UPLO, N, A, LDA, E, TAU, WORK, LWORK, INFO )
 *
 *  -- LAPACK computational routine --
 *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
@@ -198,7 +191,7 @@
       INTEGER            INFO, LDA, LWORK, N
 *     ..
 *     .. Array Arguments ..
-      REAL               A( LDA, * ), D( * ), E( * ), TAU( * ),
+      REAL               A( LDA, * ), E( * ), TAU( * ),
      $                   WORK( * )
 *     ..
 *
@@ -239,7 +232,7 @@
       ELSE IF( LDA.LT.MAX( 1, N ) ) THEN
          INFO = -4
       ELSE IF( LWORK.LT.1 .AND. .NOT.LQUERY ) THEN
-         INFO = -9
+         INFO = -8
       END IF
 *
       IF( INFO.EQ.0 ) THEN
@@ -319,18 +312,16 @@
      $                   I ),
      $                   LDA, WORK, LDWORK, ONE, A, LDA )
 *
-*           Copy superdiagonal elements back into A, and diagonal
-*           elements into D
+*           Copy superdiagonal elements back into A
 *
             DO 10 J = I, I + NB - 1
                A( J-1, J ) = E( J-1 )
-               D( J ) = ZERO
    10       CONTINUE
    20    CONTINUE
 *
 *        Use unblocked code to reduce the last or only block
 *
-         CALL SKYTD2( UPLO, KK, A, LDA, D, E, TAU, IINFO )
+         CALL SKYTD2( UPLO, KK, A, LDA, E, TAU, IINFO )
       ELSE
 *
 *        Reduce the lower triangle of A
@@ -348,21 +339,19 @@
 *           an update of the form:  A := A - V*W**T + W*V**T
 *
             CALL SKYR2K( UPLO, 'No transpose', N-I-NB+1, NB, -ONE,
-     $                   A( I+NB, I ), LDA, WORK( NB+1 ), LDWORK, ONE,
-     $                   A( I+NB, I+NB ), LDA )
+     $                   A( I+NB, I ), LDA, WORK( NB+1 ), LDWORK,
+     $                   ONE, A( I+NB, I+NB ), LDA )
 *
-*           Copy subdiagonal elements back into A, and diagonal
-*           elements into D
+*           Copy subdiagonal elements back into A
 *
             DO 30 J = I, I + NB - 1
                A( J+1, J ) = E( J )
-               D( J ) = ZERO
    30       CONTINUE
    40    CONTINUE
 *
 *        Use unblocked code to reduce the last or only block
 *
-         CALL SKYTD2( UPLO, N-I+1, A( I, I ), LDA, D( I ), E( I ),
+         CALL SKYTD2( UPLO, N-I+1, A( I, I ), LDA, E( I ),
      $                TAU( I ), IINFO )
       END IF
 *

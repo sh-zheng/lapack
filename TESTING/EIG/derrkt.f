@@ -129,16 +129,16 @@
 *
          SRNAMT = 'DKYTRD'
          INFOT = 1
-         CALL DKYTRD( '/', 0, A, 1, D, E, TAU, W, 1, INFO )
+         CALL DKYTRD( '/', 0, A, 1, E, TAU, W, 1, INFO )
          CALL CHKXER( 'DKYTRD', INFOT, NOUT, LERR, OK )
          INFOT = 2
-         CALL DKYTRD( 'U', -1, A, 1, D, E, TAU, W, 1, INFO )
+         CALL DKYTRD( 'U', -1, A, 1, E, TAU, W, 1, INFO )
          CALL CHKXER( 'DKYTRD', INFOT, NOUT, LERR, OK )
          INFOT = 4
-         CALL DKYTRD( 'U', 2, A, 1, D, E, TAU, W, 1, INFO )
+         CALL DKYTRD( 'U', 2, A, 1, E, TAU, W, 1, INFO )
          CALL CHKXER( 'DKYTRD', INFOT, NOUT, LERR, OK )
-         INFOT = 9
-         CALL DKYTRD( 'U', 0, A, 1, D, E, TAU, W, 0, INFO )
+         INFOT = 8
+         CALL DKYTRD( 'U', 0, A, 1, E, TAU, W, 0, INFO )
          CALL CHKXER( 'DKYTRD', INFOT, NOUT, LERR, OK )
          NT = NT + 4
 *
@@ -146,13 +146,13 @@
 *
          SRNAMT = 'DKTEQR'
          INFOT = 1
-         CALL DKTEQR( '/', 0, D, E, Z, 1, W, INFO )
+         CALL DKTEQR( '/', 0, E, Z, 1, W, INFO )
          CALL CHKXER( 'DKTEQR', INFOT, NOUT, LERR, OK )
          INFOT = 2
-         CALL DKTEQR( 'N', -1, D, E, Z, 1, W, INFO )
+         CALL DKTEQR( 'N', -1, E, Z, 1, W, INFO )
          CALL CHKXER( 'DKTEQR', INFOT, NOUT, LERR, OK )
-         INFOT = 6
-         CALL DKTEQR( 'V', 2, D, E, Z, 1, W, INFO )
+         INFOT = 5
+         CALL DKTEQR( 'V', 2, E, Z, 1, W, INFO )
          CALL CHKXER( 'DKTEQR', INFOT, NOUT, LERR, OK )
          NT = NT + 3
 *
@@ -172,7 +172,7 @@
          CALL DKYEV( 'N', 'U', 2, A, 1, X, W, 3, INFO )
          CALL CHKXER( 'DKYEV ', INFOT, NOUT, LERR, OK )
          INFOT = 8
-         CALL DKYEV( 'N', 'U', 1, A, 1, X, W, 1, INFO )
+         CALL DKYEV( 'N', 'U', 2, A, 2, X, W, 2, INFO )
          CALL CHKXER( 'DKYEV ', INFOT, NOUT, LERR, OK )
          NT = NT + 5
 *

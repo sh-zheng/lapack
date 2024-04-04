@@ -10271,7 +10271,6 @@ lapack_float_return LAPACK_slanst_base(
 double LAPACK_dlankt_base(
     char const* norm,
     lapack_int const* n,
-    double const* D,
     double const* E
 #ifdef LAPACK_FORTRAN_STRLEN_END
     , size_t
@@ -10287,7 +10286,6 @@ double LAPACK_dlankt_base(
 lapack_float_return LAPACK_slankt_base(
     char const* norm,
     lapack_int const* n,
-    float const* D,
     float const* E
 #ifdef LAPACK_FORTRAN_STRLEN_END
     , size_t
@@ -16832,7 +16830,6 @@ void LAPACK_zsteqr_base(
 void LAPACK_dkteqr_base(
     char const* compz,
     lapack_int const* n,
-    double* D,
     double* E,
     double* Z, lapack_int const* ldz,
     double* work,
@@ -16851,7 +16848,6 @@ void LAPACK_dkteqr_base(
 void LAPACK_skteqr_base(
     char const* compz,
     lapack_int const* n,
-    float* D,
     float* E,
     float* Z, lapack_int const* ldz,
     float* work,
@@ -19057,7 +19053,6 @@ void LAPACK_dkytrd_base(
     char const* uplo,
     lapack_int const* n,
     double* A, lapack_int const* lda,
-    double* D,
     double* E,
     double* tau,
     double* work, lapack_int const* lwork,
@@ -19077,7 +19072,6 @@ void LAPACK_skytrd_base(
     char const* uplo,
     lapack_int const* n,
     float* A, lapack_int const* lda,
-    float* D,
     float* E,
     float* tau,
     float* work, lapack_int const* lwork,

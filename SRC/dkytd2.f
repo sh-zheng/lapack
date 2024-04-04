@@ -18,14 +18,14 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE DKYTD2( UPLO, N, A, LDA, D, E, TAU, INFO )
+*       SUBROUTINE DKYTD2( UPLO, N, A, LDA, E, TAU, INFO )
 *
 *       .. Scalar Arguments ..
 *       CHARACTER          UPLO
 *       INTEGER            INFO, LDA, N
 *       ..
 *       .. Array Arguments ..
-*       DOUBLE PRECISION   A( LDA, * ), D( * ), E( * ), TAU( * )
+*       DOUBLE PRECISION   A( LDA, * ), E( * ), TAU( * )
 *       ..
 *
 *
@@ -82,13 +82,6 @@
 *> \verbatim
 *>          LDA is INTEGER
 *>          The leading dimension of the array A.  LDA >= max(1,N).
-*> \endverbatim
-*>
-*> \param[out] D
-*> \verbatim
-*>          D is DOUBLE PRECISION array, dimension (N)
-*>          The diagonal elements of the tridiagonal matrix T:
-*>          D(i) = 0.
 *> \endverbatim
 *>
 *> \param[out] E
@@ -169,7 +162,7 @@
 *> \endverbatim
 *>
 *  =====================================================================
-      SUBROUTINE DKYTD2( UPLO, N, A, LDA, D, E, TAU, INFO )
+      SUBROUTINE DKYTD2( UPLO, N, A, LDA, E, TAU, INFO )
 *
 *  -- LAPACK computational routine --
 *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
@@ -180,7 +173,7 @@
       INTEGER            INFO, LDA, N
 *     ..
 *     .. Array Arguments ..
-      DOUBLE PRECISION   A( LDA, * ), D( * ), E( * ), TAU( * )
+      DOUBLE PRECISION   A( LDA, * ), E( * ), TAU( * )
 *     ..
 *
 *  =====================================================================
@@ -266,10 +259,8 @@
 *
                A( I, I+1 ) = E( I )
             END IF
-            D( I+1 ) = ZERO
             TAU( I ) = TAUI
    10    CONTINUE
-         D( 1 ) = ZERO
       ELSE
 *
 *        Reduce the lower triangle of A
@@ -310,10 +301,8 @@
 *
                A( I+1, I ) = E( I )
             END IF
-            D( I ) = ZERO
             TAU( I ) = TAUI
    20    CONTINUE
-         D( N ) = ZERO
       END IF
 *
       RETURN

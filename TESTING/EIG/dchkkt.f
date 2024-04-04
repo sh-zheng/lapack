@@ -870,8 +870,9 @@
             CALL DLACPY( 'U', N, N, A, LDA, V, LDU )
 *
             NTEST = 1
-            CALL DKYTRD( 'U', N, V, LDU, SD, SE, TAU, WORK, LWORK,
+            CALL DKYTRD( 'U', N, V, LDU, SE, TAU, WORK, LWORK,
      $                   IINFO )
+            CALL DLASET( 'N', N, 1, ZERO, ZERO, SD, N)
 *
             IF( IINFO.NE.0 ) THEN
                WRITE( NOUNIT, FMT = 9999 )'DKYTRD(U)', IINFO, N, JTYPE,
@@ -914,8 +915,9 @@
             CALL DLACPY( 'L', N, N, A, LDA, V, LDU )
 *
             NTEST = 3
-            CALL DKYTRD( 'L', N, V, LDU, SD, SE, TAU, WORK, LWORK,
+            CALL DKYTRD( 'L', N, V, LDU, SE, TAU, WORK, LWORK,
      $                   IINFO )
+            CALL DLASET( 'N', N, 1, ZERO, ZERO, SD, N)
 *
             IF( IINFO.NE.0 ) THEN
                WRITE( NOUNIT, FMT = 9999 )'DKYTRD(L)', IINFO, N, JTYPE,
@@ -962,7 +964,7 @@
             CALL DLASET( 'Full', N, N, ZERO, ONE, Z, LDU )
 *
             NTEST = 5
-            CALL DKTEQR( 'V', N, D1, WORK, Z, LDU, WORK( N+1 ), IINFO )
+            CALL DKTEQR( 'V', N, WORK, Z, LDU, WORK( N+1 ), IINFO )
             IF( IINFO.NE.0 ) THEN
                WRITE( NOUNIT, FMT = 9999 )'DKTEQR(V)', IINFO, N, JTYPE,
      $            IOLDSD
@@ -984,7 +986,7 @@
      $         CALL DCOPY( N-1, SE, 1, WORK, 1 )
 *
             NTEST = 7
-            CALL DKTEQR( 'N', N, D2, WORK, WORK( N+1 ), LDU,
+            CALL DKTEQR( 'N', N, WORK, WORK( N+1 ), LDU,
      $                   WORK( N+1 ), IINFO )
             IF( IINFO.NE.0 ) THEN
                WRITE( NOUNIT, FMT = 9999 )'DKTEQR(N)', IINFO, N, JTYPE,

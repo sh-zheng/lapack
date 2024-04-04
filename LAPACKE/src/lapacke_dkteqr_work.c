@@ -33,13 +33,13 @@
 #include "lapacke_utils.h"
 
 lapack_int API_SUFFIX(LAPACKE_dkteqr_work)( int matrix_layout, char compz, lapack_int n,
-                                double* d, double* e, double* z, lapack_int ldz,
+                                double* e, double* z, lapack_int ldz,
                                 double* work )
 {
     lapack_int info = 0;
     if( matrix_layout == LAPACK_COL_MAJOR ) {
         /* Call LAPACK function and adjust info */
-        LAPACK_dkteqr( &compz, &n, d, e, z, &ldz, work, &info );
+        LAPACK_dkteqr( &compz, &n, e, z, &ldz, work, &info );
         if( info < 0 ) {
             info = info - 1;
         }
@@ -65,7 +65,7 @@ lapack_int API_SUFFIX(LAPACKE_dkteqr_work)( int matrix_layout, char compz, lapac
             API_SUFFIX(LAPACKE_dge_trans)( matrix_layout, n, n, z, ldz, z_t, ldz_t );
         }
         /* Call LAPACK function and adjust info */
-        LAPACK_dkteqr( &compz, &n, d, e, z_t, &ldz_t, work, &info );
+        LAPACK_dkteqr( &compz, &n, e, z_t, &ldz_t, work, &info );
         if( info < 0 ) {
             info = info - 1;
         }

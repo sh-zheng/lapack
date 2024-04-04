@@ -33,13 +33,13 @@
 #include "lapacke_utils.h"
 
 lapack_int API_SUFFIX(LAPACKE_skytrd_work)( int matrix_layout, char uplo, lapack_int n,
-                                float* a, lapack_int lda, float* d, float* e,
+                                float* a, lapack_int lda, float* e,
                                 float* tau, float* work, lapack_int lwork )
 {
     lapack_int info = 0;
     if( matrix_layout == LAPACK_COL_MAJOR ) {
         /* Call LAPACK function and adjust info */
-        LAPACK_skytrd( &uplo, &n, a, &lda, d, e, tau, work, &lwork, &info );
+        LAPACK_skytrd( &uplo, &n, a, &lda, e, tau, work, &lwork, &info );
         if( info < 0 ) {
             info = info - 1;
         }
@@ -54,7 +54,7 @@ lapack_int API_SUFFIX(LAPACKE_skytrd_work)( int matrix_layout, char uplo, lapack
         }
         /* Query optimal working array(s) size if requested */
         if( lwork == -1 ) {
-            LAPACK_skytrd( &uplo, &n, a, &lda_t, d, e, tau, work, &lwork,
+            LAPACK_skytrd( &uplo, &n, a, &lda_t, e, tau, work, &lwork,
                            &info );
             return (info < 0) ? (info - 1) : info;
         }
@@ -67,7 +67,7 @@ lapack_int API_SUFFIX(LAPACKE_skytrd_work)( int matrix_layout, char uplo, lapack
         /* Transpose input matrices */
         API_SUFFIX(LAPACKE_sky_trans)( matrix_layout, uplo, n, a, lda, a_t, lda_t );
         /* Call LAPACK function and adjust info */
-        LAPACK_skytrd( &uplo, &n, a_t, &lda_t, d, e, tau, work, &lwork, &info );
+        LAPACK_skytrd( &uplo, &n, a_t, &lda_t, e, tau, work, &lwork, &info );
         if( info < 0 ) {
             info = info - 1;
         }

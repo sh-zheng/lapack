@@ -212,9 +212,9 @@
 *     call DKTEQR.
 *
       IF( .NOT.WANTZ ) THEN
-         CALL DKTEQR( 'N', N, D, E, Z, LDZ, WORK, INFO )
+         CALL DKTEQR( 'N', N, E, Z, LDZ, WORK, INFO )
       ELSE
-         CALL DKTEQR( 'I', N, D, E, Z, LDZ, WORK, INFO )
+         CALL DKTEQR( 'I', N, E, Z, LDZ, WORK, INFO )
       END IF
 *
       CALL DCOPY(N-1, E, 1, D, 1)

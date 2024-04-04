@@ -239,9 +239,9 @@
       END IF
 *
       IF( INFO.EQ.0 ) THEN
-         LWKMIN = MAX( 1, 3*N - 1 )
+         LWKMIN = MAX( 1, 2*N - 1 )
          NB = ILAENV( 1, 'SSYTRD', UPLO, N, -1, -1, -1 )
-         LWKOPT = MAX( LWKMIN, ( NB + 2 )*N )
+         LWKOPT = MAX( LWKMIN, ( NB + 1 )*N )
          WORK( 1 ) = SROUNDUP_LWORK(LWKOPT)
 *
          IF( LWORK.LT.LWKMIN .AND. .NOT.LQUERY ) THEN

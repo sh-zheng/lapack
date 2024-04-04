@@ -129,16 +129,16 @@
 *
          SRNAMT = 'SKYTRD'
          INFOT = 1
-         CALL SKYTRD( '/', 0, A, 1, D, E, TAU, W, 1, INFO )
+         CALL SKYTRD( '/', 0, A, 1, E, TAU, W, 1, INFO )
          CALL CHKXER( 'SKYTRD', INFOT, NOUT, LERR, OK )
          INFOT = 2
-         CALL SKYTRD( 'U', -1, A, 1, D, E, TAU, W, 1, INFO )
+         CALL SKYTRD( 'U', -1, A, 1, E, TAU, W, 1, INFO )
          CALL CHKXER( 'SKYTRD', INFOT, NOUT, LERR, OK )
          INFOT = 4
-         CALL SKYTRD( 'U', 2, A, 1, D, E, TAU, W, 1, INFO )
+         CALL SKYTRD( 'U', 2, A, 1, E, TAU, W, 1, INFO )
          CALL CHKXER( 'SKYTRD', INFOT, NOUT, LERR, OK )
-         INFOT = 9
-         CALL SKYTRD( 'U', 0, A, 1, D, E, TAU, W, 0, INFO )
+         INFOT = 8
+         CALL SKYTRD( 'U', 0, A, 1, E, TAU, W, 0, INFO )
          CALL CHKXER( 'SKYTRD', INFOT, NOUT, LERR, OK )
          NT = NT + 4
 *
@@ -146,13 +146,13 @@
 *
          SRNAMT = 'SKTEQR'
          INFOT = 1
-         CALL SKTEQR( '/', 0, D, E, Z, 1, W, INFO )
+         CALL SKTEQR( '/', 0, E, Z, 1, W, INFO )
          CALL CHKXER( 'SKTEQR', INFOT, NOUT, LERR, OK )
          INFOT = 2
-         CALL SKTEQR( 'N', -1, D, E, Z, 1, W, INFO )
+         CALL SKTEQR( 'N', -1, E, Z, 1, W, INFO )
          CALL CHKXER( 'SKTEQR', INFOT, NOUT, LERR, OK )
-         INFOT = 6
-         CALL SKTEQR( 'V', 2, D, E, Z, 1, W, INFO )
+         INFOT = 5
+         CALL SKTEQR( 'V', 2, E, Z, 1, W, INFO )
          CALL CHKXER( 'SKTEQR', INFOT, NOUT, LERR, OK )
          NT = NT + 3
 *
@@ -172,7 +172,7 @@
          CALL SKYEV( 'N', 'U', 2, A, 1, X, W, 3, INFO )
          CALL CHKXER( 'SKYEV ', INFOT, NOUT, LERR, OK )
          INFOT = 8
-         CALL SKYEV( 'N', 'U', 1, A, 1, X, W, 1, INFO )
+         CALL SKYEV( 'N', 'U', 2, A, 2, X, W, 2, INFO )
          CALL CHKXER( 'SKYEV ', INFOT, NOUT, LERR, OK )
          NT = NT + 5
 *

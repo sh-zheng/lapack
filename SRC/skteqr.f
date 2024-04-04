@@ -18,14 +18,14 @@
 *  Definition:
 *  ===========
 *
-*       SUBROUTINE SKTEQR( COMPZ, N, D, E, Z, LDZ, WORK, INFO )
+*       SUBROUTINE SKTEQR( COMPZ, N, E, Z, LDZ, WORK, INFO )
 *
 *       .. Scalar Arguments ..
 *       CHARACTER          COMPZ
 *       INTEGER            INFO, LDZ, N
 *       ..
 *       .. Array Arguments ..
-*       REAL               D( * ), E( * ), WORK( * ), Z( LDZ, * )
+*       REAL               E( * ), WORK( * ), Z( LDZ, * )
 *       ..
 *
 *
@@ -61,12 +61,6 @@
 *> \verbatim
 *>          N is INTEGER
 *>          The order of the matrix.  N >= 0.
-*> \endverbatim
-*>
-*> \param[in,out] D
-*> \verbatim
-*>          D is REAL array, dimension (N)
-*>          D is not referenced.
 *> \endverbatim
 *>
 *> \param[in,out] E
@@ -134,7 +128,7 @@
 *> \ingroup kteqr
 *
 *  =====================================================================
-      SUBROUTINE SKTEQR( COMPZ, N, D, E, Z, LDZ, WORK, INFO )
+      SUBROUTINE SKTEQR( COMPZ, N, E, Z, LDZ, WORK, INFO )
 *
 *  -- LAPACK computational routine --
 *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
@@ -145,7 +139,7 @@
       INTEGER            INFO, LDZ, N
 *     ..
 *     .. Array Arguments ..
-      REAL               D( * ), E( * ), WORK( * ), Z( LDZ, * )
+      REAL               E( * ), WORK( * ), Z( LDZ, * )
 *     ..
 *
 *  =====================================================================
@@ -198,7 +192,7 @@
          INFO = -2
       ELSE IF( ( LDZ.LT.1 ) .OR. ( ICOMPZ.GT.0 .AND. LDZ.LT.MAX( 1,
      $         N ) ) ) THEN
-         INFO = -6
+         INFO = -5
       END IF
       IF( INFO.NE.0 ) THEN
          CALL XERBLA( 'SKTEQR', -INFO )
@@ -294,7 +288,7 @@
 *
 *     Scale submatrix in rows and columns L to LEND
 *
-      ANORM = SLANKT( 'M', LEND-L+1, D( L ), E( L ) )
+      ANORM = SLANKT( 'M', LEND-L+1, E( L ) )
       ISCALE = 0
       IF( ANORM.EQ.ZERO )
      $   GO TO 10
