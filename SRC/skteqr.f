@@ -100,8 +100,8 @@
 *>
 *> \param[out] WORK
 *> \verbatim
-*>          WORK is REAL array, dimension (max(1,2*N-2))
-*>          If COMPZ = 'N', then WORK is not referenced.
+*>          WORK is REAL array.
+*>          WORK is not referenced.
 *> \endverbatim
 *>
 *> \param[out] INFO
