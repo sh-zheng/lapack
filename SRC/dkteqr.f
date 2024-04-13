@@ -70,7 +70,7 @@
 *>          tridiagonal matrix.
 *>          On exit, the (n-1) lower subdiagonal elements of the
 *>          block diagonal matrix. If INFO = 0, the matrix consists
-*>			of 2-by-2 skew-symmetric blocks, and zeros.
+*>          of 2-by-2 skew-symmetric blocks, and zeros.
 *>          The values in E, which represent blocks, are always
 *>          positive, and sorted in descending order.
 *>          The eigenvalues of each blocks can be evaluated directly.
