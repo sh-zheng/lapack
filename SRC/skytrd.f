@@ -306,7 +306,7 @@
      $                   LDWORK )
 *
 *           Update the unreduced submatrix A(1:i-1,1:i-1), using an
-*           update of the form:  A := A - V*W**T + W*V**T
+*           update of the form:  A := A + V*X**T - X*V**T
 *
             CALL SKYR2K( UPLO, 'No transpose', I-1, NB, -ONE, A( 1,
      $                   I ),
@@ -336,7 +336,7 @@
      $                   TAU( I ), WORK, LDWORK )
 *
 *           Update the unreduced submatrix A(i+ib:n,i+ib:n), using
-*           an update of the form:  A := A - V*W**T + W*V**T
+*           an update of the form:  A := A + V*X**T - X*V**T
 *
             CALL SKYR2K( UPLO, 'No transpose', N-I-NB+1, NB, -ONE,
      $                   A( I+NB, I ), LDA, WORK( NB+1 ), LDWORK,

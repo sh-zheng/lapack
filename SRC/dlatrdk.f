@@ -278,9 +278,6 @@
      $                        W( 1, IW ), 1 )
                END IF
                CALL DSCAL( I-1, TAU( I-1 ), W( 1, IW ), 1 )
-               ALPHA = -HALF*TAU( I-1 )*DDOT( I-1, W( 1, IW ), 1,
-     $                 A( 1, I ), 1 )
-               CALL DAXPY( I-1, ALPHA, A( 1, I ), 1, W( 1, IW ), 1 )
             END IF
 *
    10    CONTINUE
@@ -323,10 +320,6 @@
      $                     1 ),
      $                     LDW, W( 1, I ), 1, ONE, W( I+1, I ), 1 )
                CALL DSCAL( N-I, TAU( I ), W( I+1, I ), 1 )
-               ALPHA = -HALF*TAU( I )*DDOT( N-I, W( I+1, I ), 1,
-     $                 A( I+1, I ), 1 )
-               CALL DAXPY( N-I, ALPHA, A( I+1, I ), 1, W( I+1, I ),
-     $                     1 )
             END IF
 *
    20    CONTINUE

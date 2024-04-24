@@ -278,9 +278,6 @@
      $                        W( 1, IW ), 1 )
                END IF
                CALL SSCAL( I-1, TAU( I-1 ), W( 1, IW ), 1 )
-               ALPHA = -HALF*TAU( I-1 )*SDOT( I-1, W( 1, IW ), 1,
-     $                 A( 1, I ), 1 )
-               CALL SAXPY( I-1, ALPHA, A( 1, I ), 1, W( 1, IW ), 1 )
             END IF
 *
    10    CONTINUE
@@ -323,10 +320,6 @@
      $                     1 ),
      $                     LDW, W( 1, I ), 1, ONE, W( I+1, I ), 1 )
                CALL SSCAL( N-I, TAU( I ), W( I+1, I ), 1 )
-               ALPHA = -HALF*TAU( I )*SDOT( N-I, W( I+1, I ), 1,
-     $                 A( I+1, I ), 1 )
-               CALL SAXPY( N-I, ALPHA, A( I+1, I ), 1, W( I+1, I ),
-     $                     1 )
             END IF
 *
    20    CONTINUE

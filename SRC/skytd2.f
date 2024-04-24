@@ -245,13 +245,8 @@
      $                     ZERO,
      $                     TAU, 1 )
 *
-*              Compute  w := x - 1/2 * tau * (x**T * v) * v
-*
-               ALPHA = -HALF*TAUI*SDOT( I, TAU, 1, A( 1, I+1 ), 1 )
-               CALL SAXPY( I, ALPHA, A( 1, I+1 ), 1, TAU, 1 )
-*
 *              Apply the transformation as a rank-2 update:
-*                 A := A - v * w**T + w * v**T
+*                 A := A + v * x**T - x * v**T
 *
                CALL SKYR2( UPLO, I, -ONE, A( 1, I+1 ), 1, TAU, 1, A,
      $                     LDA )
@@ -284,15 +279,8 @@
                CALL SKYMV( UPLO, N-I, TAUI, A( I+1, I+1 ), LDA,
      $                     A( I+1, I ), 1, ZERO, TAU( I ), 1 )
 *
-*              Compute  w := x - 1/2 * tau * (x**T * v) * v
-*
-               ALPHA = -HALF*TAUI*SDOT( N-I, TAU( I ), 1, A( I+1,
-     $                                  I ),
-     $                 1 )
-               CALL SAXPY( N-I, ALPHA, A( I+1, I ), 1, TAU( I ), 1 )
-*
 *              Apply the transformation as a rank-2 update:
-*                 A := A - v * w**T + w * v**T
+*                 A := A + v * x**T - x * v**T
 *
                CALL SKYR2( UPLO, N-I, -ONE, A( I+1, I ), 1, TAU( I ),
      $                     1,
