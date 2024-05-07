@@ -367,8 +367,15 @@
             R = E(M-1)*E(M-2)
             S = SIGN(DLAPY2( P, R ), P)
 *
-            IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
+            IF(S.EQ.ZERO) THEN
                E(M-1) = ZERO
+               E(M-2) = ZERO
+               GO TO 40
+            ELSEIF(R/S.EQ.ZERO .AND. ABS(E(M-1)).LT.ABS(E(M-2))) THEN
+               E(M-1) = ZERO
+               GO TO 40
+            ELSEIF(R/S.EQ.ZERO .AND. ABS(E(M-1)).GE.ABS(E(M-2))) THEN
+               E(M-2) = ZERO
                GO TO 40
             ELSEIF(E(M-2).EQ.E(M-1)) THEN
                E(M-2) = SQRT2*E(M-2)
@@ -448,7 +455,11 @@
             VB = ONE
             VC = ONE
             VD = ZERO
-            E(M-1) = ZERO
+            IF(ABS(E(M-1)).LT.ABS(E(M-2))) THEN
+               E(M-1) = ZERO
+            ELSE
+               E(M-2) = ZERO
+            END IF
          ELSE
             VA = -P/S
             VB = -VA + (R/S)*(R/(P+S))
@@ -487,12 +498,17 @@
             S = SIGN(DLAPY2( P, R ), P)
             E(I) = -S
 *
-            IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
+            IF(S.EQ.ZERO) THEN
                VA = -ONE
                VB = ONE
                VC = ONE
                VD = ZERO
-               E(I) = ZERO
+            ELSEIF(R/S.EQ.ZERO .AND. VD.NE.ZERO) THEN
+               VA = -ONE
+               VB = ONE
+               VC = ONE
+               VD = ZERO
+               E(I-2) = ZERO
             ELSE
                VA = -P/S
                VB = -VA + (R/S)*(R/(P+S))
@@ -530,12 +546,17 @@
          S = SIGN(DLAPY2( P, R ), P)
          E(I) = -S
 *
-         IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
+         IF(S.EQ.ZERO) THEN
             VA = -ONE
             VB = ONE
             VC = ONE
             VD = ZERO
-            E(I) = ZERO
+         ELSEIF(R/S.EQ.ZERO .AND. VD.NE.ZERO) THEN
+            VA = -ONE
+            VB = ONE
+            VC = ONE
+            VD = ZERO
+            E(I-2) = ZERO
          ELSE
             VA = -P/S
             VB = -VA + (R/S)*(R/(P+S))
@@ -641,8 +662,15 @@
             R = E(M)*E(M+1)
             S = SIGN(DLAPY2( P, R ), P)
 *
-            IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
+            IF(S.EQ.ZERO) THEN
                E(M) = ZERO
+               E(M+1) = ZERO
+               GO TO 90
+            ELSEIF(R/S.EQ.ZERO .AND. ABS(E(M)).LT.ABS(E(M+1))) THEN
+               E(M) = ZERO
+               GO TO 90
+            ELSEIF(R/S.EQ.ZERO .AND. ABS(E(M)).GE.ABS(E(M+1))) THEN
+               E(M+1) = ZERO
                GO TO 90
             ELSEIF(E(M).EQ.E(M+1)) THEN
                E(M) = SQRT2*E(M)
@@ -722,7 +750,11 @@
             VB = ONE
             VC = ONE
             VD = ZERO
-            E(M) = ZERO
+            IF(ABS(E(M)).LT.ABS(E(M+1))) THEN
+               E(M) = ZERO
+            ELSE
+               E(M+1) = ZERO
+            END IF
          ELSE
             VA = -P/S
             VB = -VA + (R/S)*(R/(P+S))
@@ -761,12 +793,17 @@
             S = SIGN(DLAPY2( P, R ), P)
             E(I-1) = -S
 *
-            IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
+            IF(S.EQ.ZERO) THEN
                VA = -ONE
                VB = ONE
                VC = ONE
                VD = ZERO
-               E(I-1) = ZERO
+            ELSEIF(R/S.EQ.ZERO .AND. VD.NE.ZERO) THEN
+               VA = -ONE
+               VB = ONE
+               VC = ONE
+               VD = ZERO
+               E(I+1) = ZERO
             ELSE
                VA = -P/S
                VB = -VA + (R/S)*(R/(P+S))
@@ -804,12 +841,17 @@
          S = SIGN(DLAPY2( P, R ), P)
          E(I-1) = -S
 *
-         IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
+         IF(S.EQ.ZERO) THEN
             VA = -ONE
             VB = ONE
             VC = ONE
             VD = ZERO
-            E(I-1) = ZERO
+         ELSEIF(R/S.EQ.ZERO .AND. VD.NE.ZERO) THEN
+            VA = -ONE
+            VB = ONE
+            VC = ONE
+            VD = ZERO
+            E(I+1) = ZERO
          ELSE
             VA = -P/S
             VB = -VA + (R/S)*(R/(P+S))
