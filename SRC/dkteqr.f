@@ -377,7 +377,7 @@
             ELSEIF(R/S.EQ.ZERO .AND. ABS(E(M-1)).GE.ABS(E(M-2))) THEN
                E(M-2) = ZERO
                GO TO 40
-            ELSEIF(E(M-2).EQ.E(M-1)) THEN
+            ELSEIF(P/S.EQ.ZERO .AND. R.GE.ZERO) THEN
                E(M-2) = SQRT2*E(M-2)
                E(M-1) = ZERO
                IF( ICOMPZ.GT.0 ) THEN
@@ -389,7 +389,7 @@
                   END DO
                END IF
                GO TO 40
-            ELSEIF(E(M-2).EQ.-E(M-1)) THEN
+            ELSEIF(P/S.EQ.ZERO .AND. R.LT.ZERO) THEN
                E(M-2) = SQRT2*E(M-2)
                E(M-1) = ZERO
                IF( ICOMPZ.GT.0 ) THEN
@@ -672,7 +672,7 @@
             ELSEIF(R/S.EQ.ZERO .AND. ABS(E(M)).GE.ABS(E(M+1))) THEN
                E(M+1) = ZERO
                GO TO 90
-            ELSEIF(E(M).EQ.E(M+1)) THEN
+            ELSEIF(P/S.EQ.ZERO .AND. R.GE.ZERO) THEN
                E(M) = SQRT2*E(M)
                E(M+1) = ZERO
                IF( ICOMPZ.GT.0 ) THEN
@@ -684,7 +684,7 @@
                   END DO
                END IF
                GO TO 90
-            ELSEIF(E(M).EQ.-E(M+1)) THEN
+            ELSEIF(P/S.EQ.ZERO .AND. R.LT.ZERO) THEN
                E(M) = SQRT2*E(M)
                E(M+1) = ZERO
                IF( ICOMPZ.GT.0 ) THEN
