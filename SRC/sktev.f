@@ -197,7 +197,7 @@
 *     Scale matrix to allowable range, if necessary.
 *
       ISCALE = 0
-      TNRM = SLANKT( 'M', N, D, E )
+      TNRM = SLANKT( 'M', N, E )
       IF( TNRM.GT.ZERO .AND. TNRM.LT.RMIN ) THEN
          ISCALE = 1
          SIGMA = RMIN / TNRM
