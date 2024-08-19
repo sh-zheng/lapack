@@ -687,14 +687,14 @@
 *           End of Loop -- Check for RESULT(j) > THRESH
 *
             NTESTT = NTESTT + NTEST
-            CALL DLAFTS( 'SKG', N, N, JTYPE, NTEST, RESULT, IOLDSD,
+            CALL DLAFTS( 'DKG', N, N, JTYPE, NTEST, RESULT, IOLDSD,
      $                   THRESH, NOUNIT, NERRS )
   640    CONTINUE
   650 CONTINUE
 *
 *     Summary
 *
-      CALL DLASUM( 'SKG', NOUNIT, NERRS, NTESTT )
+      CALL DLASUM( 'DKG', NOUNIT, NERRS, NTESTT )
 *
       RETURN
 *
