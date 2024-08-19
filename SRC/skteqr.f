@@ -155,9 +155,8 @@
       INTEGER            I, ICOMPZ, II, ISCALE, J, JTOT, K, L, L1, LEND,
      $                   LENDM1, LENDP1, LENDSV, LM3, LSV, M, MM, MM1,
      $                   NM1, NMAXIT
-      REAL               ANORM, B, EPS, EPS2, P, R, VA, VB, VC, VD, E3,
-     $                   S, SAFMAX, SAFMIN, SSFMAX, SSFMIN, TST, TEMP,
-     $                   SQRT2
+      REAL               ANORM, B, EPS, EPS2, P, R, VA, VB, E3,
+     $                   S, SAFMAX, SAFMIN, SSFMAX, SSFMIN, TST, TEMP
 *     ..
 *     .. External Functions ..
       LOGICAL            LSAME
@@ -232,7 +231,6 @@
       SAFMAX = ONE / SAFMIN
       SSFMAX = SQRT( SAFMAX ) / THREE
       SSFMIN = SQRT( SAFMIN ) / EPS2
-      SQRT2 = SQRT( TWO )
 *
 *     Compute the eigenvalues and eigenvectors of the tridiagonal
 *     matrix.
@@ -362,66 +360,36 @@
 *        If remaining matrix is 3-by-3, get its eigensystem directly
 *
          IF( M.EQ.L+2 ) THEN
-            B = E(L)*E(L)
+            IF ( MOD( JTOT, 10 ).EQ.0 ) THEN
+               B = E(L)*E(L) * (ONE - MIN(ABS(E(L+1)/E(L)), ONE))
+            ELSE
+               B = E(L)*E(L)
+            END IF
             P = -E(M-1)*E(M-1) + B
             R = E(M-1)*E(M-2)
             S = SIGN(SLAPY2( P, R ), P)
 *
             IF(S.EQ.ZERO) THEN
-               E(M-1) = ZERO
-               E(M-2) = ZERO
-               GO TO 40
-            ELSEIF(R/S.EQ.ZERO .AND. ABS(E(M-1)).LT.ABS(E(M-2))) THEN
-               E(M-1) = ZERO
-               GO TO 40
-            ELSEIF(R/S.EQ.ZERO .AND. ABS(E(M-1)).GE.ABS(E(M-2))) THEN
-               E(M-2) = ZERO
-               GO TO 40
-            ELSEIF(P/S.EQ.ZERO .AND. R.GE.ZERO) THEN
-               E(M-2) = SQRT2*E(M-2)
-               E(M-1) = ZERO
-               IF( ICOMPZ.GT.0 ) THEN
-                  DO J = 1, N
-                     TEMP = Z( J, M-2 )
-                     Z( J, M-2 ) = -Z( J, M-1 )
-                     Z( J, M-1 ) = (SQRT2*TEMP - SQRT2*Z(J, M))/TWO
-                     Z( J, M ) = (SQRT2*TEMP + SQRT2*Z(J, M))/TWO
-                  END DO
-               END IF
-               GO TO 40
-            ELSEIF(P/S.EQ.ZERO .AND. R.LT.ZERO) THEN
-               E(M-2) = SQRT2*E(M-2)
-               E(M-1) = ZERO
-               IF( ICOMPZ.GT.0 ) THEN
-                  DO J = 1, N
-                     TEMP = Z( J, M-2 )
-                     Z( J, M-2 ) = -Z( J, M-1 )
-                     Z( J, M-1 ) = (SQRT2*TEMP + SQRT2*Z(J, M))/TWO
-                     Z( J, M ) = (-SQRT2*TEMP + SQRT2*Z(J, M))/TWO
-                  END DO
-               END IF
-               GO TO 40
+               VA = -ONE
+               VB = ZERO
             ELSE
                VA = -P/S
-               VB = -VA + (R/S)*(R/(P+S))
-               VC = -VA
-               VD = -R/S
+               VB = -R/S
             END IF
 *
 *           Update E.
 *
             TEMP = E(M-1)
-            E(M-1) = VA*VB*E(M-1) - VB*VD*E(M-2)
-            E(M-2) = -VB*VD*TEMP + VB*VC*E(M-2)
+            E(M-1) = VA*E(M-1) - VB*E(M-2)
+            E(M-2) = -VB*TEMP - VA*E(M-2)
 *
 *           If eigenvectors are desired, then update Z initially.
 *
             IF( ICOMPZ.GT.0 ) THEN
                DO J = 1, N
                   TEMP = Z( J, M )
-                  Z( J, M ) = VA*Z( J, M ) + VD*Z( J, M-2 )
-                  Z( J, M-1 ) = VB*Z( J, M-1 )
-                  Z( J, M-2 ) = VD*TEMP + VC*Z( J, M-2 )
+                  Z( J, M ) = VA*Z( J, M ) + VB*Z( J, M-2 )
+                  Z( J, M-2 ) = VB*TEMP - VA*Z( J, M-2 )
                END DO
             END IF
 *
@@ -445,44 +413,38 @@
 *
 *        Form shift and set initial values.
 *
-         B = E(L)*E(L)
+         IF ( MOD( JTOT, 10 ).EQ.0 ) THEN
+            B = E(L)*E(L) * (ONE - MIN(ABS(E(L+1)/E(L)), ONE))
+         ELSE
+            B = E(L)*E(L)
+         END IF
          P = -E(M-1)*E(M-1) + B
          R = E(M-1)*E(M-2)
          S = SIGN(SLAPY2( P, R ), P)
 *
-         IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
+         IF(S.EQ.ZERO) THEN
             VA = -ONE
-            VB = ONE
-            VC = ONE
-            VD = ZERO
-            IF(ABS(E(M-1)).LT.ABS(E(M-2))) THEN
-               E(M-1) = ZERO
-            ELSE
-               E(M-2) = ZERO
-            END IF
+            VB = ZERO
          ELSE
             VA = -P/S
-            VB = -VA + (R/S)*(R/(P+S))
-            VC = -VA
-            VD = -R/S
+            VB = -R/S
          END IF
 *
 *        Update E.
 *
          TEMP = E(M-1)
-         E(M-1) = VA*VB*E(M-1) - VB*VD*E(M-2)
-         E(M-2) = -VB*VD*TEMP + VB*VC*E(M-2)
+         E(M-1) = VA*E(M-1) - VB*E(M-2)
+         E(M-2) = -VB*TEMP - VA*E(M-2)
          E3 = E(M-3)
-         E(M-3) = VC*E(M-3)
+         E(M-3) = -VA*E(M-3)
 *
 *        If eigenvectors are desired, then update Z initially.
 *
          IF( ICOMPZ.GT.0 ) THEN
             DO J = 1, N
                TEMP = Z( J, M )
-               Z( J, M ) = VA*Z( J, M ) + VD*Z( J, M-2 )
-               Z( J, M-1 ) = VB*Z( J, M-1 )
-               Z( J, M-2 ) = VD*TEMP + VC*Z( J, M-2 )
+               Z( J, M ) = VA*Z( J, M ) + VB*Z( J, M-2 )
+               Z( J, M-2 ) = VB*TEMP - VA*Z( J, M-2 )
             END DO
          END IF    
 *
@@ -494,44 +456,33 @@
 *           Set iterative values.
 *
             P = E(I)
-            R = VD*E3
+            R = VB*E3
             S = SIGN(SLAPY2( P, R ), P)
             E(I) = -S
 *
             IF(S.EQ.ZERO) THEN
                VA = -ONE
-               VB = ONE
-               VC = ONE
-               VD = ZERO
-            ELSEIF(R/S.EQ.ZERO .AND. VD.NE.ZERO) THEN
-               VA = -ONE
-               VB = ONE
-               VC = ONE
-               VD = ZERO
-               E(I-2) = ZERO
+               VB = ZERO
             ELSE
                VA = -P/S
-               VB = -VA + (R/S)*(R/(P+S))
-               VC = -VA
-               VD = -R/S
+               VB = -R/S
             END IF
 *
 *           Update E.
 *
             TEMP = E(I-1)
-            E(I-1) = VA*VB*E(I-1) - VB*VD*E(I-2)
-            E(I-2) = -VB*VD*TEMP + VB*VC*E(I-2)
+            E(I-1) = VA*E(I-1) - VB*E(I-2)
+            E(I-2) = -VB*TEMP - VA*E(I-2)
             E3 = E(I-3)
-            E(I-3) = VC*E(I-3)
+            E(I-3) = -VA*E(I-3)
 *
 *           If eigenvectors are desired, then update Z.
 *
             IF( ICOMPZ.GT.0 ) THEN
                DO J = 1, N
                   TEMP = Z( J, I )
-                  Z( J, I ) = VA*Z( J, I ) + VD*Z( J, I-2 )
-                  Z( J, I-1 ) = VB*Z( J, I-1 )
-                  Z( J, I-2 ) = VD*TEMP + VC*Z( J, I-2 )
+                  Z( J, I ) = VA*Z( J, I ) + VB*Z( J, I-2 )
+                  Z( J, I-2 ) = VB*TEMP - VA*Z( J, I-2 )
                END DO
             END IF    
 *
@@ -542,42 +493,31 @@
 *        Set iterative values.
 *
          P = E(I)
-         R = VD*E3
+         R = VB*E3
          S = SIGN(SLAPY2( P, R ), P)
          E(I) = -S
 *
          IF(S.EQ.ZERO) THEN
             VA = -ONE
-            VB = ONE
-            VC = ONE
-            VD = ZERO
-         ELSEIF(R/S.EQ.ZERO .AND. VD.NE.ZERO) THEN
-            VA = -ONE
-            VB = ONE
-            VC = ONE
-            VD = ZERO
-            E(I-2) = ZERO
+            VB = ZERO
          ELSE
             VA = -P/S
-            VB = -VA + (R/S)*(R/(P+S))
-            VC = -VA
-            VD = -R/S
+            VB = -R/S
          END IF
 *
 *        Update E.
 *
          TEMP = E(I-1)
-         E(I-1) = VA*VB*E(I-1) - VB*VD*E(I-2)
-         E(I-2) = -VB*VD*TEMP + VB*VC*E(I-2)
+         E(I-1) = VA*E(I-1) - VB*E(I-2)
+         E(I-2) = -VB*TEMP - VA*E(I-2)
 *
 *        If eigenvectors are desired, then update Z.
 *
          IF( ICOMPZ.GT.0 ) THEN
             DO J = 1, N
                TEMP = Z( J, I )
-               Z( J, I ) = VA*Z( J, I ) + VD*Z( J, I-2 )
-               Z( J, I-1 ) = VB*Z( J, I-1 )
-               Z( J, I-2 ) = VD*TEMP + VC*Z( J, I-2 )
+               Z( J, I ) = VA*Z( J, I ) + VB*Z( J, I-2 )
+               Z( J, I-2 ) = VB*TEMP - VA*Z( J, I-2 )
             END DO
          END IF
 *
@@ -657,66 +597,36 @@
 *        If remaining matrix is 3-by-3, get its eigensystem directly
 *
          IF( M.EQ.L-2 ) THEN
-            B = E(L-1)*E(L-1)
+            IF ( MOD( JTOT, 10 ).EQ.0 ) THEN
+               B = E(L-1)*E(L-1) * (ONE - MIN(ABS(E(L-2)/E(L-1)), ONE))
+            ELSE
+               B = E(L-1)*E(L-1)
+            END IF
             P = -E(M)*E(M) + B
             R = E(M)*E(M+1)
             S = SIGN(SLAPY2( P, R ), P)
 *
             IF(S.EQ.ZERO) THEN
-               E(M) = ZERO
-               E(M+1) = ZERO
-               GO TO 90
-            ELSEIF(R/S.EQ.ZERO .AND. ABS(E(M)).LT.ABS(E(M+1))) THEN
-               E(M) = ZERO
-               GO TO 90
-            ELSEIF(R/S.EQ.ZERO .AND. ABS(E(M)).GE.ABS(E(M+1))) THEN
-               E(M+1) = ZERO
-               GO TO 90
-            ELSEIF(P/S.EQ.ZERO .AND. R.GE.ZERO) THEN
-               E(M) = SQRT2*E(M)
-               E(M+1) = ZERO
-               IF( ICOMPZ.GT.0 ) THEN
-                  DO J = 1, N
-                     TEMP = Z( J, M )
-                     Z( J, M ) = -Z( J, M+1 )
-                     Z( J, M+1 ) = (SQRT2*TEMP - SQRT2*Z(J, M+2))/TWO
-                     Z( J, M+2 ) = (SQRT2*TEMP + SQRT2*Z(J, M+2))/TWO
-                  END DO
-               END IF
-               GO TO 90
-            ELSEIF(P/S.EQ.ZERO .AND. R.LT.ZERO) THEN
-               E(M) = SQRT2*E(M)
-               E(M+1) = ZERO
-               IF( ICOMPZ.GT.0 ) THEN
-                  DO J = 1, N
-                     TEMP = Z( J, M )
-                     Z( J, M ) = -Z( J, M+1 )
-                     Z( J, M+1 ) = (SQRT2*TEMP + SQRT2*Z(J, M+2))/TWO
-                     Z( J, M+2 ) = (-SQRT2*TEMP + SQRT2*Z(J, M+2))/TWO
-                  END DO
-               END IF
-               GO TO 90
+               VA = -ONE
+               VB = ZERO
             ELSE
                VA = -P/S
-               VB = -VA + (R/S)*(R/(P+S))
-               VC = -VA
-               VD = -R/S
+               VB = -R/S
             END IF
 *
 *           Update E.
 *
             TEMP = E(M)
-            E(M) = VA*VB*E(M) - VB*VD*E(M+1)
-            E(M+1) = -VB*VD*TEMP + VB*VC*E(M+1)
+            E(M) = VA*E(M) - VB*E(M+1)
+            E(M+1) = -VB*TEMP - VA*E(M+1)
 *
 *           If eigenvectors are desired, then update Z initially.
 *
             IF( ICOMPZ.GT.0 ) THEN
                DO J = 1, N
                   TEMP = Z( J, M )
-                  Z( J, M ) = VA*Z( J, M ) + VD*Z( J, M+2 )
-                  Z( J, M+1 ) = VB*Z( J, M+1 )
-                  Z( J, M+2 ) = VD*TEMP + VC*Z( J, M+2 )
+                  Z( J, M ) = VA*Z( J, M ) + VB*Z( J, M+2 )
+                  Z( J, M+2 ) = VB*TEMP - VA*Z( J, M+2 )
                END DO
             END IF
 *
@@ -740,44 +650,38 @@
 *
 *        Form shift and set initial values.
 *
-         B = E(L-1)*E(L-1)
+         IF ( MOD( JTOT, 10 ).EQ.0 ) THEN
+            B = E(L-1)*E(L-1) * (ONE - MIN(ABS(E(L-2)/E(L-1)), ONE))
+         ELSE
+            B = E(L-1)*E(L-1)
+         END IF
          P = -E(M)*E(M) + B
          R = E(M)*E(M+1)
          S = SIGN(SLAPY2( P, R ), P)
 *
-         IF(S.EQ.ZERO .OR. R/S.EQ.ZERO) THEN
+         IF(S.EQ.ZERO) THEN
             VA = -ONE
-            VB = ONE
-            VC = ONE
-            VD = ZERO
-            IF(ABS(E(M)).LT.ABS(E(M+1))) THEN
-               E(M) = ZERO
-            ELSE
-               E(M+1) = ZERO
-            END IF
+            VB = ZERO
          ELSE
             VA = -P/S
-            VB = -VA + (R/S)*(R/(P+S))
-            VC = -VA
-            VD = -R/S
+            VB = -R/S
          END IF
 *
 *        Update E.
 *
          TEMP = E(M)
-         E(M) = VA*VB*E(M) - VB*VD*E(M+1)
-         E(M+1) = -VB*VD*TEMP + VB*VC*E(M+1)
+         E(M) = VA*E(M) - VB*E(M+1)
+         E(M+1) = -VB*TEMP - VA*E(M+1)
          E3 = E(M+2)
-         E(M+2) = VC*E(M+2)
+         E(M+2) = -VA*E(M+2)
 *
 *        If eigenvectors are desired, then update Z initially.
 *
          IF( ICOMPZ.GT.0 ) THEN
             DO J = 1, N
                TEMP = Z( J, M )
-               Z( J, M ) = VA*Z( J, M ) + VD*Z( J, M+2 )
-               Z( J, M+1 ) = VB*Z( J, M+1 )
-               Z( J, M+2 ) = VD*TEMP + VC*Z( J, M+2 )
+               Z( J, M ) = VA*Z( J, M ) + VB*Z( J, M+2 )
+               Z( J, M+2 ) = VB*TEMP - VA*Z( J, M+2 )
             END DO
          END IF    
 *
@@ -789,44 +693,33 @@
 *           Set iterative values.
 *
             P = E(I-1)
-            R = VD*E3
+            R = VB*E3
             S = SIGN(SLAPY2( P, R ), P)
             E(I-1) = -S
 *
             IF(S.EQ.ZERO) THEN
                VA = -ONE
-               VB = ONE
-               VC = ONE
-               VD = ZERO
-            ELSEIF(R/S.EQ.ZERO .AND. VD.NE.ZERO) THEN
-               VA = -ONE
-               VB = ONE
-               VC = ONE
-               VD = ZERO
-               E(I+1) = ZERO
+               VB = ZERO
             ELSE
                VA = -P/S
-               VB = -VA + (R/S)*(R/(P+S))
-               VC = -VA
-               VD = -R/S
+               VB = -R/S
             END IF
 *
 *           Update E.
 *
             TEMP = E(I)
-            E(I) = VA*VB*E(I) - VB*VD*E(I+1)
-            E(I+1) = -VB*VD*TEMP + VB*VC*E(I+1)
+            E(I) = VA*E(I) - VB*E(I+1)
+            E(I+1) = -VB*TEMP - VA*E(I+1)
             E3 = E(I+2)
-            E(I+2) = VC*E(I+2)
+            E(I+2) = -VA*E(I+2)
 *
 *           If eigenvectors are desired, then update Z.
 *
             IF( ICOMPZ.GT.0 ) THEN
                DO J = 1, N
                   TEMP = Z( J, I )
-                  Z( J, I ) = VA*Z( J, I ) + VD*Z( J, I+2 )
-                  Z( J, I+1 ) = VB*Z( J, I+1 )
-                  Z( J, I+2 ) = VD*TEMP + VC*Z( J, I+2 )
+                  Z( J, I ) = VA*Z( J, I ) + VB*Z( J, I+2 )
+                  Z( J, I+2 ) = VB*TEMP - VA*Z( J, I+2 )
                END DO
             END IF    
 *
@@ -837,42 +730,31 @@
 *        Set iterative values.
 *
          P = E(I-1)
-         R = VD*E3
+         R = VB*E3
          S = SIGN(SLAPY2( P, R ), P)
          E(I-1) = -S
 *
          IF(S.EQ.ZERO) THEN
             VA = -ONE
-            VB = ONE
-            VC = ONE
-            VD = ZERO
-         ELSEIF(R/S.EQ.ZERO .AND. VD.NE.ZERO) THEN
-            VA = -ONE
-            VB = ONE
-            VC = ONE
-            VD = ZERO
-            E(I+1) = ZERO
+            VB = ZERO
          ELSE
             VA = -P/S
-            VB = -VA + (R/S)*(R/(P+S))
-            VC = -VA
-            VD = -R/S
+            VB = -R/S
          END IF
 *
 *        Update E.
 *
          TEMP = E(I)
-         E(I) = VA*VB*E(I) - VB*VD*E(I+1)
-         E(I+1) = -VB*VD*TEMP + VB*VC*E(I+1)
+         E(I) = VA*E(I) - VB*E(I+1)
+         E(I+1) = -VB*TEMP - VA*E(I+1)
 *
 *        If eigenvectors are desired, then update Z.
 *
          IF( ICOMPZ.GT.0 ) THEN
             DO J = 1, N
                TEMP = Z( J, I )
-               Z( J, I ) = VA*Z( J, I ) + VD*Z( J, I+2 )
-               Z( J, I+1 ) = VB*Z( J, I+1 )
-               Z( J, I+2 ) = VD*TEMP + VC*Z( J, I+2 )
+               Z( J, I ) = VA*Z( J, I ) + VB*Z( J, I+2 )
+               Z( J, I+2 ) = VB*TEMP - VA*Z( J, I+2 )
             END DO
          END IF
 *
