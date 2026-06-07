@@ -172,7 +172,7 @@
 *
 *     .. Local Scalars ..
       INTEGER            I, IC, IZ, NB, NBMIN, NX
-      LOGICAL            CNAME, SNAME, TWOSTAGE
+      LOGICAL            CNAME, SNAME, TWOSTAGE, SKEW
       CHARACTER          C1*1, C2*2, C4*2, C3*3, SUBNAM*16
 *     ..
 *     .. Intrinsic Functions ..
@@ -254,6 +254,11 @@
       C4 = C3( 2: 3 )
       TWOSTAGE = LEN( SUBNAM ).GE.11
      $           .AND. SUBNAM( 11: 11 ).EQ.'2'
+      SKEW = LEN( SUBNAM ).GE.10
+     $       .AND. SUBNAM( 2: 6 ).EQ.'SKEWS'
+      IF(SKEW) THEN
+         C3 = SUBNAM( 8: 10 )
+      END IF
 *
       GO TO ( 50, 60, 70 )ISPEC
 *
@@ -389,6 +394,26 @@
          ELSE IF( SNAME .AND. C3.EQ.'GST' ) THEN
             NB = 64
          END IF
+      ELSE IF( SKEW ) THEN
+         IF( C3.EQ.'TRF' ) THEN
+            IF( SNAME ) THEN
+               IF( TWOSTAGE ) THEN
+                  NB = 192
+               ELSE
+                  NB = 64
+               END IF
+            ELSE
+               IF( TWOSTAGE ) THEN
+                  NB = 192
+               ELSE
+                  NB = 64
+               END IF
+            END IF
+         ELSE IF( SNAME .AND. C3.EQ.'TRD' ) THEN
+            NB = 32
+         ELSE IF( SNAME .AND. C3.EQ.'GST' ) THEN
+            NB = 64
+         END IF
       ELSE IF( CNAME .AND. C2.EQ.'HE' ) THEN
          IF( C3.EQ.'TRF' ) THEN
             IF( TWOSTAGE ) THEN
@@ -502,6 +527,10 @@
          IF( C3.EQ.'EBZ' ) THEN
             NB = 1
          END IF
+      ELSE IF( SNAME .AND. SKEW ) THEN
+         IF( C3.EQ.'EBZ' ) THEN
+            NB = 1
+         END IF
       ELSE IF( C2.EQ.'GG' ) THEN
          NB = 32
          IF( C3.EQ.'HD3' ) THEN
@@ -555,6 +584,16 @@
          END IF
 
       ELSE IF( C2.EQ.'SY' ) THEN
+         IF( C3.EQ.'TRF' ) THEN
+            IF( SNAME ) THEN
+               NBMIN = 8
+            ELSE
+               NBMIN = 8
+            END IF
+         ELSE IF( SNAME .AND. C3.EQ.'TRD' ) THEN
+            NBMIN = 2
+         END IF
+      ELSE IF( SKEW ) THEN
          IF( C3.EQ.'TRF' ) THEN
             IF( SNAME ) THEN
                NBMIN = 8
@@ -638,6 +677,10 @@
             END IF
          END IF
       ELSE IF( C2.EQ.'SY' ) THEN
+         IF( SNAME .AND. C3.EQ.'TRD' ) THEN
+            NX = 32
+         END IF
+      ELSE IF( SKEW ) THEN
          IF( SNAME .AND. C3.EQ.'TRD' ) THEN
             NX = 32
          END IF

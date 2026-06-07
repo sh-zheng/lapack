@@ -79,8 +79,9 @@ SCLAUX = \
    sbdsdc.o \
    sbdsqr.o sdisna.o slabad.o slacpy.o sladiv.o slae2.o  slaebz.o \
    slaed0.o slaed1.o slaed2.o slaed3.o slaed4.o slaed5.o slaed6.o \
-   slaed7.o slaed8.o slaed9.o slaeda.o slaev2.o slagtf.o \
-   slagts.o slamrg.o slanst.o \
+   slaed7.o slaed8.o slaed9.o slaeda.o slaev2.o slagtf.o slagtfskew.o \
+   slagts.o slagtsskew.o slamrg.o slanst.o slanskewst.o \
+   slaedskew0.o \
    slapy2.o slapy3.o slarnv.o \
    slarra.o slarrb.o slarrc.o slarrd.o slarre.o slarrf.o slarrj.o \
    slarrk.o slarrr.o slaneg.o \
@@ -89,7 +90,8 @@ SCLAUX = \
    slasd7.o slasd8.o slasda.o slasdq.o slasdt.o \
    slaset.o slasq1.o slasq2.o slasq3.o slasq4.o slasq5.o slasq6.o \
    slasr.o  slasrt.o slassq.o slasv2.o spttrf.o sstebz.o sstedc.o \
-   ssteqr.o ssterf.o slaisnan.o sisnan.o \
+   ssteqr.o ssterf.o sskewstebz.o sskewsteqr.o sskewstedc.o \
+   slaisnan.o sisnan.o \
    slartgp.o slartgs.o ../INSTALL/sroundup_lwork.o \
    ../INSTALL/second_$(TIMER).o
 
@@ -98,8 +100,9 @@ DZLAUX = \
    dbdsdc.o \
    dbdsqr.o ddisna.o dlabad.o dlacpy.o dladiv.o dlae2.o  dlaebz.o \
    dlaed0.o dlaed1.o dlaed2.o dlaed3.o dlaed4.o dlaed5.o dlaed6.o \
-   dlaed7.o dlaed8.o dlaed9.o dlaeda.o dlaev2.o dlagtf.o \
-   dlagts.o dlamrg.o dlanst.o \
+   dlaed7.o dlaed8.o dlaed9.o dlaeda.o dlaev2.o dlagtf.o dlagtfskew.o \
+   dlagts.o dlagtsskew.o dlamrg.o dlanst.o dlanskewst.o \
+   dlaedskew0.o \
    dlapy2.o dlapy3.o dlarnv.o \
    dlarra.o dlarrb.o dlarrc.o dlarrd.o dlarre.o dlarrf.o dlarrj.o \
    dlarrk.o dlarrr.o dlaneg.o \
@@ -108,7 +111,8 @@ DZLAUX = \
    dlasd7.o dlasd8.o dlasda.o dlasdq.o dlasdt.o \
    dlaset.o dlasq1.o dlasq2.o dlasq3.o dlasq4.o dlasq5.o dlasq6.o \
    dlasr.o  dlasrt.o dlassq.o dlasv2.o dpttrf.o dstebz.o dstedc.o \
-   dsteqr.o dsterf.o dlaisnan.o disnan.o \
+   dsteqr.o dsterf.o dskewstebz.o dskewsteqr.o dskewstedc.o \
+   dlaisnan.o disnan.o \
    dlartgp.o dlartgs.o ../INSTALL/droundup_lwork.o \
    ../INSTALL/dlamch.o ../INSTALL/dsecnd_$(TIMER).o
 
@@ -132,7 +136,7 @@ SLASRC = \
    slaein.o slaexc.o slag2.o  slags2.o slagtm.o slagv2.o slahqr.o \
    slahr2.o slaic1.o slaln2.o slals0.o slalsa.o slalsd.o \
    slangb.o slange.o slangt.o slanhs.o slansb.o slansp.o \
-   slansy.o slantb.o slantp.o slantr.o slanv2.o \
+   slansy.o slanskewsy.o slantb.o slantp.o slantr.o slanv2.o \
    slapll.o slapmt.o \
    slaqgb.o slaqge.o slaqp2.o slaqps.o slaqp2rk.o slaqp3rk.o slaqsb.o slaqsp.o slaqsy.o \
    slaqr0.o slaqr1.o slaqr2.o slaqr3.o slaqr4.o slaqr5.o \
@@ -140,8 +144,8 @@ SLASRC = \
    slarf.o  slarf1f.o slarf1l.o slarfb.o slarfb_gett.o slarfg.o slarfgp.o slarft.o slarft_lvl2.o slarfx.o slarfy.o \
    slargv.o slarmm.o slarrv.o slartv.o \
    slarz.o  slarzb.o slarzt.o slaswp.o slasy2.o slasyf.o slasyf_rook.o \
-   slasyf_rk.o \
-   slatbs.o slatdf.o slatps.o slatrd.o slatrs.o slatrs3.o slatrz.o \
+   slasyf_rk.o slaskewsyf.o \
+   slatbs.o slatdf.o slatps.o slatrd.o slatrdskew.o slatrs.o slatrs3.o slatrz.o \
    slauu2.o slauum.o sopgtr.o sopmtr.o sorg2l.o sorg2r.o \
    sorgbr.o sorghr.o sorgl2.o sorglq.o sorgql.o sorgqr.o sorgr2.o \
    sorgrq.o sorgtr.o sorgtsqr.o sorgtsqr_row.o sorm2l.o sorm2r.o sorm22.o \
@@ -169,6 +173,14 @@ SLASRC = \
    ssytri_3.o ssytri_3x.o ssycon_3.o ssysv_rk.o \
    slasyf_aa.o ssysv_aa.o ssytrf_aa.o ssytrs_aa.o \
    ssysv_aa_2stage.o ssytrf_aa_2stage.o ssytrs_aa_2stage.o \
+   sskewsytf2.o sskewsytrf.o sskewsytrs.o sskewsytrs2.o sskewsyconv.o \
+   sskewsytri.o sskewsytri2.o sskewsytri2x.o sskewsyswapr.o \
+   sskewsysv.o sskewsycon.o sskewsyrfs.o sskewsysvx.o \
+   slaskewsyf_aa.o sskewsysv_aa.o sskewsytrf_aa.o sskewsytrs_aa.o \
+   sskewsytd2.o sskewsytrd.o sskewstev.o sskewsyev.o \
+   sskewsygst.o sskewsygs2.o sskewsygv.o sskewstein.o \
+   sskewstevx.o sskewsyevx.o sskewsygvx.o sskewstevd.o \
+   sskewsyevd.o sskewsygvd.o \
    stbcon.o \
    stbrfs.o stbtrs.o stgevc.o stgex2.o stgexc.o stgsen.o \
    stgsja.o stgsna.o stgsy2.o stgsyl.o stpcon.o stprfs.o stptri.o \
@@ -334,7 +346,7 @@ DLASRC = \
    dlaein.o dlaexc.o dlag2.o  dlags2.o dlagtm.o dlagv2.o dlahqr.o \
    dlahr2.o dlaic1.o dlaln2.o dlals0.o dlalsa.o dlalsd.o \
    dlangb.o dlange.o dlangt.o dlanhs.o dlansb.o dlansp.o \
-   dlansy.o dlantb.o dlantp.o dlantr.o dlanv2.o \
+   dlansy.o dlanskewsy.o dlantb.o dlantp.o dlantr.o dlanv2.o \
    dlapll.o dlapmt.o \
    dlaqgb.o dlaqge.o dlaqp2.o dlaqps.o dlaqp2rk.o dlaqp3rk.o dlaqsb.o dlaqsp.o dlaqsy.o \
    dlaqr0.o dlaqr1.o dlaqr2.o dlaqr3.o dlaqr4.o dlaqr5.o \
@@ -342,8 +354,8 @@ DLASRC = \
    dlarf.o  dlarfb.o dlarfb_gett.o dlarfg.o dlarfgp.o dlarft.o dlarft_lvl2.o dlarfx.o dlarfy.o dlarf1f.o dlarf1l.o\
    dlargv.o dlarmm.o dlarrv.o dlartv.o \
    dlarz.o  dlarzb.o dlarzt.o dlaswp.o dlasy2.o \
-   dlasyf.o dlasyf_rook.o dlasyf_rk.o \
-   dlatbs.o dlatdf.o dlatps.o dlatrd.o dlatrs.o dlatrs3.o dlatrz.o dlauu2.o \
+   dlasyf.o dlasyf_rook.o dlasyf_rk.o dlaskewsyf.o \
+   dlatbs.o dlatdf.o dlatps.o dlatrd.o dlatrdskew.o dlatrs.o dlatrs3.o dlatrz.o dlauu2.o \
    dlauum.o dopgtr.o dopmtr.o dorg2l.o dorg2r.o \
    dorgbr.o dorghr.o dorgl2.o dorglq.o dorgql.o dorgqr.o dorgr2.o \
    dorgrq.o dorgtr.o dorgtsqr.o dorgtsqr_row.o dorm2l.o dorm2r.o dorm22.o \
@@ -372,6 +384,14 @@ DLASRC = \
    dsytri_3.o dsytri_3x.o dsycon_3.o dsysv_rk.o \
    dlasyf_aa.o dsysv_aa.o dsytrf_aa.o dsytrs_aa.o \
    dsysv_aa_2stage.o dsytrf_aa_2stage.o dsytrs_aa_2stage.o \
+   dskewsytf2.o dskewsytrf.o dskewsytrs.o dskewsytrs2.o dskewsyconv.o \
+   dskewsytri.o dskewsytri2.o dskewsytri2x.o dskewsyswapr.o \
+   dskewsysv.o dskewsycon.o dskewsyrfs.o dskewsysvx.o \
+   dlaskewsyf_aa.o dskewsysv_aa.o dskewsytrf_aa.o dskewsytrs_aa.o \
+   dskewsytd2.o dskewsytrd.o dskewstev.o dskewsyev.o \
+   dskewsygst.o dskewsygs2.o dskewsygv.o dskewstein.o \
+   dskewstevx.o dskewsyevx.o dskewsygvx.o dskewstevd.o \
+   dskewsyevd.o dskewsygvd.o \
    dtbcon.o dtbrfs.o dtbtrs.o dtgevc.o dtgex2.o dtgexc.o dtgsen.o \
    dtgsja.o dtgsna.o dtgsy2.o dtgsyl.o dtpcon.o dtprfs.o dtptri.o \
    dtptrs.o \

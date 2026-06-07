@@ -49,8 +49,9 @@ set(SCLAUX
    sbdsvdx.f sbdsdc.f
    sbdsqr.f sdisna.f slabad.f slacpy.f sladiv.f slae2.f  slaebz.f
    slaed0.f slaed1.f slaed2.f slaed3.f slaed4.f slaed5.f slaed6.f
-   slaed7.f slaed8.f slaed9.f slaeda.f slaev2.f slagtf.f
-   slagts.f slamrg.f slanst.f
+   slaed7.f slaed8.f slaed9.f slaeda.f slaev2.f slagtf.f slagtfskew.f
+   slagts.f slagtsskew.f slamrg.f slanst.f slanskewst.f
+   slaedskew0.f
    slapy2.f slapy3.f slarnv.f
    slarra.f slarrb.f slarrc.f slarrd.f slarre.f slarrf.f slarrj.f
    slarrk.f slarrr.f slaneg.f
@@ -59,7 +60,8 @@ set(SCLAUX
    slasd7.f slasd8.f slasda.f slasdq.f slasdt.f
    slaset.f slasq1.f slasq2.f slasq3.f slasq4.f slasq5.f slasq6.f
    slasr.f  slasrt.f slassq.f90 slasv2.f spttrf.f sstebz.f sstedc.f
-   sstein.f ssteqr.f ssterf.f sstevx.f
+   sstein.f ssteqr.f ssterf.f sstevx.f sskewstebz.f sskewstein.f sskewsteqr.f
+   sskewstevx.f sskewstedc.f
    slartgp.f slartgs.f ../INSTALL/sroundup_lwork.f
    ${SECOND_SRC})
 
@@ -69,8 +71,9 @@ set(DZLAUX
    disnan.f
    dlabad.f dlacpy.f dladiv.f dlae2.f  dlaebz.f
    dlaed0.f dlaed1.f dlaed2.f dlaed3.f dlaed4.f dlaed5.f dlaed6.f
-   dlaed7.f dlaed8.f dlaed9.f dlaeda.f dlaev2.f dlagtf.f
-   dlagts.f dlamrg.f dlanst.f
+   dlaed7.f dlaed8.f dlaed9.f dlaeda.f dlaev2.f dlagtf.f dlagtfskew.f
+   dlagts.f dlagtsskew.f dlamrg.f dlanst.f dlanskewst.f
+   dlaedskew0.f
    dlapy2.f dlapy3.f dlarnv.f
    dlarra.f dlarrb.f dlarrc.f dlarrd.f dlarre.f dlarrf.f dlarrj.f
    dlarrk.f dlarrr.f dlaneg.f
@@ -81,6 +84,8 @@ set(DZLAUX
    dlasr.f  dlasrt.f dlassq.f90 dlasv2.f dlaisnan.f
    dpttrf.f
    dstebz.f dstedc.f dstein.f dsteqr.f dsterf.f dstevx.f
+   dskewstebz.f dskewstein.f dskewsteqr.f
+   dskewstevx.f dskewstedc.f
    dlartgp.f dlartgs.f ../INSTALL/droundup_lwork.f
    ../INSTALL/dlamch.f ${DSECOND_SRC})
 
@@ -103,7 +108,7 @@ set(SLASRC
    slaein.f slaexc.f slag2.f  slags2.f slagtm.f slagv2.f slahqr.f
    slahr2.f slaic1.f slaln2.f slals0.f slalsa.f slalsd.f
    slangb.f slange.f slangt.f slanhs.f slansb.f slansp.f
-   slansy.f slantb.f slantp.f slantr.f slanv2.f
+   slansy.f slanskewsy.f slantb.f slantp.f slantr.f slanv2.f
    slapll.f slapmt.f
    slaqgb.f slaqge.f slaqp2.f slaqps.f slaqp2rk.f slaqp3rk.f slaqsb.f slaqsp.f slaqsy.f
    slaqr0.f slaqr1.f slaqr2.f slaqr3.f slaqr4.f slaqr5.f
@@ -111,8 +116,8 @@ set(SLASRC
    slarf.f  slarf1f.f slarf1l.f slarfb.f slarfb_gett.f slarfg.f slarfgp.f slarft.f slarft_lvl2.f slarfx.f slarfy.f
    slargv.f slarmm.f slarrv.f slartv.f
    slarz.f  slarzb.f slarzt.f slasy2.f
-   slasyf.f slasyf_rook.f slasyf_rk.f slasyf_aa.f
-   slatbs.f slatdf.f slatps.f slatrd.f slatrs.f slatrs3.f slatrz.f
+   slasyf.f slasyf_rook.f slasyf_rk.f slasyf_aa.f slaskewsyf.f slaskewsyf_aa.f
+   slatbs.f slatdf.f slatps.f slatrd.f slatrdskew.f slatrs.f slatrs3.f slatrz.f
    slauu2.f slauum.f sopgtr.f sopmtr.f sorg2l.f sorg2r.f
    sorgbr.f sorghr.f sorgl2.f sorglq.f sorgql.f sorgqr.f sorgr2.f
    sorgrq.f sorgtr.f sorgtsqr.f sorgtsqr_row.f sorm2l.f sorm2r.f sorm22.f
@@ -139,6 +144,13 @@ set(SLASRC
    ssytri_3.f ssytri_3x.f ssycon_3.f ssysv_rk.f
    ssysv_aa.f ssytrf_aa.f ssytrs_aa.f
    ssysv_aa_2stage.f ssytrf_aa_2stage.f ssytrs_aa_2stage.f
+   sskewsytf2.f sskewsytrf.f sskewsytrs.f sskewsytrs2.f sskewsyconv.f
+   sskewsytri.f sskewsytri2.f sskewsytri2x.f sskewsyswapr.f
+   sskewsysv.f sskewsycon.f sskewsyrfs.f sskewsysvx.f
+   sskewsysv_aa.f sskewsytrf_aa.f sskewsytrs_aa.f
+   sskewsytd2.f sskewsytrd.f sskewstev.f sskewsyev.f
+   sskewsygst.f sskewsygs2.f sskewsygv.f sskewsyevx.f sskewsygvx.f
+   sskewstevd.f sskewsyevd.f sskewsygvd.f
    stbcon.f
    stbrfs.f stbtrs.f stgevc.f stgex2.f stgexc.f stgsen.f
    stgsja.f stgsna.f stgsy2.f stgsyl.f stpcon.f stprfs.f stptri.f
@@ -304,7 +316,7 @@ set(DLASRC
    dlaein.f dlaexc.f dlag2.f  dlags2.f dlagtm.f dlagv2.f dlahqr.f
    dlahr2.f dlaic1.f dlaln2.f dlals0.f dlalsa.f dlalsd.f
    dlangb.f dlange.f dlangt.f dlanhs.f dlansb.f dlansp.f
-   dlansy.f dlantb.f dlantp.f dlantr.f dlanv2.f
+   dlansy.f dlanskewsy.f dlantb.f dlantp.f dlantr.f dlanv2.f
    dlapll.f dlapmt.f
    dlaqgb.f dlaqge.f dlaqp2.f dlaqps.f dlaqp2rk.f dlaqp3rk.f dlaqsb.f dlaqsp.f dlaqsy.f
    dlaqr0.f dlaqr1.f dlaqr2.f dlaqr3.f dlaqr4.f dlaqr5.f
@@ -312,8 +324,8 @@ set(DLASRC
    dlarf.f  dlarfb.f dlarfb_gett.f dlarfg.f dlarfgp.f dlarft.f dlarft_lvl2.f dlarfx.f dlarfy.f dlarf1f.f dlarf1l.f
    dlargv.f dlarmm.f dlarrv.f dlartv.f
    dlarz.f  dlarzb.f dlarzt.f dlaswp.f dlasy2.f
-   dlasyf.f dlasyf_rook.f dlasyf_rk.f dlasyf_aa.f
-   dlatbs.f dlatdf.f dlatps.f dlatrd.f dlatrs.f dlatrs3.f dlatrz.f dlauu2.f
+   dlasyf.f dlasyf_rook.f dlasyf_rk.f dlasyf_aa.f dlaskewsyf.f dlaskewsyf_aa.f
+   dlatbs.f dlatdf.f dlatps.f dlatrd.f dlatrdskew.f dlatrs.f dlatrs3.f dlatrz.f dlauu2.f
    dlauum.f dopgtr.f dopmtr.f dorg2l.f dorg2r.f
    dorgbr.f dorghr.f dorgl2.f dorglq.f dorgql.f dorgqr.f dorgr2.f
    dorgrq.f dorgtr.f dorgtsqr.f dorgtsqr_row.f dorm2l.f dorm2r.f dorm22.f
@@ -341,6 +353,13 @@ set(DLASRC
    dsytri_3.f dsytri_3x.f dsycon_3.f dsysv_rk.f
    dsysv_aa.f dsytrf_aa.f dsytrs_aa.f
    dsysv_aa_2stage.f dsytrf_aa_2stage.f dsytrs_aa_2stage.f
+   dskewsytf2.f dskewsytrf.f dskewsytrs.f dskewsytrs2.f dskewsyconv.f
+   dskewsytri.f dskewsytri2.f dskewsytri2x.f dskewsyswapr.f
+   dskewsysv.f dskewsycon.f dskewsyrfs.f dskewsysvx.f
+   dskewsysv_aa.f dskewsytrf_aa.f dskewsytrs_aa.f
+   dskewsytd2.f dskewsytrd.f dskewstev.f dskewsyev.f
+   dskewsygst.f dskewsygs2.f dskewsygv.f dskewsyevx.f dskewsygvx.f
+   dskewstevd.f dskewsyevd.f dskewsygvd.f
    dtbcon.f
    dtbrfs.f dtbtrs.f dtgevc.f dtgex2.f dtgexc.f dtgsen.f
    dtgsja.f dtgsna.f dtgsy2.f dtgsyl.f dtpcon.f dtprfs.f dtptri.f

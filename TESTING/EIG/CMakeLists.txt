@@ -30,17 +30,18 @@ set(SEIGTST schkee.F
    schkbb.f schkbd.f schkbk.f schkbl.f schkec.f
    schkgg.f schkgk.f schkgl.f schkhs.f schksb.f schkst.f schkst2stg.f schksb2stg.f
    sckcsd.f sckglm.f sckgqr.f sckgsv.f scklse.f scsdts.f
+   schkskewst.f
    sdrges.f sdrgev.f sdrges3.f sdrgev3.f sdrgsx.f sdrgvx.f
    sdrvbd.f sdrves.f sdrvev.f sdrvsg.f sdrvsg2stg.f
-   sdrvst.f sdrvst2stg.f sdrvsx.f sdrvvx.f
-   serrbd.f serrec.f serred.f serrgg.f serrhs.f serrst.f
+   sdrvst.f sdrvst2stg.f sdrvsx.f sdrvvx.f sdrvskewst.f sdrvskewsg2stg.f
+   serrbd.f serrec.f serred.f serrgg.f serrhs.f serrst.f serrskewst.f
    sget02.f sget10.f sget22.f sget23.f sget24.f sget31.f
    sget32.f sget33.f sget34.f sget35.f sget36.f
    sget37.f sget38.f sget39.f sget40.f sget51.f sget52.f sget53.f
    sget54.f sglmts.f sgqrts.f sgrqts.f sgsvts3.f
-   shst01.f slarfy.f slarhs.f slatm4.f slctes.f slctsx.f slsets.f sort01.f
+   shst01.f slarfy.f slarfyskew.f slarhs.f slatm4.f slctes.f slctsx.f slsets.f sort01.f
    sort03.f ssbt21.f ssgt01.f sslect.f sspt21.f sstt21.f
-   sstt22.f ssyl01.f ssyt21.f ssyt22.f)
+   sstt22.f ssyl01.f ssyt21.f ssyt22.f sskewsgt01.f sskewstt21.f sskewsyt21.f sskewstt22.f sskewsyt22.f)
 
 set(SDMDEIGTST schkdmd.f90)
 
@@ -71,17 +72,18 @@ set(DEIGTST dchkee.F
    dchkbb.f dchkbd.f dchkbk.f dchkbl.f dchkec.f
    dchkgg.f dchkgk.f dchkgl.f dchkhs.f dchksb.f dchkst.f dchkst2stg.f dchksb2stg.f
    dckcsd.f dckglm.f dckgqr.f dckgsv.f dcklse.f dcsdts.f
+   dchkskewst.f
    ddrges.f ddrgev.f ddrges3.f ddrgev3.f ddrgsx.f ddrgvx.f
    ddrvbd.f ddrves.f ddrvev.f ddrvsg.f ddrvsg2stg.f
-   ddrvst.f ddrvst2stg.f ddrvsx.f ddrvvx.f
-   derrbd.f derrec.f derred.f derrgg.f derrhs.f derrst.f
+   ddrvst.f ddrvst2stg.f ddrvsx.f ddrvvx.f ddrvskewst.f ddrvskewsg2stg.f
+   derrbd.f derrec.f derred.f derrgg.f derrhs.f derrst.f derrskewst.f
    dget02.f dget10.f dget22.f dget23.f dget24.f dget31.f
    dget32.f dget33.f dget34.f dget35.f dget36.f
    dget37.f dget38.f dget39.f dget40.f dget51.f dget52.f dget53.f
    dget54.f dglmts.f dgqrts.f dgrqts.f dgsvts3.f
-   dhst01.f dlarfy.f dlarhs.f dlatm4.f dlctes.f dlctsx.f dlsets.f dort01.f
+   dhst01.f dlarfy.f dlarfyskew.f dlarhs.f dlatm4.f dlctes.f dlctsx.f dlsets.f dort01.f
    dort03.f dsbt21.f dsgt01.f dslect.f dspt21.f dstt21.f
-   dstt22.f dsyl01.f dsyt21.f dsyt22.f)
+   dstt22.f dsyl01.f dsyt21.f dsyt22.f dskewsgt01.f dskewstt21.f dskewsyt21.f dskewstt22.f dskewsyt22.f)
 
 set(DDMDEIGTST dchkdmd.f90)
 

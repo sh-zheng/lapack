@@ -48,10 +48,10 @@ SLINTST = schkaa.o \
    schkpt.o schkq3.o schkqp3rk.o schkql.o schkqr.o schkrq.o \
    schksp.o schksy.o schksy_rook.o schksy_rk.o  \
    schksy_aa.o schksy_aa_2stage.o schktb.o schktp.o schktr.o \
-   schktz.o \
+   schktz.o schkskewsy.o schkskewsy_aa.o \
    sdrvgt.o sdrvls.o sdrvpb.o \
    sdrvpp.o sdrvpt.o sdrvsp.o sdrvsy_rook.o sdrvsy_rk.o \
-   sdrvsy_aa.o sdrvsy_aa_2stage.o \
+   sdrvsy_aa.o sdrvsy_aa_2stage.o sdrvskewsy_aa.o \
    serrgt.o serrlq.o serrls.o \
    serrps.o serrql.o serrqp.o serrqr.o \
    serrrq.o serrtr.o serrtz.o \
@@ -59,15 +59,17 @@ SLINTST = schkaa.o \
    sgerqs.o sget01.o sget02.o \
    sget03.o sget04.o sget06.o sget07.o sgtt01.o sgtt02.o \
    sgtt05.o slaptm.o slarhs.o slatb4.o slatb5.o slattb.o slattp.o \
-   slattr.o slavsp.o slavsy.o slavsy_rook.o slqt01.o slqt02.o \
+   slattr.o slavsp.o slavsy.o slavsy_rook.o slavskewsy.o slqt01.o slqt02.o \
    slqt03.o spbt01.o spbt02.o spbt05.o spot01.o \
    spot02.o spot03.o spot05.o spst01.o sppt01.o \
+   spot07.o spot08.o spot09.o \
    sppt02.o sppt03.o sppt05.o sptt01.o sptt02.o \
    sptt05.o sqlt01.o sqlt02.o sqlt03.o sqpt01.o \
    sqrt01.o sqrt01p.o sqrt02.o sqrt03.o sqrt11.o sqrt12.o \
    sqrt13.o sqrt14.o sqrt15.o sqrt16.o sqrt17.o \
    srqt01.o srqt02.o srqt03.o srzt01.o srzt02.o \
    sspt01.o ssyt01.o ssyt01_rook.o ssyt01_3.o ssyt01_aa.o \
+   sskewsyt01.o sskewsyt01_aa.o \
    stbt02.o stbt03.o stbt05.o stbt06.o stpt01.o \
    stpt02.o stpt03.o stpt05.o stpt06.o strt01.o \
    strt02.o strt03.o strt05.o strt06.o \
@@ -81,8 +83,8 @@ SLINTST += sdrvgbx.o sdrvgex.o sdrvsyx.o sdrvpox.o \
            serrvxx.o serrgex.o serrsyx.o serrpox.o \
            sebchvxx.o
 else
-SLINTST += sdrvgb.o sdrvge.o sdrvsy.o sdrvpo.o \
-           serrvx.o serrge.o serrsy.o serrpo.o
+SLINTST += sdrvgb.o sdrvge.o sdrvsy.o sdrvskewsy.o sdrvpo.o \
+           serrvx.o serrge.o serrsy.o serrskewsy.o serrpo.o
 endif
 
 CLINTST = cchkaa.o \
@@ -140,10 +142,10 @@ DLINTST = dchkaa.o \
    dchkpt.o dchkq3.o dchkqp3rk.o dchkql.o dchkqr.o dchkrq.o \
    dchksp.o dchksy.o dchksy_rook.o dchksy_rk.o  \
    dchksy_aa.o dchksy_aa_2stage.o dchktb.o dchktp.o dchktr.o \
-   dchktz.o \
+   dchktz.o dchkskewsy.o dchkskewsy_aa.o \
    ddrvgt.o ddrvls.o ddrvpb.o \
    ddrvpp.o ddrvpt.o ddrvsp.o ddrvsy_rook.o ddrvsy_rk.o \
-   ddrvsy_aa.o ddrvsy_aa_2stage.o \
+   ddrvsy_aa.o ddrvsy_aa_2stage.o ddrvskewsy_aa.o \
    derrgt.o derrlq.o derrls.o \
    derrps.o derrql.o derrqp.o derrqr.o \
    derrrq.o derrtr.o derrtz.o \
@@ -151,15 +153,17 @@ DLINTST = dchkaa.o \
    dgerqs.o dget01.o dget02.o \
    dget03.o dget04.o dget06.o dget07.o dgtt01.o dgtt02.o \
    dgtt05.o dlaptm.o dlarhs.o dlatb4.o dlatb5.o dlattb.o dlattp.o \
-   dlattr.o dlavsp.o dlavsy.o dlavsy_rook.o dlqt01.o dlqt02.o \
+   dlattr.o dlavsp.o dlavsy.o dlavsy_rook.o dlavskewsy.o dlqt01.o dlqt02.o \
    dlqt03.o dpbt01.o dpbt02.o dpbt05.o dpot01.o \
    dpot02.o dpot03.o dpot05.o dpst01.o dppt01.o \
+   dpot07.o dpot08.o dpot09.o \
    dppt02.o dppt03.o dppt05.o dptt01.o dptt02.o \
    dptt05.o dqlt01.o dqlt02.o dqlt03.o dqpt01.o \
    dqrt01.o dqrt01p.o dqrt02.o dqrt03.o dqrt11.o dqrt12.o \
    dqrt13.o dqrt14.o dqrt15.o dqrt16.o dqrt17.o \
    drqt01.o drqt02.o drqt03.o drzt01.o drzt02.o \
    dspt01.o dsyt01.o dsyt01_rook.o dsyt01_3.o dsyt01_aa.o \
+   dskewsyt01.o dskewsyt01_aa.o \
    dtbt02.o dtbt03.o dtbt05.o dtbt06.o dtpt01.o \
    dtpt02.o dtpt03.o dtpt05.o dtpt06.o dtrt01.o \
    dtrt02.o dtrt03.o dtrt05.o dtrt06.o \
@@ -174,8 +178,8 @@ DLINTST += ddrvgbx.o ddrvgex.o ddrvsyx.o ddrvpox.o \
            derrvxx.o derrgex.o derrsyx.o derrpox.o \
            debchvxx.o
 else
-DLINTST += ddrvgb.o ddrvge.o ddrvsy.o ddrvpo.o \
-           derrvx.o derrge.o derrsy.o derrpo.o
+DLINTST += ddrvgb.o ddrvge.o ddrvsy.o ddrvskewsy.o ddrvpo.o \
+           derrvx.o derrge.o derrsy.o derrskewsy.o derrpo.o
 endif
 
 ZLINTST = zchkaa.o \
