@@ -268,7 +268,7 @@
             ZEROT = IMAT.GE.3 .AND. IMAT.LE.6
             IF( ZEROT .AND. N.LT.IMAT-2 )
      $         GO TO 170
-            ZEROT = MOD(N,2).NE.0
+            ZEROT = ZEROT .OR. MOD(N,2).NE.0
 *
 *           Do first for UPLO = 'U', then for UPLO = 'L'
 *
@@ -297,7 +297,7 @@
 *              For types 3-6, zero one or more rows and columns of the
 *              matrix to test that INFO is returned correctly.
 *
-               IF( ZEROT ) THEN
+               IF( IMAT.GE.3 .AND. IMAT.LE.6 ) THEN
                   IF( IMAT.EQ.3 ) THEN
                      IZERO = 1
                   ELSE IF( IMAT.EQ.4 ) THEN
@@ -306,7 +306,7 @@
                      IZERO = N / 2 + 1
                   END IF
 *
-                  IF( IMAT.LT.6 ) THEN
+                  IF( IMAT.GT.2 .AND. IMAT.LT.6 ) THEN
 *
 *                    Set row and column IZERO to zero.
 *
@@ -331,7 +331,7 @@
                            A( IOFF+I ) = ZERO
    50                   CONTINUE
                      END IF
-                  ELSE
+                  ELSEIF( IMAT.GE.6 ) THEN
                      IOFF = 0
                      IF( IUPLO.EQ.1 ) THEN
 *
@@ -371,8 +371,10 @@
 *                 the value returned by SSKEWSYSVX.
 *
                   IF( ZEROT ) THEN
-                     IF( IFACT.EQ.1 )
-     $                  GO TO 150
+                     IF( IFACT.EQ.1 ) THEN
+                        LWORK = (N+NB+1)*(NB+3)
+                        GO TO 150
+                     END IF
                      RCONDC = ZERO
 *
                   ELSE IF( IFACT.EQ.1 ) THEN
@@ -433,15 +435,15 @@
 *                    pivoting.
 *
                      K = IZERO
-                     IF (N.EQ.3 .AND. IMAT.GE.7 .AND. IMAT.LE.10) THEN
-                        IF (LSAME( UPLO, 'U' )) THEN
-                           K = N
-                        ELSEIF (LSAME( UPLO, 'L' )) THEN
-                           K = 1
-                        END IF
-                     ELSEIF (N.EQ.5 .AND. IMAT.GE.6 .AND. IMAT.LE.10)
-     $               THEN
+                     IF (MOD(N,2).NE.0 .AND. IMAT.EQ.6) THEN
                         K = (N + 1) / 2
+                        IF (MOD(K,2).EQ.0 .AND. LSAME( UPLO, 'U' ))
+     $                  THEN
+                           K = K + 1
+                        ELSE IF (MOD(K,2).EQ.0 .AND. LSAME( UPLO, 'L' ))
+     $                  THEN
+                           K = K - 1
+                        END IF
                      ELSEIF (MOD(N,2).NE.0 .AND. LSAME( UPLO, 'U' ))
      $               THEN
                         K = 1
@@ -543,15 +545,15 @@
 *                 pivoting.
 *
                   K = IZERO
-                  IF (N.EQ.3 .AND. IMAT.GE.7 .AND. IMAT.LE.10) THEN
-                     IF (LSAME( UPLO, 'U' )) THEN
-                        K = N
-                     ELSEIF (LSAME( UPLO, 'L' )) THEN
-                        K = 1
-                     END IF
-                  ELSEIF (N.EQ.5 .AND. IMAT.GE.6 .AND. IMAT.LE.10)
-     $            THEN
+                  IF (MOD(N,2).NE.0 .AND. IMAT.EQ.6) THEN
                      K = (N + 1) / 2
+                     IF (MOD(K,2).EQ.0 .AND. LSAME( UPLO, 'U' ))
+     $               THEN
+                        K = K + 1
+                     ELSE IF (MOD(K,2).EQ.0 .AND. LSAME( UPLO, 'L' ))
+     $               THEN
+                        K = K - 1
+                     END IF
                   ELSEIF (MOD(N,2).NE.0 .AND. LSAME( UPLO, 'U' ))
      $            THEN
                      K = 1
