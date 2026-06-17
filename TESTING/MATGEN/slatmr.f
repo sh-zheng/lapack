@@ -509,10 +509,10 @@
 *     .. External Functions ..
       LOGICAL            LSAME
       REAL               SLANGB, SLANGE, SLANSB,
-     $                   SLANSP, SLANSY, SLATM2,
+     $                   SLANSP, SLANSY, SLANSKEWSY, SLATM2,
      $                   SLATM3
       EXTERNAL           LSAME, SLANGB, SLANGE,
-     $                   SLANSB, SLANSP, SLANSY,
+     $                   SLANSB, SLANSP, SLANSY, SLANSKEWSY,
      $                   SLATM2, SLATM3
 *     ..
 *     .. External Subroutines ..
@@ -1164,11 +1164,27 @@
 *     5)      Scaling the norm
 *
       IF( IPACK.EQ.0 ) THEN
+         IF( ISYM.EQ.2 .AND. MIN(M, N).GE.2 ) THEN
+            DO I = 1, MIN(M, N)
+               A(I, I) = ZERO
+               DO J = 1, I-1
+                  A(I, J) = -A(J, I)
+               END DO
+            END DO
+         END IF
          ONORM = SLANGE( 'M', M, N, A, LDA, TEMPA )
       ELSE IF( IPACK.EQ.1 ) THEN
-         ONORM = SLANSY( 'M', 'U', N, A, LDA, TEMPA )
+         IF( ISYM.EQ.2 .AND. N.GE.2 ) THEN
+            ONORM = SLANSKEWSY( 'M', 'U', N, A, LDA, TEMPA )
+         ELSE
+            ONORM = SLANSY( 'M', 'U', N, A, LDA, TEMPA )
+         END IF
       ELSE IF( IPACK.EQ.2 ) THEN
-         ONORM = SLANSY( 'M', 'L', N, A, LDA, TEMPA )
+         IF( ISYM.EQ.2 .AND. N.GE.2 ) THEN
+            ONORM = SLANSKEWSY( 'M', 'L', N, A, LDA, TEMPA )
+         ELSE
+            ONORM = SLANSY( 'M', 'L', N, A, LDA, TEMPA )
+         END IF
       ELSE IF( IPACK.EQ.3 ) THEN
          ONORM = SLANSP( 'M', 'U', N, A, TEMPA )
       ELSE IF( IPACK.EQ.4 ) THEN

@@ -697,6 +697,9 @@ c           LIWEDC = 12
 *              skew-symmetric banded, eigenvalues specified
 *
                IHBW = INT( ( N-1 )*SLARND( 1, ISEED3 ) )
+               IF( N.GE.2 ) THEN
+                  IHBW = MAX( IHBW, 1 )
+               END IF
                CALL SLATMS( N, N, 'S', ISEED, 'K', WORK, IMODE, COND,
      $                      ANORM, IHBW, IHBW, 'Z', U, LDU, WORK( N+1 ),
      $                      IINFO )
@@ -710,7 +713,9 @@ c           LIWEDC = 12
                   J2 = MIN( N, N+IDIAG )
                   DO 90 J = J1, J2
                      I = J - IDIAG
-                     A( I, J ) = U( IROW, J )
+                     IF( IDIAG.NE.0 ) THEN
+                        A( I, J ) = U( IROW, J )
+                     END IF
    90             CONTINUE
   100          CONTINUE
             ELSE

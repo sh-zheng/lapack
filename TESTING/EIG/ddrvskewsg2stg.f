@@ -602,7 +602,7 @@
                   KA9 = KA9 + 1
                   KB9 = 1
                END IF
-               KA = MAX( 0, MIN( N-1, KA9 ) )
+               KA = MAX( 1, MIN( N-1, KA9 ) )
                KB = MAX( 0, MIN( N-1, KB9 ) )
                CALL DLATMS( N, N, 'S', ISEED, 'K', WORK, IMODE, COND,
      $                      ANORM, KA, KA, 'N', A, LDA, WORK( N+1 ),

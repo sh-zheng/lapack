@@ -509,10 +509,10 @@
 *     .. External Functions ..
       LOGICAL            LSAME
       DOUBLE PRECISION   DLANGB, DLANGE, DLANSB,
-     $                   DLANSP, DLANSY, DLATM2,
+     $                   DLANSP, DLANSY, DLANSKEWSY, DLATM2,
      $                   DLATM3
       EXTERNAL           LSAME, DLANGB, DLANGE,
-     $                   DLANSB, DLANSP, DLANSY,
+     $                   DLANSB, DLANSP, DLANSY, DLANSKEWSY,
      $                   DLATM2, DLATM3
 *     ..
 *     .. External Subroutines ..
@@ -1164,11 +1164,27 @@
 *     5)      Scaling the norm
 *
       IF( IPACK.EQ.0 ) THEN
+         IF( ISYM.EQ.2 .AND. MIN(M, N).GE.2 ) THEN
+            DO I = 1, MIN(M, N)
+               A(I, I) = ZERO
+               DO J = 1, I-1
+                  A(I, J) = -A(J, I)
+               END DO
+            END DO
+         END IF
          ONORM = DLANGE( 'M', M, N, A, LDA, TEMPA )
       ELSE IF( IPACK.EQ.1 ) THEN
-         ONORM = DLANSY( 'M', 'U', N, A, LDA, TEMPA )
+         IF( ISYM.EQ.2 .AND. N.GE.2 ) THEN
+            ONORM = DLANSKEWSY( 'M', 'U', N, A, LDA, TEMPA )
+         ELSE
+            ONORM = DLANSY( 'M', 'U', N, A, LDA, TEMPA )
+         END IF
       ELSE IF( IPACK.EQ.2 ) THEN
-         ONORM = DLANSY( 'M', 'L', N, A, LDA, TEMPA )
+         IF( ISYM.EQ.2 .AND. N.GE.2 ) THEN
+            ONORM = DLANSKEWSY( 'M', 'L', N, A, LDA, TEMPA )
+         ELSE
+            ONORM = DLANSY( 'M', 'L', N, A, LDA, TEMPA )
+         END IF
       ELSE IF( IPACK.EQ.3 ) THEN
          ONORM = DLANSP( 'M', 'U', N, A, TEMPA )
       ELSE IF( IPACK.EQ.4 ) THEN

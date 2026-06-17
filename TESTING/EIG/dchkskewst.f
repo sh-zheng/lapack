@@ -855,19 +855,12 @@
 *
             ELSE IF( ITYPE.EQ.10 ) THEN
 *
-*              skew-ymmetric tridiagonal, eigenvalues specified.
+*              skew-ymmetric tridiagonal, all the same value.
 *
-               CALL DLATMS( N, N, 'S', ISEED, 'K', WORK, IMODE, COND,
-     $                      ANORM, 1, 1, 'N', A, LDA, WORK( N+1 ),
-     $                      IINFO )
+               CALL DLASET( 'N', N, N, ZERO, ZERO, A, LDA )
                DO 90 I = 2, N
-                  TEMP1 = ABS( A( I-1, I ) ) /
-     $                    SQRT( ABS( A( I-1, I-1 )*A( I, I ) ) )
-                  IF( TEMP1.GT.HALF ) THEN
-                     A( I-1, I ) = HALF*SQRT( ABS( A( I-1, I-1 )*A( I,
-     $                             I ) ) )
-                     A( I, I-1 ) = A( I-1, I )
-                  END IF
+                  A( I-1, I ) = ONE
+                  A( I, I-1 ) = -ONE
    90          CONTINUE
 *
             ELSE
@@ -1097,7 +1090,7 @@
                TEMP1 = ZERO
                DO 190 J = 1, N
                   TEMP1 = MAX( TEMP1, ABS( D2( J )-WR( J ) ) /
-     $                    ( ABSTOL+ABS( D4( J ) ) ) )
+     $                    ( ABSTOL+ABS( D2( J ) ) ) )
   190          CONTINUE
 *
                RESULT( 9 ) = TEMP1 / TEMP2
