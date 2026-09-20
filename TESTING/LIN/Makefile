@@ -48,10 +48,10 @@ SLINTST = schkaa.o \
    schkpt.o schkq3.o schkqp3rk.o schkql.o schkqr.o schkrq.o \
    schksp.o schksy.o schksy_rook.o schksy_rk.o  \
    schksy_aa.o schksy_aa_2stage.o schktb.o schktp.o schktr.o \
-   schktz.o schkskewsy.o schkskewsy_aa.o \
+   schktz.o schkskewsy.o schkskewsy_aa.o schkskewsy_aa_2stage.o \
    sdrvgt.o sdrvls.o sdrvpb.o \
    sdrvpp.o sdrvpt.o sdrvsp.o sdrvsy_rook.o sdrvsy_rk.o \
-   sdrvsy_aa.o sdrvsy_aa_2stage.o sdrvskewsy_aa.o \
+   sdrvsy_aa.o sdrvsy_aa_2stage.o sdrvskewsy_aa.o sdrvskewsy_aa_2stage.o \
    serrgt.o serrlq.o serrls.o \
    serrps.o serrql.o serrqp.o serrqr.o \
    serrrq.o serrtr.o serrtz.o \
@@ -142,10 +142,10 @@ DLINTST = dchkaa.o \
    dchkpt.o dchkq3.o dchkqp3rk.o dchkql.o dchkqr.o dchkrq.o \
    dchksp.o dchksy.o dchksy_rook.o dchksy_rk.o  \
    dchksy_aa.o dchksy_aa_2stage.o dchktb.o dchktp.o dchktr.o \
-   dchktz.o dchkskewsy.o dchkskewsy_aa.o \
+   dchktz.o dchkskewsy.o dchkskewsy_aa.o dchkskewsy_aa_2stage.o \
    ddrvgt.o ddrvls.o ddrvpb.o \
    ddrvpp.o ddrvpt.o ddrvsp.o ddrvsy_rook.o ddrvsy_rk.o \
-   ddrvsy_aa.o ddrvsy_aa_2stage.o ddrvskewsy_aa.o \
+   ddrvsy_aa.o ddrvsy_aa_2stage.o ddrvskewsy_aa.o ddrvskewsy_aa_2stage.o \
    derrgt.o derrlq.o derrls.o \
    derrps.o derrql.o derrqp.o derrqr.o \
    derrrq.o derrtr.o derrtz.o \

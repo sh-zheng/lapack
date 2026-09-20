@@ -143,7 +143,7 @@ set(SLASRC
    ssytf2_rk.f ssytrf_rk.f ssytrs_3.f
    ssytri_3.f ssytri_3x.f ssycon_3.f ssysv_rk.f
    ssysv_aa.f ssytrf_aa.f ssytrs_aa.f
-   ssysv_aa_2stage.f ssytrf_aa_2stage.f ssytrs_aa_2stage.f
+   ssysv_aa_2stage.f sskewsysv_aa_2stage.f ssytrf_aa_2stage.f sskewsytrf_aa_2stage.f ssytrs_aa_2stage.f
    sskewsytf2.f sskewsytrf.f sskewsytrs.f sskewsytrs2.f sskewsyconv.f
    sskewsytri.f sskewsytri2.f sskewsytri2x.f sskewsyswapr.f
    sskewsysv.f sskewsycon.f sskewsyrfs.f sskewsysvx.f
@@ -352,7 +352,7 @@ set(DLASRC
    dsytf2_rk.f dsytrf_rk.f dsytrs_3.f
    dsytri_3.f dsytri_3x.f dsycon_3.f dsysv_rk.f
    dsysv_aa.f dsytrf_aa.f dsytrs_aa.f
-   dsysv_aa_2stage.f dsytrf_aa_2stage.f dsytrs_aa_2stage.f
+   dsysv_aa_2stage.f dskewsysv_aa_2stage.f dsytrf_aa_2stage.f dskewsytrf_aa_2stage.f dsytrs_aa_2stage.f
    dskewsytf2.f dskewsytrf.f dskewsytrs.f dskewsytrs2.f dskewsyconv.f
    dskewsytri.f dskewsytri2.f dskewsytri2x.f dskewsyswapr.f
    dskewsysv.f dskewsycon.f dskewsyrfs.f dskewsysvx.f

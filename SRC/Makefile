@@ -172,7 +172,7 @@ SLASRC = \
    ssytf2_rk.o ssytrf_rk.o ssytrs_3.o \
    ssytri_3.o ssytri_3x.o ssycon_3.o ssysv_rk.o \
    slasyf_aa.o ssysv_aa.o ssytrf_aa.o ssytrs_aa.o \
-   ssysv_aa_2stage.o ssytrf_aa_2stage.o ssytrs_aa_2stage.o \
+   ssysv_aa_2stage.o sskewsysv_aa_2stage.o ssytrf_aa_2stage.o sskewsytrf_aa_2stage.o ssytrs_aa_2stage.o \
    sskewsytf2.o sskewsytrf.o sskewsytrs.o sskewsytrs2.o sskewsyconv.o \
    sskewsytri.o sskewsytri2.o sskewsytri2x.o sskewsyswapr.o \
    sskewsysv.o sskewsycon.o sskewsyrfs.o sskewsysvx.o \
@@ -383,7 +383,7 @@ DLASRC = \
    dsytf2_rk.o dsytrf_rk.o dsytrs_3.o \
    dsytri_3.o dsytri_3x.o dsycon_3.o dsysv_rk.o \
    dlasyf_aa.o dsysv_aa.o dsytrf_aa.o dsytrs_aa.o \
-   dsysv_aa_2stage.o dsytrf_aa_2stage.o dsytrs_aa_2stage.o \
+   dsysv_aa_2stage.o dskewsysv_aa_2stage.o dsytrf_aa_2stage.o dskewsytrf_aa_2stage.o dsytrs_aa_2stage.o \
    dskewsytf2.o dskewsytrf.o dskewsytrs.o dskewsytrs2.o dskewsyconv.o \
    dskewsytri.o dskewsytri2.o dskewsytri2x.o dskewsyswapr.o \
    dskewsysv.o dskewsycon.o dskewsyrfs.o dskewsysvx.o \

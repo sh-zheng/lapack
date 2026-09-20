@@ -13,10 +13,10 @@ set(SLINTST schkaa.F
    schksp.f schksy.f schksy_rook.f schksy_rk.f 
    schksy_aa.f schksy_aa_2stage.f 
    schktb.f schktp.f schktr.f
-   schktz.f schkskewsy.f schkskewsy_aa.f
+   schktz.f schkskewsy.f schkskewsy_aa.f schkskewsy_aa_2stage.f 
    sdrvgt.f sdrvls.f sdrvpb.f
    sdrvpp.f sdrvpt.f sdrvsp.f sdrvsy_rook.f sdrvsy_rk.f 
-   sdrvsy_aa.f sdrvsy_aa_2stage.f sdrvskewsy_aa.f 
+   sdrvsy_aa.f sdrvsy_aa_2stage.f sdrvskewsy_aa.f sdrvskewsy_aa_2stage.f 
    serrgt.f serrlq.f serrls.f
    serrps.f serrql.f serrqp.f serrqr.f
    serrrq.f serrtr.f serrtz.f
@@ -115,10 +115,10 @@ set(DLINTST dchkaa.F
    dchksp.f dchksy.f dchksy_rook.f dchksy_rk.f 
    dchksy_aa.f dchksy_aa_2stage.f
    dchktb.f dchktp.f dchktr.f
-   dchktz.f dchkskewsy.f dchkskewsy_aa.f
+   dchktz.f dchkskewsy.f dchkskewsy_aa.f dchkskewsy_aa_2stage.f 
    ddrvgt.f ddrvls.f ddrvpb.f
    ddrvpp.f ddrvpt.f ddrvsp.f ddrvsy_rook.f ddrvsy_rk.f 
-   ddrvsy_aa.f ddrvsy_aa_2stage.f ddrvskewsy_aa.f
+   ddrvsy_aa.f ddrvsy_aa_2stage.f ddrvskewsy_aa.f ddrvskewsy_aa_2stage.f 
    derrgt.f derrlq.f derrls.f
    derrps.f derrql.f derrqp.f derrqr.f
    derrrq.f derrtr.f derrtz.f

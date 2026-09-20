@@ -87,7 +87,7 @@
 *     .. External Subroutines ..
       EXTERNAL           ALAESM, CHKXER, DSKEWSYTRI2X, DSKEWSYTF2,
      $                   DSKEWSYTRF, DSKEWSYTRF_AA, DSKEWSYTRI, DSKEWSYTRS,
-     $                   DSKEWSYTRS_AA, DSKEWSYTRI2
+     $                   DSKEWSYTRS_AA, DSKEWSYTRI2, DSKEWSYTRF_AA_2STAGE
 *     ..
 *     .. Scalars in Common ..
       LOGICAL            LERR, OK
@@ -274,6 +274,39 @@
          CALL DSKEWSYTRS_AA( 'U', 0, 1, A, 2, IP, B, 1, W, -2,
      $                       INFO )
          CALL CHKXER( 'DSKEWSYTRS_AA', INFOT, NOUT, LERR, OK )
+      ELSE IF( LSAMEN( 2, C2, 'K2' ) ) THEN
+*
+*        Test error exits of the routines that use factorization
+*        of a skew-symmetric indefinite matrix with Aasen's algorithm.
+*
+*        DSKEWSYTRF_AA_2STAGE
+*
+         SRNAMT = 'DSKEWSYTRF_AA_2STAGE'
+         INFOT = 1
+         CALL DSKEWSYTRF_AA_2STAGE( '/', 0, A, 1, A, 1, IP, IP, W,
+     $                          1, INFO )
+         CALL CHKXER( 'DSKEWSYTRF_AA_2STAGE', INFOT, NOUT, LERR,
+     $                OK )
+         INFOT = 2
+         CALL DSKEWSYTRF_AA_2STAGE( 'U', -1, A, 1, A, 1, IP, IP, W,
+     $                           1, INFO )
+         CALL CHKXER( 'DSKEWSYTRF_AA_2STAGE', INFOT, NOUT, LERR,
+     $                OK )
+         INFOT = 4
+         CALL DSKEWSYTRF_AA_2STAGE( 'U', 2, A, 1, A, 2, IP, IP, W,
+     $                           1, INFO )
+         CALL CHKXER( 'DSKEWSYTRF_AA_2STAGE', INFOT, NOUT, LERR,
+     $                OK )
+         INFOT = 6
+         CALL DSKEWSYTRF_AA_2STAGE( 'U', 2, A, 2, A, 1, IP, IP, W,
+     $                           1, INFO )
+         CALL CHKXER( 'DSKEWSYTRF_AA_2STAGE', INFOT, NOUT, LERR,
+     $                OK )
+         INFOT = 10
+         CALL DSKEWSYTRF_AA_2STAGE( 'U', 2, A, 2, A, 8, IP, IP, W,
+     $                           0, INFO )
+         CALL CHKXER( 'DSKEWSYTRF_AA_2STAGE', INFOT, NOUT, LERR,
+     $                OK )
       END IF
 *
 *     Print a summary line.

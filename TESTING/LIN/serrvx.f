@@ -90,7 +90,7 @@
      $                   SGTSVX, SPBSV, SPBSVX, SPOSV, SPOSVX, SPPSV,
      $                   SPPSVX, SPTSV, SPTSVX, SSPSV, SSPSVX, SSYSV,
      $                   SSYSV_AA, SSYSV_RK, SSYSV_ROOK, SSYSVX,
-     $                   SSYSV_AA_2STAGE
+     $                   SSYSV_AA_2STAGE, SSKEWSYSV_AA_2STAGE
 *     ..
 *     .. Scalars in Common ..
       LOGICAL            LERR, OK
@@ -756,6 +756,40 @@
          CALL SSYSV_AA_2STAGE( 'U', 2, 1, A, 2, A, 8, IP, IP, B, 2,
      $                         W, 1, INFO )
          CALL CHKXER( 'SSYSV_AA_2STAGE', INFOT, NOUT, LERR, OK )
+*
+      ELSE IF( LSAMEN( 2, C2, 'K2' ) ) THEN
+*
+*        SSKEWSYSV_AASEN_2STAGE
+*
+         SRNAMT = 'SSKEWSYSV_AA_2STAGE'
+         INFOT = 1
+         CALL SSKEWSYSV_AA_2STAGE( '/', 0, 0, A, 1, A, 1, IP, IP,
+     $                         B, 1, W, 1, INFO )
+         CALL CHKXER( 'SSKEWSYSV_AA_2STAGE', INFOT, NOUT, LERR, OK )
+         INFOT = 2
+         CALL SSKEWSYSV_AA_2STAGE( 'U', -1, 0, A, 1, A, 1, IP, IP,
+     $                         B, 1, W, 1, INFO )
+         CALL CHKXER( 'SSKEWSYSV_AA_2STAGE', INFOT, NOUT, LERR, OK )
+         INFOT = 3
+         CALL SSKEWSYSV_AA_2STAGE( 'U', 0, -1, A, 1, A, 1, IP, IP,
+     $                         B, 1, W, 1, INFO )
+         CALL CHKXER( 'SSKEWSYSV_AA_2STAGE', INFOT, NOUT, LERR, OK )
+         INFOT = 5
+         CALL SSKEWSYSV_AA_2STAGE( 'U', 2, 1, A, 1, A, 1, IP, IP,
+     $                         B, 1, W, 1, INFO )
+         CALL CHKXER( 'SSKEWSYSV_AA_2STAGE', INFOT, NOUT, LERR, OK )
+         INFOT = 7
+         CALL SSKEWSYSV_AA_2STAGE( 'U', 2, 1, A, 2, A, 1, IP, IP,
+     $                         B, 2, W, 1, INFO )
+         CALL CHKXER( 'SSKEWSYSV_AA_2STAGE', INFOT, NOUT, LERR, OK )
+         INFOT = 11
+         CALL SSKEWSYSV_AA_2STAGE( 'U', 2, 1, A, 2, A, 8, IP, IP,
+     $                         B, 1, W, 1, INFO )
+         CALL CHKXER( 'SSKEWSYSV_AA_2STAGE', INFOT, NOUT, LERR, OK )
+         INFOT = 13
+         CALL SSKEWSYSV_AA_2STAGE( 'U', 2, 1, A, 2, A, 8, IP, IP,
+     $                         B, 2, W, 1, INFO )
+         CALL CHKXER( 'SSKEWSYSV_AA_2STAGE', INFOT, NOUT, LERR, OK )
 *
       ELSE IF( LSAMEN( 2, C2, 'SP' ) ) THEN
 *
