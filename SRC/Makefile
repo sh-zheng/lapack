@@ -135,13 +135,13 @@ SLASRC = \
    shsein.o shseqr.o slabrd.o slacon.o slacn2.o \
    slaein.o slaexc.o slag2.o  slags2.o slagtm.o slagv2.o slahqr.o \
    slahr2.o slaic1.o slaln2.o slals0.o slalsa.o slalsd.o \
-   slangb.o slange.o slangt.o slanhs.o slansb.o slansp.o \
+   slangb.o slange.o slangt.o slanhs.o slansb.o slanskewsb.o slansp.o \
    slansy.o slanskewsy.o slantb.o slantp.o slantr.o slanv2.o \
    slapll.o slapmt.o \
    slaqgb.o slaqge.o slaqp2.o slaqps.o slaqp2rk.o slaqp3rk.o slaqsb.o slaqsp.o slaqsy.o \
    slaqr0.o slaqr1.o slaqr2.o slaqr3.o slaqr4.o slaqr5.o \
    slaqtr.o slar1v.o slar2v.o ilaslr.o ilaslc.o \
-   slarf.o  slarf1f.o slarf1l.o slarfb.o slarfb_gett.o slarfg.o slarfgp.o slarft.o slarft_lvl2.o slarfx.o slarfy.o \
+   slarf.o  slarf1f.o slarf1l.o slarfb.o slarfb_gett.o slarfg.o slarfgp.o slarft.o slarft_lvl2.o slarfx.o slarfy.o slarfyskew.o \
    slargv.o slarmm.o slarrv.o slartv.o \
    slarz.o  slarzb.o slarzt.o slaswp.o slasy2.o slasyf.o slasyf_rook.o \
    slasyf_rk.o slaskewsyf.o \
@@ -158,7 +158,8 @@ SLASRC = \
    spprfs.o sppsv.o  sppsvx.o spptrf.o spptri.o spptrs.o sptcon.o \
    spteqr.o sptrfs.o sptsv.o  sptsvx.o spttrs.o sptts2.o srscl.o \
    ssbev.o  ssbevd.o ssbevx.o ssbgst.o ssbgv.o  ssbgvd.o ssbgvx.o \
-   ssbtrd.o sspcon.o sspev.o  sspevd.o sspevx.o sspgst.o \
+   sskewsbgst.o sskewsbev.o sskewsbevd.o sskewsbevx.o sskewsbgv.o sskewsbgvd.o sskewsbgvx.o \
+   ssbtrd.o sskewsbtrd.o sspcon.o sspev.o  sspevd.o sspevx.o sspgst.o \
    sspgv.o  sspgvd.o sspgvx.o ssprfs.o sspsv.o  sspsvx.o ssptrd.o \
    ssptrf.o ssptri.o ssptrs.o sstegr.o sstein.o sstev.o  sstevd.o sstevr.o \
    sstevx.o \
@@ -201,6 +202,7 @@ SLASRC = \
    stplqt.o stplqt2.o stpmlqt.o \
    sorhr_col.o slaorhr_col_getrfnp.o slaorhr_col_getrfnp2.o \
    ssytrd_2stage.o ssytrd_sy2sb.o ssytrd_sb2st.o ssb2st_kernels.o \
+   sskewsytrd_2stage.o sskewsytrd_sy2sb.o sskewsytrd_sb2st.o sskewsb2st_kernels.o \
    ssyevd_2stage.o ssyev_2stage.o ssyevx_2stage.o ssyevr_2stage.o \
    ssbev_2stage.o ssbevx_2stage.o ssbevd_2stage.o ssygv_2stage.o \
    sgesvdq.o sgedmd.o sgedmdq.o
@@ -345,13 +347,13 @@ DLASRC = \
    dhsein.o dhseqr.o dlabrd.o dlacon.o dlacn2.o \
    dlaein.o dlaexc.o dlag2.o  dlags2.o dlagtm.o dlagv2.o dlahqr.o \
    dlahr2.o dlaic1.o dlaln2.o dlals0.o dlalsa.o dlalsd.o \
-   dlangb.o dlange.o dlangt.o dlanhs.o dlansb.o dlansp.o \
+   dlangb.o dlange.o dlangt.o dlanhs.o dlansb.o dlanskewsb.o dlansp.o \
    dlansy.o dlanskewsy.o dlantb.o dlantp.o dlantr.o dlanv2.o \
    dlapll.o dlapmt.o \
    dlaqgb.o dlaqge.o dlaqp2.o dlaqps.o dlaqp2rk.o dlaqp3rk.o dlaqsb.o dlaqsp.o dlaqsy.o \
    dlaqr0.o dlaqr1.o dlaqr2.o dlaqr3.o dlaqr4.o dlaqr5.o \
    dlaqtr.o dlar1v.o dlar2v.o iladlr.o iladlc.o \
-   dlarf.o  dlarfb.o dlarfb_gett.o dlarfg.o dlarfgp.o dlarft.o dlarft_lvl2.o dlarfx.o dlarfy.o dlarf1f.o dlarf1l.o\
+   dlarf.o  dlarfb.o dlarfb_gett.o dlarfg.o dlarfgp.o dlarft.o dlarft_lvl2.o dlarfx.o dlarfy.o dlarfyskew.o dlarf1f.o dlarf1l.o\
    dlargv.o dlarmm.o dlarrv.o dlartv.o \
    dlarz.o  dlarzb.o dlarzt.o dlaswp.o dlasy2.o \
    dlasyf.o dlasyf_rook.o dlasyf_rk.o dlaskewsyf.o \
@@ -368,7 +370,8 @@ DLASRC = \
    dpprfs.o dppsv.o  dppsvx.o dpptrf.o dpptri.o dpptrs.o dptcon.o \
    dpteqr.o dptrfs.o dptsv.o  dptsvx.o dpttrs.o dptts2.o drscl.o \
    dsbev.o  dsbevd.o dsbevx.o dsbgst.o dsbgv.o  dsbgvd.o dsbgvx.o \
-   dsbtrd.o dspcon.o dspev.o  dspevd.o dspevx.o dspgst.o \
+   dskewsbgst.o dskewsbev.o dskewsbevd.o dskewsbevx.o dskewsbgv.o dskewsbgvd.o dskewsbgvx.o \
+   dsbtrd.o dskewsbtrd.o dspcon.o dspev.o  dspevd.o dspevx.o dspgst.o \
    dspgv.o  dspgvd.o dspgvx.o dsprfs.o dspsv.o  dspsvx.o dsptrd.o \
    dsptrf.o dsptri.o dsptrs.o dstegr.o dstein.o dstev.o  dstevd.o dstevr.o \
    dstevx.o \
@@ -412,6 +415,7 @@ DLASRC = \
    dtplqt.o dtplqt2.o dtpmlqt.o \
    dorhr_col.o dlaorhr_col_getrfnp.o dlaorhr_col_getrfnp2.o \
    dsytrd_2stage.o dsytrd_sy2sb.o dsytrd_sb2st.o dsb2st_kernels.o \
+   dskewsytrd_2stage.o dskewsytrd_sy2sb.o dskewsytrd_sb2st.o dskewsb2st_kernels.o \
    dsyevd_2stage.o dsyev_2stage.o dsyevx_2stage.o dsyevr_2stage.o \
    dsbev_2stage.o dsbevx_2stage.o dsbevd_2stage.o dsygv_2stage.o \
    dgesvdq.o dgedmd.o dgedmdq.o

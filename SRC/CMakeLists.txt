@@ -107,13 +107,13 @@ set(SLASRC
    shsein.f shseqr.f slabrd.f slacon.f slacn2.f
    slaein.f slaexc.f slag2.f  slags2.f slagtm.f slagv2.f slahqr.f
    slahr2.f slaic1.f slaln2.f slals0.f slalsa.f slalsd.f
-   slangb.f slange.f slangt.f slanhs.f slansb.f slansp.f
+   slangb.f slange.f slangt.f slanhs.f slansb.f slanskewsb.f slansp.f
    slansy.f slanskewsy.f slantb.f slantp.f slantr.f slanv2.f
    slapll.f slapmt.f
    slaqgb.f slaqge.f slaqp2.f slaqps.f slaqp2rk.f slaqp3rk.f slaqsb.f slaqsp.f slaqsy.f
    slaqr0.f slaqr1.f slaqr2.f slaqr3.f slaqr4.f slaqr5.f
    slaqtr.f slar1v.f slar2v.f ilaslr.f ilaslc.f
-   slarf.f  slarf1f.f slarf1l.f slarfb.f slarfb_gett.f slarfg.f slarfgp.f slarft.f slarft_lvl2.f slarfx.f slarfy.f
+   slarf.f  slarf1f.f slarf1l.f slarfb.f slarfb_gett.f slarfg.f slarfgp.f slarft.f slarft_lvl2.f slarfx.f slarfy.f slarfyskew.f
    slargv.f slarmm.f slarrv.f slartv.f
    slarz.f  slarzb.f slarzt.f slasy2.f
    slasyf.f slasyf_rook.f slasyf_rk.f slasyf_aa.f slaskewsyf.f slaskewsyf_aa.f
@@ -130,7 +130,8 @@ set(SLASRC
    spprfs.f sppsv.f  sppsvx.f spptrf.f spptri.f spptrs.f sptcon.f
    spteqr.f sptrfs.f sptsv.f  sptsvx.f spttrs.f sptts2.f srscl.f
    ssbev.f  ssbevd.f ssbevx.f ssbgst.f ssbgv.f  ssbgvd.f ssbgvx.f
-   ssbtrd.f sspcon.f sspev.f  sspevd.f sspevx.f sspgst.f
+   sskewsbgst.f sskewsbev.f sskewsbevd.f sskewsbevx.f sskewsbgv.f sskewsbgvd.f sskewsbgvx.f
+   ssbtrd.f sskewsbtrd.f sspcon.f sspev.f  sspevd.f sspevx.f sspgst.f
    sspgv.f  sspgvd.f sspgvx.f ssprfs.f sspsv.f  sspsvx.f ssptrd.f
    ssptrf.f ssptri.f ssptrs.f sstegr.f sstev.f  sstevd.f sstevr.f
    ssycon.f ssyev.f  ssyevd.f ssyevr.f ssyevx.f ssygs2.f
@@ -171,6 +172,7 @@ set(SLASRC
    stplqt.f stplqt2.f stpmlqt.f
    sorhr_col.f slaorhr_col_getrfnp.f slaorhr_col_getrfnp2.f
    ssytrd_2stage.f ssytrd_sy2sb.f ssytrd_sb2st.F ssb2st_kernels.f
+   sskewsytrd_2stage.f sskewsytrd_sy2sb.f sskewsytrd_sb2st.F sskewsb2st_kernels.f
    ssyevd_2stage.f ssyev_2stage.f ssyevx_2stage.f ssyevr_2stage.f
    ssbev_2stage.f ssbevx_2stage.f ssbevd_2stage.f ssygv_2stage.f
    sgesvdq.f sgedmd.f90 sgedmdq.f90)
@@ -315,13 +317,13 @@ set(DLASRC
    dhsein.f dhseqr.f dlabrd.f dlacon.f dlacn2.f
    dlaein.f dlaexc.f dlag2.f  dlags2.f dlagtm.f dlagv2.f dlahqr.f
    dlahr2.f dlaic1.f dlaln2.f dlals0.f dlalsa.f dlalsd.f
-   dlangb.f dlange.f dlangt.f dlanhs.f dlansb.f dlansp.f
+   dlangb.f dlange.f dlangt.f dlanhs.f dlansb.f dlanskewsb.f dlansp.f
    dlansy.f dlanskewsy.f dlantb.f dlantp.f dlantr.f dlanv2.f
    dlapll.f dlapmt.f
    dlaqgb.f dlaqge.f dlaqp2.f dlaqps.f dlaqp2rk.f dlaqp3rk.f dlaqsb.f dlaqsp.f dlaqsy.f
    dlaqr0.f dlaqr1.f dlaqr2.f dlaqr3.f dlaqr4.f dlaqr5.f
    dlaqtr.f dlar1v.f dlar2v.f iladlr.f iladlc.f
-   dlarf.f  dlarfb.f dlarfb_gett.f dlarfg.f dlarfgp.f dlarft.f dlarft_lvl2.f dlarfx.f dlarfy.f dlarf1f.f dlarf1l.f
+   dlarf.f  dlarfb.f dlarfb_gett.f dlarfg.f dlarfgp.f dlarft.f dlarft_lvl2.f dlarfx.f dlarfy.f dlarfyskew.f dlarf1f.f dlarf1l.f
    dlargv.f dlarmm.f dlarrv.f dlartv.f
    dlarz.f  dlarzb.f dlarzt.f dlaswp.f dlasy2.f
    dlasyf.f dlasyf_rook.f dlasyf_rk.f dlasyf_aa.f dlaskewsyf.f dlaskewsyf_aa.f
@@ -338,7 +340,8 @@ set(DLASRC
    dpprfs.f dppsv.f  dppsvx.f dpptrf.f dpptri.f dpptrs.f dptcon.f
    dpteqr.f dptrfs.f dptsv.f  dptsvx.f dpttrs.f dptts2.f drscl.f
    dsbev.f  dsbevd.f dsbevx.f dsbgst.f dsbgv.f  dsbgvd.f dsbgvx.f
-   dsbtrd.f dspcon.f dspev.f  dspevd.f dspevx.f dspgst.f
+   dskewsbgst.f dskewsbev.f dskewsbevd.f dskewsbevx.f dskewsbgv.f dskewsbgvd.f dskewsbgvx.f
+   dsbtrd.f dskewsbtrd.f dspcon.f dspev.f  dspevd.f dspevx.f dspgst.f
    dspgv.f  dspgvd.f dspgvx.f dsprfs.f dspsv.f  dspsvx.f dsptrd.f
    dsptrf.f dsptri.f dsptrs.f dstegr.f dstev.f  dstevd.f dstevr.f
    dsycon.f dsyev.f  dsyevd.f dsyevr.f
@@ -381,6 +384,7 @@ set(DLASRC
    dtplqt.f dtplqt2.f dtpmlqt.f
    dorhr_col.f dlaorhr_col_getrfnp.f dlaorhr_col_getrfnp2.f
    dsytrd_2stage.f dsytrd_sy2sb.f dsytrd_sb2st.F dsb2st_kernels.f
+   dskewsytrd_2stage.f dskewsytrd_sy2sb.f dskewsytrd_sb2st.F dskewsb2st_kernels.f
    dsyevd_2stage.f dsyev_2stage.f dsyevx_2stage.f dsyevr_2stage.f
    dsbev_2stage.f dsbevx_2stage.f dsbevd_2stage.f dsygv_2stage.f
    dgesvdq.f dgedmd.f90 dgedmdq.f90)

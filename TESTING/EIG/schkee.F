@@ -71,6 +71,9 @@
 *> SSB (Symmetric Band Eigenvalue Problem):
 *>     Test SSBTRD
 *>
+*> SKB (Skew-Symmetric Band Eigenvalue Problem):
+*>     Test SSKEWSBTRD
+*>
 *> SBB (Band Singular Value Decomposition):
 *>     Test SGBBRD
 *>
@@ -136,6 +139,7 @@
 *> SSG             21     SDRVSG
 *> SKG             21     SDRVKG
 *> SSB             15     SCHKSB
+*> SKB             15     SCHKSKEWSB
 *> SBB             15     SCHKBB
 *> SEC              -     SCHKEC
 *> SBL              -     SCHKBL
@@ -696,7 +700,7 @@
 *>
 *>-----------------------------------------------------------------------
 *>
-*> SSB input file:
+*> SSB and SKB input file:
 *>
 *> line 2:  NN, INTEGER
 *>          Number of values of N.
@@ -728,7 +732,7 @@
 *>          Four integer values for the random number seed.
 *>
 *> lines 8-EOF:  Lines specifying matrix types, as for NEP.
-*>          The 3-character path name is 'SSB'.
+*>          The 3-character path name is 'SSB' or 'SKB'.
 *>
 *>-----------------------------------------------------------------------
 *>
@@ -1078,8 +1082,8 @@
 *     .. Local Scalars ..
       LOGICAL            CSD, FATAL, GLM, GQR, GSV, LSE, NEP, SBB, SBK,
      $                   SBL, SEP, KEP, SES, SEV, SGG, SGK, SGL, SGS,
-     $                   SGV, SGX, SSB, SSX, SVD, SVX, SXV, TSTCHK,
-     $                   TSTDIF, TSTDRV, TSTERR
+     $                   SGV, SGX, SSB, SKB, SSX, SVD, SVX, SXV,
+     $                   TSTCHK, TSTDIF, TSTDRV, TSTERR
       CHARACTER          C1
       CHARACTER*3        C3, PATH
       CHARACTER*32       VNAME
@@ -1122,7 +1126,7 @@
      $                   SERRED, SERRGG, SERRHS, SERRST, ILAVER, XLAENV,
      $                   SDRGES3, SDRGEV3, SERRSKEWST, SCHKSKEWST,
      $                   SDRVSKEWST, SCHKST2STG, SDRVST2STG, SCHKSB2STG,
-     $                   SDRVSG2STG, SDRVSKEWSG2STG
+     $                   SDRVSG2STG, SDRVSKEWSG2STG, SCHKSKEWSB
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          LEN, MIN
@@ -1195,6 +1199,7 @@
       SGV = LSAMEN( 3, PATH, 'SGV' )
       SXV = LSAMEN( 3, PATH, 'SXV' )
       SSB = LSAMEN( 3, PATH, 'SSB' )
+		SKB = LSAMEN( 3, PATH, 'SKB' )
       SBB = LSAMEN( 3, PATH, 'SBB' )
       GLM = LSAMEN( 3, PATH, 'GLM' )
       GQR = LSAMEN( 3, PATH, 'GQR' ) .OR. LSAMEN( 3, PATH, 'GRQ' )
@@ -1238,6 +1243,8 @@
          WRITE( NOUT, FMT = 9962 )
       ELSE IF( SSB ) THEN
          WRITE( NOUT, FMT = 9974 )
+      ELSE IF( SKB ) THEN
+         WRITE( NOUT, FMT = 9958 )
       ELSE IF( SBB ) THEN
          WRITE( NOUT, FMT = 9967 )
       ELSE IF( GLM ) THEN
@@ -1373,12 +1380,15 @@
 *
 *     Read the number of values of K, followed by the values of K
 *
-      IF( SSB .OR. SBB ) THEN
+      IF( SSB .OR. SKB .OR. SBB ) THEN
          READ( NIN, FMT = * )NK
          READ( NIN, FMT = * )( KVAL( I ), I = 1, NK )
          DO 60 I = 1, NK
-            IF( KVAL( I ).LT.0 ) THEN
+            IF( KVAL( I ).LT.0 .AND. .NOT.SKB ) THEN
                WRITE( NOUT, FMT = 9989 )'    K ', KVAL( I ), 0
+               FATAL = .TRUE.
+				ELSE IF( KVAL( I ).LT.1 .AND. SKB ) THEN
+				   WRITE( NOUT, FMT = 9989 )'    K ', KVAL( I ), 0
                FATAL = .TRUE.
             ELSE IF( KVAL( I ).GT.NMAX ) THEN
                WRITE( NOUT, FMT = 9988 )'    K ', KVAL( I ), NMAX
@@ -1471,7 +1481,8 @@
          WRITE( NOUT, FMT = 9983 )'NS:   ', NSVAL( 1 )
          WRITE( NOUT, FMT = 9983 )'MAXB: ', MXBVAL( 1 )
 *
-      ELSE IF( .NOT.SSB .AND. .NOT.GLM .AND. .NOT.GQR .AND. .NOT.
+      ELSE IF( .NOT.SSB .AND. .NOT.SKB .AND. .NOT.GLM
+     $         .AND. .NOT.GQR .AND. .NOT.
      $         GSV .AND. .NOT.CSD .AND. .NOT.LSE ) THEN
 *
 *        For the other paths, the number of parameters can be varied
@@ -2465,6 +2476,28 @@
          IF( INFO.NE.0 )
      $      WRITE( NOUT, FMT = 9980 )'SCHKSB', INFO
 *
+      ELSE IF( LSAMEN( 3, C3, 'SKB' ) ) THEN
+*
+*        ------------------------------
+*        SKB:  Skew-Symmetric Band Reduction
+*        ------------------------------
+*
+         MAXTYP = 15
+         NTYPES = MIN( MAXTYP, NTYPES )
+         CALL ALAREQ( C3, NTYPES, DOTYPE, MAXTYP, NIN, NOUT )
+         IF( TSTERR )
+     $      CALL SERRSKEWST( 'SKB', NOUT )
+         CALL SCHKSKEWSB( NN, NVAL, NK, KVAL, MAXTYP, DOTYPE, ISEED,
+     $                THRESH, NOUT, A( 1, 1 ), NMAX, D( 1, 1 ),
+     $                D( 1, 2 ), A( 1, 2 ), NMAX, WORK, LWORK,
+     $                RESULT, INFO )
+*         CALL SCHKSB2STG( NN, NVAL, NK, KVAL, MAXTYP, DOTYPE, ISEED,
+*     $                 THRESH, NOUT, A( 1, 1 ), NMAX, D( 1, 1 ), 
+*     $                 D( 1, 2 ), D( 1, 3 ), D( 1, 4 ), D( 1, 5 ),
+*     $                 A( 1, 2 ), NMAX, WORK, LWORK, RESULT, INFO )
+         IF( INFO.NE.0 )
+     $      WRITE( NOUT, FMT = 9980 )'SCHKSKEWSB', INFO
+*
       ELSE IF( LSAMEN( 3, C3, 'SBB' ) ) THEN
 *
 *        ------------------------------
@@ -2654,6 +2687,8 @@
  9960 FORMAT( / ' Tests of the CS Decomposition routines' )
  9959 FORMAT( ' Tests of the Skew-symmetric Eigenvalue Problem ',
      $      'routines' )
+ 9958 FORMAT( ' Tests of SSKEWSBTRD', / ' (reduction of a ',
+     $      'skew-symmetric band matrix to tridiagonal form)' )
 *
 *     End of SCHKEE
 *

@@ -230,9 +230,9 @@
 *>           'R' => store the lower triangle columnwise
 *>                  (only if the matrix is symmetric or lower triangular)
 *>           'B' => store the lower triangle in band storage scheme
-*>                  (only if matrix symmetric or lower triangular)
+*>                  (only if matrix symmetric/skew-symmetric or lower triangular)
 *>           'Q' => store the upper triangle in band storage scheme
-*>                  (only if matrix symmetric or upper triangular)
+*>                  (only if matrix symmetric/skew-symmetric or upper triangular)
 *>           'Z' => store the entire matrix in band storage scheme
 *>                      (pivoting can be provided for by using this
 *>                      option to store A in the trailing rows of

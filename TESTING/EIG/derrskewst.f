@@ -88,7 +88,8 @@
       EXTERNAL           CHKXER, DSKEWSTEQR, DSKEWSYEV, DSKEWSTEV,
      $                   DSKEWSYTRD, DSKEWSTEBZ, DSKEWSTEIN,
      $                   DSKEWSYEVX, DSKEWSTEVX, DSKEWSTEDC,
-     $                   DSKEWSTEVD, DSKEWSYEVD
+     $                   DSKEWSTEVD, DSKEWSYEVD, DSKEWSBTRD,
+     $                   DSKEWSBEV, DSKEWSBEVD, DSKEWSBEVX
 *     ..
 *     .. Scalars in Common ..
       LOGICAL            LERR, OK
@@ -446,6 +447,175 @@
          CALL DSKEWSYEVD( 'V', 'U', 2, A, 2, X, W, 27, IW, 7, INFO )
          CALL CHKXER( 'DSKEWSYEVD', INFOT, NOUT, LERR, OK )
          NT = NT + 10
+      ELSE IF( LSAMEN( 2, C2, 'KB' ) ) THEN
+*
+*        DSKEWSBTRD
+*
+         SRNAMT = 'DSKEWSBTRD'
+         INFOT = 1
+         CALL DSKEWSBTRD( '/', 'U', 0, 0, A, 1, E, Z, 1, W, INFO )
+         CALL CHKXER( 'DSKEWSBTRD', INFOT, NOUT, LERR, OK )
+         INFOT = 2
+         CALL DSKEWSBTRD( 'N', '/', 0, 0, A, 1, E, Z, 1, W, INFO )
+         CALL CHKXER( 'DSKEWSBTRD', INFOT, NOUT, LERR, OK )
+         INFOT = 3
+         CALL DSKEWSBTRD( 'N', 'U', -1, 0, A, 1, E, Z, 1, W, INFO )
+         CALL CHKXER( 'DSKEWSBTRD', INFOT, NOUT, LERR, OK )
+         INFOT = 4
+         CALL DSKEWSBTRD( 'N', 'U', 0, -1, A, 1, E, Z, 1, W, INFO )
+         CALL CHKXER( 'DSKEWSBTRD', INFOT, NOUT, LERR, OK )
+         INFOT = 4
+         CALL DSKEWSBTRD( 'N', 'U', 0, 0, A, 1, E, Z, 1, W, INFO )
+         CALL CHKXER( 'DSKEWSBTRD', INFOT, NOUT, LERR, OK )
+         INFOT = 6
+         CALL DSKEWSBTRD( 'N', 'U', 1, 1, A, 1, E, Z, 1, W, INFO )
+         CALL CHKXER( 'DSKEWSBTRD', INFOT, NOUT, LERR, OK )
+         INFOT = 9
+         CALL DSKEWSBTRD( 'V', 'U', 2, 1, A, 2, E, Z, 1, W, INFO )
+         CALL CHKXER( 'DSKEWSBTRD', INFOT, NOUT, LERR, OK )
+         NT = NT + 7
+*
+*        DSKEWSBEV
+*
+         SRNAMT = 'DSKEWSBEV'
+         INFOT = 1
+         CALL DSKEWSBEV( '/', 'U', 0, 0, A, 1, X, Z, 1, W, INFO )
+         CALL CHKXER( 'DSKEWSBEV', INFOT, NOUT, LERR, OK )
+         INFOT = 2
+         CALL DSKEWSBEV( 'N', '/', 0, 0, A, 1, X, Z, 1, W, INFO )
+         CALL CHKXER( 'DSKEWSBEV', INFOT, NOUT, LERR, OK )
+         INFOT = 3
+         CALL DSKEWSBEV( 'N', 'U', -1, 0, A, 1, X, Z, 1, W, INFO )
+         CALL CHKXER( 'DSKEWSBEV', INFOT, NOUT, LERR, OK )
+         INFOT = 4
+         CALL DSKEWSBEV( 'N', 'U', 0, -1, A, 1, X, Z, 1, W, INFO )
+         CALL CHKXER( 'DSKEWSBEV', INFOT, NOUT, LERR, OK )
+         INFOT = 4
+         CALL DSKEWSBEV( 'N', 'U', 0, 0, A, 1, X, Z, 1, W, INFO )
+         CALL CHKXER( 'DSKEWSBEV', INFOT, NOUT, LERR, OK )
+         INFOT = 6
+         CALL DSKEWSBEV( 'N', 'U', 2, 1, A, 1, X, Z, 1, W, INFO )
+         CALL CHKXER( 'DSKEWSBEV', INFOT, NOUT, LERR, OK )
+         INFOT = 9
+         CALL DSKEWSBEV( 'V', 'U', 2, 1, A, 2, X, Z, 1, W, INFO )
+         CALL CHKXER( 'DSKEWSBEV', INFOT, NOUT, LERR, OK )
+         NT = NT + 7
+*
+*        DSKEWSBEVD
+*
+         SRNAMT = 'DSKEWSBEVD'
+         INFOT = 1
+         CALL DSKEWSBEVD( '/', 'U', 0, 0, A, 1, X, Z, 1, W, 1, IW, 1,
+     $                INFO )
+         CALL CHKXER( 'DSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 2
+         CALL DSKEWSBEVD( 'N', '/', 0, 0, A, 1, X, Z, 1, W, 1, IW, 1,
+     $                INFO )
+         CALL CHKXER( 'DSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 3
+         CALL DSKEWSBEVD( 'N', 'U', -1, 0, A, 1, X, Z, 1, W, 1, IW, 1,
+     $                INFO )
+         CALL CHKXER( 'DSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 4
+         CALL DSKEWSBEVD( 'N', 'U', 0, -1, A, 1, X, Z, 1, W, 1, IW, 1,
+     $                INFO )
+         CALL CHKXER( 'DSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 4
+         CALL DSKEWSBEVD( 'N', 'U', 0, 0, A, 1, X, Z, 1, W, 1, IW, 1,
+     $                INFO )
+         CALL CHKXER( 'DSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 6
+         CALL DSKEWSBEVD( 'N', 'U', 2, 1, A, 1, X, Z, 1, W, 4, IW, 1,
+     $                INFO )
+         CALL CHKXER( 'DSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 9
+         CALL DSKEWSBEVD( 'V', 'U', 2, 1, A, 2, X, Z, 1, W, 25, IW, 12,
+     $                INFO )
+         CALL CHKXER( 'DSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 11
+         CALL DSKEWSBEVD( 'N', 'U', 1, 1, A, 2, X, Z, 1, W, 0, IW, 1,
+     $                INFO )
+         CALL CHKXER( 'DSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 11
+         CALL DSKEWSBEVD( 'N', 'U', 2, 1, A, 2, X, Z, 1, W, 3, IW, 1,
+     $                INFO )
+         CALL CHKXER( 'DSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 11
+         CALL DSKEWSBEVD( 'V', 'U', 2, 1, A, 2, X, Z, 2, W, 18, IW, 12,
+     $                INFO )
+         CALL CHKXER( 'DSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 13
+         CALL DSKEWSBEVD( 'N', 'U', 1, 1, A, 2, X, Z, 1, W, 1, IW, 0,
+     $                INFO )
+         CALL CHKXER( 'DSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 13
+         CALL DSKEWSBEVD( 'V', 'U', 2, 1, A, 2, X, Z, 2, W, 25, IW, 11,
+     $                INFO )
+         CALL CHKXER( 'DSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         NT = NT + 12
+*
+*        DSKEWSBEVX
+*
+         SRNAMT = 'DSKEWSBEVX'
+         INFOT = 1
+         CALL DSKEWSBEVX( '/', 'A', 'U', 0, 0, A, 1, Q, 1, 0.0D0, 0.0D0,
+     $                0, 0, 0.0D0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'DSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 2
+         CALL DSKEWSBEVX( 'N', '/', 'U', 0, 0, A, 1, Q, 1, 0.0D0, 0.0D0,
+     $                0, 0, 0.0D0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'DSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 3
+         CALL DSKEWSBEVX( 'N', 'A', '/', 0, 0, A, 1, Q, 1, 0.0D0, 0.0D0,
+     $                0, 0, 0.0D0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'DSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 4
+         CALL DSKEWSBEVX( 'N', 'A', 'U', -1, 0, A, 1, Q, 1, 0.0D0,
+     $                0.0D0, 0, 0, 0.0D0, M, X, Z, 1, W, IW, I3,
+     $                INFO )
+         CALL CHKXER( 'DSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 5
+         CALL DSKEWSBEVX( 'N', 'A', 'U', 0, -1, A, 1, Q, 1, 0.0D0,
+     $                0.0D0, 0, 0, 0.0D0, M, X, Z, 1, W, IW, I3,
+     $                INFO )
+         CALL CHKXER( 'DSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 5
+         CALL DSKEWSBEVX( 'N', 'A', 'U', 0, 0, A, 1, Q, 1, 0.0D0, 0.0D0,
+     $                0, 0, 0.0D0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'DSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 7
+         CALL DSKEWSBEVX( 'N', 'A', 'U', 2, 1, A, 1, Q, 1, 0.0D0, 0.0D0,
+     $                0, 0, 0.0D0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'DSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 9
+         CALL DSKEWSBEVX( 'V', 'A', 'U', 2, 1, A, 2, Q, 1, 0.0D0, 0.0D0,
+     $                0, 0, 0.0D0, M, X, Z, 2, W, IW, I3, INFO )
+         CALL CHKXER( 'DSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 11
+         CALL DSKEWSBEVX( 'N', 'V', 'U', 1, 1, A, 2, Q, 1, 0.0D0, 0.0D0,
+     $                0, 0, 0.0D0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'DSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 12
+         CALL DSKEWSBEVX( 'N', 'I', 'U', 1, 1, A, 2, Q, 1, 0.0D0, 0.0D0,
+     $                0, 0, 0.0D0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'DSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 12
+         CALL DSKEWSBEVX( 'N', 'I', 'U', 1, 1, A, 2, Q, 1, 0.0D0, 0.0D0,
+     $                2, 1, 0.0D0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'DSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 13
+         CALL DSKEWSBEVX( 'N', 'I', 'U', 2, 1, A, 2, Q, 1, 0.0D0, 0.0D0,
+     $                2, 1, 0.0D0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'DSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 13
+         CALL DSKEWSBEVX( 'N', 'I', 'U', 1, 1, A, 2, Q, 1, 0.0D0, 0.0D0,
+     $                1, 2, 0.0D0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'DSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 18
+         CALL DSKEWSBEVX( 'V', 'A', 'U', 2, 1, A, 2, Q, 2, 0.0D0, 0.0D0,
+     $                0, 0, 0.0D0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'DSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         NT = NT + 14
       END IF
 *
 *     Print a summary line.

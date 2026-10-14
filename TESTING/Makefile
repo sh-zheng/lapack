@@ -50,8 +50,9 @@ SEIGTST= snep.out \
          sgg.out \
          sgd.out \
          ssb.out \
+         skb.out \
          ssg.out \
-		 skg.out \
+		   skg.out \
          sbal.out \
          sbak.out \
          sgbal.out \
@@ -98,8 +99,9 @@ DEIGTST= dnep.out \
          dgg.out \
          dgd.out \
          dsb.out \
+         dkb.out \
          dsg.out \
-		 dkg.out \
+		   dkg.out \
          dbal.out \
          dbak.out \
          dgbal.out \
@@ -268,6 +270,10 @@ sgd.out: sgd.in EIG/xeigtsts
 ssb.out: ssb.in EIG/xeigtsts
 	@echo SSB: Testing REAL Symmetric Eigenvalue Problem routines
 	./EIG/xeigtsts < ssb.in > $@ 2>&1
+
+skb.out: skb.in EIG/xeigtsts
+	@echo SKB: Testing REAL Skew-Symmetric Eigenvalue Problem routines
+	./EIG/xeigtsts < skb.in > $@ 2>&1
 
 ssg.out: ssg.in EIG/xeigtsts
 	@echo SSG: Testing REAL Symmetric Generalized Eigenvalue Problem routines
@@ -448,6 +454,10 @@ dgd.out: dgd.in EIG/xeigtstd
 dsb.out: dsb.in EIG/xeigtstd
 	@echo DSB: Testing DOUBLE PRECISION Symmetric Eigenvalue Problem routines
 	./EIG/xeigtstd < dsb.in > $@ 2>&1
+
+dkb.out: dkb.in EIG/xeigtstd
+	@echo DKB: Testing DOUBLE PRECISION Skew-Symmetric Eigenvalue Problem routines
+	./EIG/xeigtstd < dkb.in > $@ 2>&1
 
 dsg.out: dsg.in EIG/xeigtstd
 	@echo DSG: Testing DOUBLE PRECISION Symmetric Generalized Eigenvalue Problem routines

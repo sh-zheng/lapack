@@ -50,7 +50,7 @@ SCIGTST = slafts.o slahd2.o slasum.o slatb9.o sstech.o sstect.o \
 SEIGTST = schkee.o \
    sbdt01.o sbdt02.o sbdt03.o sbdt04.o sbdt05.o \
    schkbb.o schkbd.o schkbk.o schkbl.o schkec.o \
-   schkgg.o schkgk.o schkgl.o schkhs.o schksb.o schkst.o schkst2stg.o schksb2stg.o \
+   schkgg.o schkgk.o schkgl.o schkhs.o schksb.o schkskewsb.o schkst.o schkst2stg.o schksb2stg.o \
    sckcsd.o sckglm.o sckgqr.o sckgsv.o scklse.o scsdts.o \
    schkskewst.o \
    sdrges.o sdrgev.o sdrges3.o sdrgev3.o sdrgsx.o sdrgvx.o \
@@ -62,7 +62,7 @@ SEIGTST = schkee.o \
    sget37.o sget38.o sget39.o sget40.o sget51.o sget52.o sget53.o \
    sget54.o sglmts.o sgqrts.o sgrqts.o sgsvts3.o \
    shst01.o slarfy.o slarfyskew.o slarhs.o slatm4.o slctes.o slctsx.o slsets.o sort01.o \
-   sort03.o ssbt21.o ssgt01.o sslect.o sspt21.o sstt21.o \
+   sort03.o ssbt21.o sskewsbt21.o ssgt01.o sslect.o sspt21.o sstt21.o \
    sstt22.o ssyl01.o ssyt21.o ssyt22.o sskewsgt01.o sskewstt21.o sskewsyt21.o sskewstt22.o sskewsyt22.o
 
 SDMDEIGTST = schkdmd.o
@@ -92,7 +92,7 @@ DZIGTST = dlafts.o dlahd2.o dlasum.o dlatb9.o dstech.o dstect.o \
 DEIGTST = dchkee.o \
    dbdt01.o dbdt02.o dbdt03.o dbdt04.o dbdt05.o \
    dchkbb.o dchkbd.o dchkbk.o dchkbl.o dchkec.o \
-   dchkgg.o dchkgk.o dchkgl.o dchkhs.o dchksb.o dchkst.o dchkst2stg.o dchksb2stg.o \
+   dchkgg.o dchkgk.o dchkgl.o dchkhs.o dchksb.o dchkskewsb.o dchkst.o dchkst2stg.o dchksb2stg.o \
    dckcsd.o dckglm.o dckgqr.o dckgsv.o dcklse.o dcsdts.o \
    dchkskewst.o \
    ddrges.o ddrgev.o ddrges3.o ddrgev3.o ddrgsx.o ddrgvx.o \
@@ -104,7 +104,7 @@ DEIGTST = dchkee.o \
    dget37.o dget38.o dget39.o dget40.o dget51.o dget52.o dget53.o \
    dget54.o dglmts.o dgqrts.o dgrqts.o dgsvts3.o \
    dhst01.o dlarfy.o dlarfyskew.o dlarhs.o dlatm4.o dlctes.o dlctsx.o dlsets.o dort01.o \
-   dort03.o dsbt21.o dsgt01.o dslect.o dspt21.o dstt21.o \
+   dort03.o dsbt21.o dskewsbt21.o dsgt01.o dslect.o dspt21.o dstt21.o \
    dstt22.o dsyl01.o dsyt21.o dsyt22.o dskewsgt01.o dskewstt21.o dskewsyt21.o dskewstt22.o dskewsyt22.o
 
 DDMDEIGTST = dchkdmd.o

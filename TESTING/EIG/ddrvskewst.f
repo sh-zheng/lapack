@@ -349,27 +349,27 @@
 *>    46= | A - U S U' | / ( |A| n ulp )        SSPEVX('L','V','V', ... )
 *>    47= | I - U U' | / ( n ulp )              SSPEVX('L','V','V', ... )
 *>    48= |D(with Z) - D(w/o Z)| / (|D| ulp)    SSPEVX('L','N','V', ... )
-*>    49= | A - U S U' | / ( |A| n ulp )        SSBEV('L','V', ... )
-*>    50= | I - U U' | / ( n ulp )              SSBEV('L','V', ... )
-*>    51= |D(with Z) - D(w/o Z)| / (|D| ulp)    SSBEV('L','N', ... )
-*>    52= | A - U S U' | / ( |A| n ulp )        SSBEVX('L','V','A', ... )
-*>    53= | I - U U' | / ( n ulp )              SSBEVX('L','V','A', ... )
-*>    54= |D(with Z) - D(w/o Z)| / (|D| ulp)    SSBEVX('L','N','A', ... )
-*>    55= | A - U S U' | / ( |A| n ulp )        SSBEVX('L','V','I', ... )
-*>    56= | I - U U' | / ( n ulp )              SSBEVX('L','V','I', ... )
-*>    57= |D(with Z) - D(w/o Z)| / (|D| ulp)    SSBEVX('L','N','I', ... )
-*>    58= | A - U S U' | / ( |A| n ulp )        SSBEVX('L','V','V', ... )
-*>    59= | I - U U' | / ( n ulp )              SSBEVX('L','V','V', ... )
-*>    60= |D(with Z) - D(w/o Z)| / (|D| ulp)    SSBEVX('L','N','V', ... )
+*>    49= | A - U S U' | / ( |A| n ulp )        DSKEWSBEV('L','V', ... )
+*>    50= | I - U U' | / ( n ulp )              DSKEWSBEV('L','V', ... )
+*>    51= |D(with Z) - D(w/o Z)| / (|D| ulp)    DSKEWSBEV('L','N', ... )
+*>    52= | A - U S U' | / ( |A| n ulp )        DSKEWSBEVX('L','V','A', ... )
+*>    53= | I - U U' | / ( n ulp )              DSKEWSBEVX('L','V','A', ... )
+*>    54= |D(with Z) - D(w/o Z)| / (|D| ulp)    DSKEWSBEVX('L','N','A', ... )
+*>    55= | A - U S U' | / ( |A| n ulp )        DSKEWSBEVX('L','V','I', ... )
+*>    56= | I - U U' | / ( n ulp )              DSKEWSBEVX('L','V','I', ... )
+*>    57= |D(with Z) - D(w/o Z)| / (|D| ulp)    DSKEWSBEVX('L','N','I', ... )
+*>    58= | A - U S U' | / ( |A| n ulp )        DSKEWSBEVX('L','V','V', ... )
+*>    59= | I - U U' | / ( n ulp )              DSKEWSBEVX('L','V','V', ... )
+*>    60= |D(with Z) - D(w/o Z)| / (|D| ulp)    DSKEWSBEVX('L','N','V', ... )
 *>    61= | A - U S U' | / ( |A| n ulp )        DSKEWSYEVD('L','V', ... )
 *>    62= | I - U U' | / ( n ulp )              DSKEWSYEVD('L','V', ... )
 *>    63= |D(with Z) - D(w/o Z)| / (|D| ulp)    DSKEWSYEVD('L','N', ... )
 *>    64= | A - U S U' | / ( |A| n ulp )        SSPEVD('L','V', ... )
 *>    65= | I - U U' | / ( n ulp )              SSPEVD('L','V', ... )
 *>    66= |D(with Z) - D(w/o Z)| / (|D| ulp)    SSPEVD('L','N', ... )
-*>    67= | A - U S U' | / ( |A| n ulp )        SSBEVD('L','V', ... )
-*>    68= | I - U U' | / ( n ulp )              SSBEVD('L','V', ... )
-*>    69= |D(with Z) - D(w/o Z)| / (|D| ulp)    SSBEVD('L','N', ... )
+*>    67= | A - U S U' | / ( |A| n ulp )        DSKEWSBEVD('L','V', ... )
+*>    68= | I - U U' | / ( n ulp )              DSKEWSBEVD('L','V', ... )
+*>    69= |D(with Z) - D(w/o Z)| / (|D| ulp)    DSKEWSBEVD('L','N', ... )
 *>    70= | A - U S U' | / ( |A| n ulp )        SSYEVR('L','V','A', ... )
 *>    71= | I - U U' | / ( n ulp )              SSYEVR('L','V','A', ... )
 *>    72= |D(with Z) - D(w/o Z)| / (|D| ulp)    SSYEVR('L','N','A', ... )
@@ -459,7 +459,7 @@
      $                   ITEMP, ITYPE, IU, IUPLO, J, J1, J2, JCOL,
      $                   JSIZE, JTYPE, LGN, LIWEDC, LWEDC, M, M2,
      $                   M3, MTYPES, N, NERRS, NMATS, NMAX, NTEST,
-     $                   NTESTT
+     $                   NTESTT, KD
       DOUBLE PRECISION   ABSTOL, ANINV, ANORM, COND, OVFL, RTOVFL,
      $                   RTUNFL, TEMP1, TEMP2, TEMP3, ULP, ULPINV,
      $                   UNFL, VL, VU
@@ -477,7 +477,8 @@
       EXTERNAL           ALASVM, DLABAD, DLACPY, DLAFTS, DLASET, DLATMR,
      $                   DLATMS, DSKEWSTEV, DSKEWSTEVX, DSKEWSTT21,
      $                   DSKEWSTT22, DSKEWSYEV, DSKEWSYEVX, DSKEWSTEVD,
-     $                   DSKEWSYEVD, DSKEWSYT21, DSKEWSYT22, XERBLA
+     $                   DSKEWSYEVD, DSKEWSYT21, DSKEWSYT22, DSKEWSBEV,
+     $                   DSKEWSBEVD, DSKEWSBEVX, XERBLA
 *     ..
 *     .. Scalars in Common ..
       CHARACTER*32       SRNAMT
@@ -1427,6 +1428,366 @@ c           LIWEDC = 12
 *
   700          CONTINUE
 *
+*              6)      Call DSKEWSBEV and DSKEWSBEVX.
+*
+               IF( JTYPE.LE.7 ) THEN
+                  KD = 1
+               ELSE IF( JTYPE.GE.8 .AND. JTYPE.LE.15 ) THEN
+                  KD = MAX( N-1, 0 )
+               ELSE
+                  KD = IHBW
+               END IF
+               IF( KD.LT.1 ) THEN
+                 GO TO 1460
+               END IF
+*
+*              Load array V with the upper or lower triangular part
+*              of the matrix in band form.
+*
+               IF( IUPLO.EQ.1 ) THEN
+                  DO 1100 J = 1, N
+                     DO 1090 I = MAX( 1, J-KD ), J-1
+                        V( KD+1+I-J, J ) = A( I, J )
+ 1090                CONTINUE
+ 1100             CONTINUE
+               ELSE
+                  DO 1120 J = 1, N
+                     DO 1110 I = J+1, MIN( N, J+KD )
+                        V( 1+I-J, J ) = A( I, J )
+ 1110                CONTINUE
+ 1120             CONTINUE
+               END IF
+*
+               NTEST = NTEST + 1
+               SRNAMT = 'DSKEWSBEV'
+               CALL DSKEWSBEV( 'V', UPLO, N, KD, V, LDU, D1, Z, LDU,
+     $                     WORK, IINFO )
+               IF( IINFO.NE.0 ) THEN
+                  WRITE( NOUNIT, FMT = 9999 )
+     $               'DSKEWSBEV(V,' // UPLO // ')',
+     $               IINFO, N, JTYPE, IOLDSD
+                  INFO = ABS( IINFO )
+                  IF( IINFO.LT.0 ) THEN
+                     RETURN
+                  ELSE
+                     RESULT( NTEST ) = ULPINV
+                     RESULT( NTEST+1 ) = ULPINV
+                     RESULT( NTEST+2 ) = ULPINV
+                     GO TO 1180
+                  END IF
+               END IF
+*
+*              Do tests 49 and 50 (or ... )
+*
+               CALL DSKEWSYT21( 1, UPLO, N, 1, A, LDA, D2, D1, Z,
+     $                     LDU, V, LDU, TAU, WORK, RESULT( NTEST ) )
+*
+               IF( IUPLO.EQ.1 ) THEN
+                  DO 1140 J = 1, N
+                     DO 1130 I = MAX( 1, J-KD ), J-1
+                        V( KD+1+I-J, J ) = A( I, J )
+ 1130                CONTINUE
+ 1140             CONTINUE
+               ELSE
+                  DO 1160 J = 1, N
+                     DO 1150 I = J+1, MIN( N, J+KD )
+                        V( 1+I-J, J ) = A( I, J )
+ 1150                CONTINUE
+ 1160             CONTINUE
+               END IF
+*
+               NTEST = NTEST + 2
+               SRNAMT = 'DSKEWSBEV'
+               CALL DSKEWSBEV( 'N', UPLO, N, KD, V, LDU, D3, Z,
+     $                     LDU, WORK, IINFO )
+               IF( IINFO.NE.0 ) THEN
+                  WRITE( NOUNIT, FMT = 9999 )
+     $               'DSKEWSBEV(N,' // UPLO // ')',
+     $               IINFO, N, JTYPE, IOLDSD
+                  INFO = ABS( IINFO )
+                  IF( IINFO.LT.0 ) THEN
+                     RETURN
+                  ELSE
+                     RESULT( NTEST ) = ULPINV
+                     GO TO 1180
+                  END IF
+               END IF
+*
+*              Do test 51 (or +54)
+*
+               TEMP1 = ZERO
+               TEMP2 = ZERO
+               DO 1170 J = 1, N
+                  TEMP1 = MAX( TEMP1, ABS( D1( J ) ), ABS( D3( J ) ) )
+                  TEMP2 = MAX( TEMP2, ABS( D1( J )-D3( J ) ) )
+ 1170          CONTINUE
+               RESULT( NTEST ) = TEMP2 / MAX( UNFL,
+     $                           ULP*MAX( TEMP1, TEMP2 ) )
+*
+*              Load array V with the upper or lower triangular part
+*              of the matrix in band form.
+*
+ 1180          CONTINUE
+               IF( IUPLO.EQ.1 ) THEN
+                  DO 1200 J = 1, N
+                     DO 1190 I = MAX( 1, J-KD ), J-1
+                        V( KD+1+I-J, J ) = A( I, J )
+ 1190                CONTINUE
+ 1200             CONTINUE
+               ELSE
+                  DO 1220 J = 1, N
+                     DO 1210 I = J+1, MIN( N, J+KD )
+                        V( 1+I-J, J ) = A( I, J )
+ 1210                CONTINUE
+ 1220             CONTINUE
+               END IF
+*
+               NTEST = NTEST + 1
+               SRNAMT = 'DSKEWSBEVX'
+               CALL DSKEWSBEVX( 'V', 'A', UPLO, N, KD, V, LDU, U, LDU,
+     $                      VL, VU, IL, IU, ABSTOL, M, WA2, Z, LDU,
+     $                      WORK, IWORK, IWORK( 5*N+1 ), IINFO )
+               IF( IINFO.NE.0 ) THEN
+                  WRITE( NOUNIT, FMT = 9999 )
+     $               'DSKEWSBEVX(V,A,' // UPLO //
+     $               ')', IINFO, N, JTYPE, IOLDSD
+                  INFO = ABS( IINFO )
+                  IF( IINFO.LT.0 ) THEN
+                     RETURN
+                  ELSE
+                     RESULT( NTEST ) = ULPINV
+                     RESULT( NTEST+1 ) = ULPINV
+                     RESULT( NTEST+2 ) = ULPINV
+                     GO TO 1280
+                  END IF
+               END IF
+*
+*              Do tests 52 and 53 (or +54)
+*
+               CALL DSKEWSYT21( 1, UPLO, N, 1, A, LDU, D2, WA2, Z, LDU,
+     $                      V, LDU, TAU, WORK, RESULT( NTEST ) )
+*
+               NTEST = NTEST + 2
+*
+               IF( IUPLO.EQ.1 ) THEN
+                  DO 1240 J = 1, N
+                     DO 1230 I = MAX( 1, J-KD ), J-1
+                        V( KD+1+I-J, J ) = A( I, J )
+ 1230                CONTINUE
+ 1240             CONTINUE
+               ELSE
+                  DO 1260 J = 1, N
+                     DO 1250 I = J+1, MIN( N, J+KD )
+                        V( 1+I-J, J ) = A( I, J )
+ 1250                CONTINUE
+ 1260             CONTINUE
+               END IF
+*
+               SRNAMT = 'DSKEWSBEVX'
+               CALL DSKEWSBEVX( 'N', 'A', UPLO, N, KD, V, LDU, U, LDU,
+     $                      VL, VU, IL, IU, ABSTOL, M3, WA3, Z, LDU,
+     $                      WORK, IWORK, IWORK( 5*N+1 ), IINFO )
+               IF( IINFO.NE.0 ) THEN
+                  WRITE( NOUNIT, FMT = 9999 )
+     $               'DSKEWSBEVX(N,A,' // UPLO //
+     $               ')', IINFO, N, JTYPE, IOLDSD
+                  INFO = ABS( IINFO )
+                  IF( IINFO.LT.0 ) THEN
+                     RETURN
+                  ELSE
+                     RESULT( NTEST ) = ULPINV
+                     GO TO 1280
+                  END IF
+               END IF
+*
+*              Do test 54 (or +54)
+*
+               TEMP1 = ZERO
+               TEMP2 = ZERO
+               DO 1270 J = 1, N
+                  TEMP1 = MAX( TEMP1, ABS( WA2( J ) ), ABS( WA3( J ) ) )
+                  TEMP2 = MAX( TEMP2, ABS( WA2( J )-WA3( J ) ) )
+ 1270          CONTINUE
+               RESULT( NTEST ) = TEMP2 / MAX( UNFL,
+     $                           ULP*MAX( TEMP1, TEMP2 ) )
+*
+ 1280          CONTINUE
+               NTEST = NTEST + 1
+               IF( IUPLO.EQ.1 ) THEN
+                  DO 1300 J = 1, N
+                     DO 1290 I = MAX( 1, J-KD ), J-1
+                        V( KD+1+I-J, J ) = A( I, J )
+ 1290                CONTINUE
+ 1300             CONTINUE
+               ELSE
+                  DO 1320 J = 1, N
+                     DO 1310 I = J+1, MIN( N, J+KD )
+                        V( 1+I-J, J ) = A( I, J )
+ 1310                CONTINUE
+ 1320             CONTINUE
+               END IF
+*
+               SRNAMT = 'DSKEWSBEVX'
+               CALL DSKEWSBEVX( 'V', 'I', UPLO, N, KD, V, LDU, U, LDU,
+     $                      VL, VU, IL, IU, ABSTOL, M2, WA2, Z, LDU,
+     $                      WORK, IWORK, IWORK( 5*N+1 ), IINFO )
+               IF( IINFO.NE.0 ) THEN
+                  WRITE( NOUNIT, FMT = 9999 )
+     $               'DSKEWSBEVX(V,I,' // UPLO //
+     $               ')', IINFO, N, JTYPE, IOLDSD
+                  INFO = ABS( IINFO )
+                  IF( IINFO.LT.0 ) THEN
+                     RETURN
+                  ELSE
+                     RESULT( NTEST ) = ULPINV
+                     RESULT( NTEST+1 ) = ULPINV
+                     RESULT( NTEST+2 ) = ULPINV
+                     GO TO 1370
+                  END IF
+               END IF
+*
+*              Do tests 55 and 56 (or +54)
+*
+               CALL DSKEWSYT22( 1, UPLO, N, M2, 1, A, LDU, D2, WA2, Z,
+     $                      LDU, V, LDU, TAU, WORK, RESULT( NTEST ) )
+*
+               NTEST = NTEST + 2
+*
+               IF( IUPLO.EQ.1 ) THEN
+                  DO 1340 J = 1, N
+                     DO 1330 I = MAX( 1, J-KD ), J-1
+                        V( KD+1+I-J, J ) = A( I, J )
+ 1330                CONTINUE
+ 1340             CONTINUE
+               ELSE
+                  DO 1360 J = 1, N
+                     DO 1350 I = J+1, MIN( N, J+KD )
+                        V( 1+I-J, J ) = A( I, J )
+ 1350                CONTINUE
+ 1360             CONTINUE
+               END IF
+*
+               SRNAMT = 'DSKEWSBEVX'
+               CALL DSKEWSBEVX( 'N', 'I', UPLO, N, KD, V, LDU, U, LDU,
+     $                      VL, VU, IL, IU, ABSTOL, M3, WA3, Z, LDU,
+     $                      WORK, IWORK, IWORK( 5*N+1 ), IINFO )
+               IF( IINFO.NE.0 ) THEN
+                  WRITE( NOUNIT, FMT = 9999 )
+     $               'DSKEWSBEVX(N,I,' // UPLO //
+     $               ')', IINFO, N, JTYPE, IOLDSD
+                  INFO = ABS( IINFO )
+                  IF( IINFO.LT.0 ) THEN
+                     RETURN
+                  ELSE
+                     RESULT( NTEST ) = ULPINV
+                     GO TO 1370
+                  END IF
+               END IF
+*
+*              Do test 57 (or +54)
+*
+               TEMP1 = DSXT1( 3, WA2, M2, WA3, M3, ABSTOL, ULP, UNFL )
+               TEMP2 = DSXT1( 3, WA3, M3, WA2, M2, ABSTOL, ULP, UNFL )
+               IF( N.GT.0 ) THEN
+                  TEMP3 = MAX( ABS( WA1( 1 ) ), ABS( WA1( N ) ) )
+               ELSE
+                  TEMP3 = ZERO
+               END IF
+               RESULT( NTEST ) = ( TEMP1+TEMP2 ) /
+     $                           MAX( UNFL, TEMP3*ULP )
+*
+ 1370          CONTINUE
+               NTEST = NTEST + 1
+               IF( IUPLO.EQ.1 ) THEN
+                  DO 1390 J = 1, N
+                     DO 1380 I = MAX( 1, J-KD ), J-1
+                        V( KD+1+I-J, J ) = A( I, J )
+ 1380                CONTINUE
+ 1390             CONTINUE
+               ELSE
+                  DO 1410 J = 1, N
+                     DO 1400 I = J+1, MIN( N, J+KD )
+                        V( 1+I-J, J ) = A( I, J )
+ 1400                CONTINUE
+ 1410             CONTINUE
+               END IF
+*
+               SRNAMT = 'DSKEWSBEVX'
+               CALL DSKEWSBEVX( 'V', 'V', UPLO, N, KD, V, LDU, U, LDU,
+     $                      VL, VU, IL, IU, ABSTOL, M2, WA2, Z, LDU,
+     $                      WORK, IWORK, IWORK( 5*N+1 ), IINFO )
+               IF( IINFO.NE.0 ) THEN
+                  WRITE( NOUNIT, FMT = 9999 )
+     $               'DSKEWSBEVX(V,V,' // UPLO //
+     $               ')', IINFO, N, JTYPE, IOLDSD
+                  INFO = ABS( IINFO )
+                  IF( IINFO.LT.0 ) THEN
+                     RETURN
+                  ELSE
+                     RESULT( NTEST ) = ULPINV
+                     RESULT( NTEST+1 ) = ULPINV
+                     RESULT( NTEST+2 ) = ULPINV
+                     GO TO 1460
+                  END IF
+               END IF
+*
+*              Do tests 58 and 59 (or +54)
+*
+               CALL DSKEWSYT22( 1, UPLO, N, M2, 1, A, LDU, D2, WA2, Z,
+     $                      LDU, V, LDU, TAU, WORK, RESULT( NTEST ) )
+*
+               NTEST = NTEST + 2
+*
+               IF( IUPLO.EQ.1 ) THEN
+                  DO 1430 J = 1, N
+                     DO 1420 I = MAX( 1, J-KD ), J-1
+                        V( KD+1+I-J, J ) = A( I, J )
+ 1420                CONTINUE
+ 1430             CONTINUE
+               ELSE
+                  DO 1450 J = 1, N
+                     DO 1440 I = J+1, MIN( N, J+KD )
+                        V( 1+I-J, J ) = A( I, J )
+ 1440                CONTINUE
+ 1450             CONTINUE
+               END IF
+*
+               SRNAMT = 'DSKEWSBEVX'
+               CALL DSKEWSBEVX( 'N', 'V', UPLO, N, KD, V, LDU, U, LDU,
+     $                      VL, VU, IL, IU, ABSTOL, M3, WA3, Z, LDU,
+     $                      WORK, IWORK, IWORK( 5*N+1 ), IINFO )
+               IF( IINFO.NE.0 ) THEN
+                  WRITE( NOUNIT, FMT = 9999 )
+     $               'DSKEWSBEVX(N,V,' // UPLO //
+     $               ')', IINFO, N, JTYPE, IOLDSD
+                  INFO = ABS( IINFO )
+                  IF( IINFO.LT.0 ) THEN
+                     RETURN
+                  ELSE
+                     RESULT( NTEST ) = ULPINV
+                     GO TO 1460
+                  END IF
+               END IF
+*
+               IF( M3.EQ.0 .AND. N.GT.0 ) THEN
+                  RESULT( NTEST ) = ULPINV
+                  GO TO 1460
+               END IF
+*
+*              Do test 60 (or +54)
+*
+               TEMP1 = DSXT1( 3, WA2, M2, WA3, M3, ABSTOL, ULP, UNFL )
+               TEMP2 = DSXT1( 3, WA3, M3, WA2, M2, ABSTOL, ULP, UNFL )
+               IF( N.GT.0 ) THEN
+                  TEMP3 = MAX( ABS( WA1( 1 ) ), ABS( WA1( N ) ) )
+               ELSE
+                  TEMP3 = ZERO
+               END IF
+               RESULT( NTEST ) = ( TEMP1+TEMP2 ) /
+     $                           MAX( UNFL, TEMP3*ULP )
+*
+ 1460          CONTINUE
+*
 *              7)      Call DSKEWSYEVD
 *
                CALL DLACPY( ' ', N, N, A, LDA, V, LDU )
@@ -1445,7 +1806,7 @@ c           LIWEDC = 12
                      RESULT( NTEST ) = ULPINV
                      RESULT( NTEST+1 ) = ULPINV
                      RESULT( NTEST+2 ) = ULPINV
-                     GO TO 720
+                     GO TO 1480
                   END IF
                END IF
 *
@@ -1468,7 +1829,7 @@ c           LIWEDC = 12
                      RETURN
                   ELSE
                      RESULT( NTEST ) = ULPINV
-                     GO TO 720
+                     GO TO 1480
                   END IF
                END IF
 *
@@ -1476,15 +1837,114 @@ c           LIWEDC = 12
 *
                TEMP1 = ZERO
                TEMP2 = ZERO
-               DO 710 J = 1, N
+               DO 1470 J = 1, N
                   TEMP1 = MAX( TEMP1, ABS( D1( J ) ), ABS( D3( J ) ) )
                   TEMP2 = MAX( TEMP2, ABS( D1( J )-D3( J ) ) )
- 710           CONTINUE
+ 1470          CONTINUE
                RESULT( NTEST ) = TEMP2 / MAX( UNFL,
      $                           ULP*MAX( TEMP1, TEMP2 ) )
 *
- 720           CONTINUE
+ 1480          CONTINUE
 *
+*
+*              9)      Call DSKEWSBEVD.
+*
+               CALL DLACPY( ' ', N, N, V, LDU, A, LDA )
+               IF( JTYPE.LE.7 ) THEN
+                  KD = 1
+               ELSE IF( JTYPE.GE.8 .AND. JTYPE.LE.15 ) THEN
+                  KD = MAX( N-1, 0 )
+               ELSE
+                  KD = IHBW
+               END IF
+               IF( KD.LT.1 ) THEN
+                 GO TO 1680
+               END IF
+*
+*              Load array V with the upper or lower triangular part
+*              of the matrix in band form.
+*
+               IF( IUPLO.EQ.1 ) THEN
+                  DO 1600 J = 1, N
+                     DO 1590 I = MAX( 1, J-KD ), J-1
+                        V( KD+1+I-J, J ) = A( I, J )
+ 1590                CONTINUE
+ 1600             CONTINUE
+               ELSE
+                  DO 1620 J = 1, N
+                     DO 1610 I = J+1, MIN( N, J+KD )
+                        V( 1+I-J, J ) = A( I, J )
+ 1610                CONTINUE
+ 1620             CONTINUE
+               END IF
+*
+               NTEST = NTEST + 1
+               SRNAMT = 'DSKEWSBEVD'
+               CALL DSKEWSBEVD( 'V', UPLO, N, KD, V, LDU, D1, Z, LDU,
+     $                      WORK, LWEDC, IWORK, LIWEDC, IINFO )
+               IF( IINFO.NE.0 ) THEN
+                  WRITE( NOUNIT, FMT = 9999 )
+     $               'DSKEWSBEVD(V,' // UPLO //
+     $               ')', IINFO, N, JTYPE, IOLDSD
+                  INFO = ABS( IINFO )
+                  IF( IINFO.LT.0 ) THEN
+                     RETURN
+                  ELSE
+                     RESULT( NTEST ) = ULPINV
+                     RESULT( NTEST+1 ) = ULPINV
+                     RESULT( NTEST+2 ) = ULPINV
+                     GO TO 1680
+                  END IF
+               END IF
+*
+*              Do tests 67 and 68 (or +54)
+*
+               CALL DSKEWSYT21( 1, UPLO, N, 1, A, LDA, D2, D1, Z,
+     $                     LDU, V, LDU, TAU, WORK, RESULT( NTEST ) )
+*
+               IF( IUPLO.EQ.1 ) THEN
+                  DO 1640 J = 1, N
+                     DO 1630 I = MAX( 1, J-KD ), J-1
+                        V( KD+1+I-J, J ) = A( I, J )
+ 1630                CONTINUE
+ 1640             CONTINUE
+               ELSE
+                  DO 1660 J = 1, N
+                     DO 1650 I = J+1, MIN( N, J+KD )
+                        V( 1+I-J, J ) = A( I, J )
+ 1650                CONTINUE
+ 1660             CONTINUE
+               END IF
+*
+               NTEST = NTEST + 2
+               SRNAMT = 'DSKEWSBEVD'
+               CALL DSKEWSBEVD( 'N', UPLO, N, KD, V, LDU, D3, Z, LDU,
+     $                      WORK, LWEDC, IWORK, LIWEDC, IINFO )
+               IF( IINFO.NE.0 ) THEN
+                  WRITE( NOUNIT, FMT = 9999 )
+     $               'DSKEWSBEVD(N,' // UPLO //
+     $               ')', IINFO, N, JTYPE, IOLDSD
+                  INFO = ABS( IINFO )
+                  IF( IINFO.LT.0 ) THEN
+                     RETURN
+                  ELSE
+                     RESULT( NTEST ) = ULPINV
+                     GO TO 1680
+                  END IF
+               END IF
+*
+*              Do test 69 (or +54)
+*
+               TEMP1 = ZERO
+               TEMP2 = ZERO
+               DO 1670 J = 1, N
+                  TEMP1 = MAX( TEMP1, ABS( D1( J ) ), ABS( D3( J ) ) )
+                  TEMP2 = MAX( TEMP2, ABS( D1( J )-D3( J ) ) )
+ 1670          CONTINUE
+               RESULT( NTEST ) = TEMP2 / MAX( UNFL,
+     $                           ULP*MAX( TEMP1, TEMP2 ) )
+*
+ 1680          CONTINUE
 *
  1720       CONTINUE
 *

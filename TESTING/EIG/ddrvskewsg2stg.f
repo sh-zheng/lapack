@@ -285,8 +285,8 @@
 *>          -16: LDZ < 1 or LDZ < NMAX.
 *>          -21: NWORK too small.
 *>          -23: LIWORK too small.
-*>          If  DLATMR, DLATMS, DSKEWSYGV, SSPGV, SSBGV, DSKEWSYGVD, SSPGVD,
-*>              SSBGVD, DSKEWSYGVX, SSPGVX or SSBGVX returns an error code,
+*>          If  DLATMR, DLATMS, DSKEWSYGV, SSPGV, DSKEWSBGV, DSKEWSYGVD, SSPGVD,
+*>              DSKEWSBGVD, DSKEWSYGVX, SSPGVX or DSKEWSBGVX returns an error code,
 *>              the absolute value of it is returned.
 *>          Modified.
 *>
@@ -382,7 +382,8 @@
 *     .. External Subroutines ..
       EXTERNAL           DLABAD, DLACPY, DLAFTS, DLASET, DLASUM, DLATMR,
      $                   DLATMS, DSKEWSYGV, DSKEWSYGVX, DSKEWSYGVD,
-     $                   DSKEWSGT01, XERBLA
+     $                   DSKEWSGT01, DSKEWSBGV, DSKEWSBGVD, DSKEWSBGVX,
+     $                   XERBLA
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          ABS, DBLE, MAX, MIN, SQRT
@@ -636,8 +637,8 @@
                END IF
             END IF
 *
-*           3) Call DSKEWSYGV, SSPGV, SSBGV, DSKEWSYGVD, SSPGVD, SSBGVD,
-*              DSKEWSYGVX, SSPGVX, and SSBGVX, do tests.
+*           3) Call DSKEWSYGV, SSPGV, DSKEWSBGV, DSKEWSYGVD, SSPGVD, DSKEWSBGVD,
+*              DSKEWSYGVX, SSPGVX, and DSKEWSBGVX, do tests.
 *
 *           loop over the three generalized problems
 *                 IBTYPE = 1: A*x = (lambda)*B*x
@@ -803,6 +804,251 @@
      $                         Z, LDZ, D, WORK, RESULT( NTEST ) )
 *
   100             CONTINUE
+*
+                  IF( IBTYPE.EQ.1 .AND. KA.GE.1 ) THEN
+*
+*                    TEST DSKEWSBGV
+*
+                     NTEST = NTEST + 1
+*
+*                    Copy the matrices into band storage.
+*
+                     IF( LSAME( UPLO, 'U' ) ) THEN
+                        DO 340 J = 1, N
+                           DO 320 I = MAX( 1, J-KA ), J-1
+                              AB( KA+1+I-J, J ) = A( I, J )
+  320                      CONTINUE
+                           DO 330 I = MAX( 1, J-KB ), J
+                              BB( KB+1+I-J, J ) = B( I, J )
+  330                      CONTINUE
+  340                   CONTINUE
+                     ELSE
+                        DO 370 J = 1, N
+                           DO 350 I = J+1, MIN( N, J+KA )
+                              AB( 1+I-J, J ) = A( I, J )
+  350                      CONTINUE
+                           DO 360 I = J, MIN( N, J+KB )
+                              BB( 1+I-J, J ) = B( I, J )
+  360                      CONTINUE
+  370                   CONTINUE
+                     END IF
+*
+                     CALL DSKEWSBGV( 'V', UPLO, N, KA, KB, AB, LDA,
+     $                           BB, LDB, D, Z, LDZ, WORK, IINFO )
+                     IF( IINFO.NE.0 ) THEN
+                        WRITE( NOUNIT, FMT = 9999 )
+     $                     'DSKEWSBGV(V,' //
+     $                     UPLO // ')', IINFO, N, JTYPE, IOLDSD
+                        INFO = ABS( IINFO )
+                        IF( IINFO.LT.0 ) THEN
+                           RETURN
+                        ELSE
+                           RESULT( NTEST ) = ULPINV
+                           GO TO 620
+                        END IF
+                     END IF
+*
+*                    Do Test
+*
+                     CALL DSKEWSGT01( IBTYPE, UPLO, N, N, A, LDA, B,
+     $                            LDB, Z, LDZ, D, WORK,
+     $                            RESULT( NTEST ) )
+*
+*                    TEST DSKEWSBGVD
+*
+                     NTEST = NTEST + 1
+*
+*                    Copy the matrices into band storage.
+*
+                     IF( LSAME( UPLO, 'U' ) ) THEN
+                        DO 400 J = 1, N
+                           DO 380 I = MAX( 1, J-KA ), J-1
+                              AB( KA+1+I-J, J ) = A( I, J )
+  380                      CONTINUE
+                           DO 390 I = MAX( 1, J-KB ), J
+                              BB( KB+1+I-J, J ) = B( I, J )
+  390                      CONTINUE
+  400                   CONTINUE
+                     ELSE
+                        DO 430 J = 1, N
+                           DO 410 I = J+1, MIN( N, J+KA )
+                              AB( 1+I-J, J ) = A( I, J )
+  410                      CONTINUE
+                           DO 420 I = J, MIN( N, J+KB )
+                              BB( 1+I-J, J ) = B( I, J )
+  420                      CONTINUE
+  430                   CONTINUE
+                     END IF
+*
+                     CALL DSKEWSBGVD( 'V', UPLO, N, KA, KB, AB, LDA,
+     $                            BB, LDB, D, Z, LDZ, WORK, NWORK,
+     $                            IWORK, LIWORK, IINFO )
+                     IF( IINFO.NE.0 ) THEN
+                        WRITE( NOUNIT, FMT = 9999 )
+     $                     'DSKEWSBGVD(V,' //
+     $                     UPLO // ')', IINFO, N, JTYPE, IOLDSD
+                        INFO = ABS( IINFO )
+                        IF( IINFO.LT.0 ) THEN
+                           RETURN
+                        ELSE
+                           RESULT( NTEST ) = ULPINV
+                           GO TO 620
+                        END IF
+                     END IF
+*
+*                    Do Test
+*
+                     CALL DSKEWSGT01( IBTYPE, UPLO, N, N, A, LDA, B,
+     $                            LDB, Z, LDZ, D, WORK,
+     $                            RESULT( NTEST ) )
+*
+*                    Test DSKEWSBGVX
+*
+                     NTEST = NTEST + 1
+*
+*                    Copy the matrices into band storage.
+*
+                     IF( LSAME( UPLO, 'U' ) ) THEN
+                        DO 460 J = 1, N
+                           DO 440 I = MAX( 1, J-KA ), J-1
+                              AB( KA+1+I-J, J ) = A( I, J )
+  440                      CONTINUE
+                           DO 450 I = MAX( 1, J-KB ), J
+                              BB( KB+1+I-J, J ) = B( I, J )
+  450                      CONTINUE
+  460                   CONTINUE
+                     ELSE
+                        DO 490 J = 1, N
+                           DO 470 I = J+1, MIN( N, J+KA )
+                              AB( 1+I-J, J ) = A( I, J )
+  470                      CONTINUE
+                           DO 480 I = J, MIN( N, J+KB )
+                              BB( 1+I-J, J ) = B( I, J )
+  480                      CONTINUE
+  490                   CONTINUE
+                     END IF
+*
+                     CALL DSKEWSBGVX( 'V', 'A', UPLO, N, KA, KB, AB,
+     $                            LDA, BB, LDB, BP, MAX( 1, N ), VL,
+     $                            VU, IL, IU, ABSTOL, M, D, Z, LDZ,
+     $                            WORK, IWORK( N+1 ), IWORK, IINFO )
+                     IF( IINFO.NE.0 ) THEN
+                        WRITE( NOUNIT, FMT = 9999 )
+     $                     'DSKEWSBGVX(V,A' //
+     $                     UPLO // ')', IINFO, N, JTYPE, IOLDSD
+                        INFO = ABS( IINFO )
+                        IF( IINFO.LT.0 ) THEN
+                           RETURN
+                        ELSE
+                           RESULT( NTEST ) = ULPINV
+                           GO TO 620
+                        END IF
+                     END IF
+*
+*                    Do Test
+*
+                     CALL DSKEWSGT01( IBTYPE, UPLO, N, M, A, LDA, B,
+     $                            LDB, Z, LDZ, D, WORK,
+     $                            RESULT( NTEST ) )
+*
+*
+                     NTEST = NTEST + 1
+*
+*                    Copy the matrices into band storage.
+*
+                     IF( LSAME( UPLO, 'U' ) ) THEN
+                        DO 520 J = 1, N
+                           DO 500 I = MAX( 1, J-KA ), J-1
+                              AB( KA+1+I-J, J ) = A( I, J )
+  500                      CONTINUE
+                           DO 510 I = MAX( 1, J-KB ), J
+                              BB( KB+1+I-J, J ) = B( I, J )
+  510                      CONTINUE
+  520                   CONTINUE
+                     ELSE
+                        DO 550 J = 1, N
+                           DO 530 I = J+1, MIN( N, J+KA )
+                              AB( 1+I-J, J ) = A( I, J )
+  530                      CONTINUE
+                           DO 540 I = J, MIN( N, J+KB )
+                              BB( 1+I-J, J ) = B( I, J )
+  540                      CONTINUE
+  550                   CONTINUE
+                     END IF
+*
+                     VL = ZERO
+                     VU = ANORM
+                     CALL DSKEWSBGVX( 'V', 'V', UPLO, N, KA, KB, AB,
+     $                            LDA, BB, LDB, BP, MAX( 1, N ), VL,
+     $                            VU, IL, IU, ABSTOL, M, D, Z, LDZ,
+     $                            WORK, IWORK( N+1 ), IWORK, IINFO )
+                     IF( IINFO.NE.0 ) THEN
+                        WRITE( NOUNIT, FMT = 9999 )
+     $                     'DSKEWSBGVX(V,V' //
+     $                     UPLO // ')', IINFO, N, JTYPE, IOLDSD
+                        INFO = ABS( IINFO )
+                        IF( IINFO.LT.0 ) THEN
+                           RETURN
+                        ELSE
+                           RESULT( NTEST ) = ULPINV
+                           GO TO 620
+                        END IF
+                     END IF
+*
+*                    Do Test
+*
+                     CALL DSKEWSGT01( IBTYPE, UPLO, N, M, A, LDA, B,
+     $                            LDB, Z, LDZ, D, WORK,
+     $                            RESULT( NTEST ) )
+*
+                     NTEST = NTEST + 1
+*
+*                    Copy the matrices into band storage.
+*
+                     IF( LSAME( UPLO, 'U' ) ) THEN
+                        DO 580 J = 1, N
+                           DO 560 I = MAX( 1, J-KA ), J-1
+                              AB( KA+1+I-J, J ) = A( I, J )
+  560                      CONTINUE
+                           DO 570 I = MAX( 1, J-KB ), J
+                              BB( KB+1+I-J, J ) = B( I, J )
+  570                      CONTINUE
+  580                   CONTINUE
+                     ELSE
+                        DO 610 J = 1, N
+                           DO 590 I = J+1, MIN( N, J+KA )
+                              AB( 1+I-J, J ) = A( I, J )
+  590                      CONTINUE
+                           DO 600 I = J, MIN( N, J+KB )
+                              BB( 1+I-J, J ) = B( I, J )
+  600                      CONTINUE
+  610                   CONTINUE
+                     END IF
+*
+                     CALL DSKEWSBGVX( 'V', 'I', UPLO, N, KA, KB, AB,
+     $                            LDA, BB, LDB, BP, MAX( 1, N ), VL,
+     $                            VU, IL, IU, ABSTOL, M, D, Z, LDZ,
+     $                            WORK, IWORK( N+1 ), IWORK, IINFO )
+                     IF( IINFO.NE.0 ) THEN
+                        WRITE( NOUNIT, FMT = 9999 )
+     $                     'DSKEWSBGVX(V,I' //
+     $                     UPLO // ')', IINFO, N, JTYPE, IOLDSD
+                        INFO = ABS( IINFO )
+                        IF( IINFO.LT.0 ) THEN
+                           RETURN
+                        ELSE
+                           RESULT( NTEST ) = ULPINV
+                           GO TO 620
+                        END IF
+                     END IF
+*
+*                    Do Test
+*
+                     CALL DSKEWSGT01( IBTYPE, UPLO, N, M, A, LDA, B,
+     $                            LDB, Z, LDZ, D, WORK,
+     $                            RESULT( NTEST ) )
+*
+                  END IF
 *
   620          CONTINUE
   630       CONTINUE

@@ -510,6 +510,8 @@
          CALL SCOPY( N-1, WORK( INDE ), 1, WORK( INDEE ), 1 )
          CALL SSKEWSTEQR( JOBZ, N, WORK( INDEE ), Z, LDZ,
      $                WORK( INDWRK ), INFO )
+         CALL SCOPY( N-1, WORK( INDEE ), 1, W, 1 )
+         W( N ) = ZERO
          IF( INFO.EQ.0 ) THEN
             DO 30 I = 1, N
                IFAIL( I ) = 0

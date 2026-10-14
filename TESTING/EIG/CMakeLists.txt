@@ -28,7 +28,7 @@ set(SCIGTST slafts.f slahd2.f slasum.f slatb9.f sstech.f sstect.f
 set(SEIGTST schkee.F
    sbdt01.f sbdt02.f sbdt03.f sbdt04.f sbdt05.f
    schkbb.f schkbd.f schkbk.f schkbl.f schkec.f
-   schkgg.f schkgk.f schkgl.f schkhs.f schksb.f schkst.f schkst2stg.f schksb2stg.f
+   schkgg.f schkgk.f schkgl.f schkhs.f schksb.f schkskewsb.f schkst.f schkst2stg.f schksb2stg.f
    sckcsd.f sckglm.f sckgqr.f sckgsv.f scklse.f scsdts.f
    schkskewst.f
    sdrges.f sdrgev.f sdrges3.f sdrgev3.f sdrgsx.f sdrgvx.f
@@ -40,7 +40,7 @@ set(SEIGTST schkee.F
    sget37.f sget38.f sget39.f sget40.f sget51.f sget52.f sget53.f
    sget54.f sglmts.f sgqrts.f sgrqts.f sgsvts3.f
    shst01.f slarfy.f slarfyskew.f slarhs.f slatm4.f slctes.f slctsx.f slsets.f sort01.f
-   sort03.f ssbt21.f ssgt01.f sslect.f sspt21.f sstt21.f
+   sort03.f ssbt21.f sskewsbt21.f ssgt01.f sslect.f sspt21.f sstt21.f
    sstt22.f ssyl01.f ssyt21.f ssyt22.f sskewsgt01.f sskewstt21.f sskewsyt21.f sskewstt22.f sskewsyt22.f)
 
 set(SDMDEIGTST schkdmd.f90)
@@ -70,7 +70,7 @@ set(DZIGTST dlafts.f dlahd2.f dlasum.f dlatb9.f dstech.f dstect.f
 set(DEIGTST dchkee.F
    dbdt01.f dbdt02.f dbdt03.f dbdt04.f dbdt05.f
    dchkbb.f dchkbd.f dchkbk.f dchkbl.f dchkec.f
-   dchkgg.f dchkgk.f dchkgl.f dchkhs.f dchksb.f dchkst.f dchkst2stg.f dchksb2stg.f
+   dchkgg.f dchkgk.f dchkgl.f dchkhs.f dchksb.f dchkskewsb.f dchkst.f dchkst2stg.f dchksb2stg.f
    dckcsd.f dckglm.f dckgqr.f dckgsv.f dcklse.f dcsdts.f
    dchkskewst.f
    ddrges.f ddrgev.f ddrges3.f ddrgev3.f ddrgsx.f ddrgvx.f
@@ -82,7 +82,7 @@ set(DEIGTST dchkee.F
    dget37.f dget38.f dget39.f dget40.f dget51.f dget52.f dget53.f
    dget54.f dglmts.f dgqrts.f dgrqts.f dgsvts3.f
    dhst01.f dlarfy.f dlarfyskew.f dlarhs.f dlatm4.f dlctes.f dlctsx.f dlsets.f dort01.f
-   dort03.f dsbt21.f dsgt01.f dslect.f dspt21.f dstt21.f
+   dort03.f dsbt21.f dskewsbt21.f dsgt01.f dslect.f dspt21.f dstt21.f
    dstt22.f dsyl01.f dsyt21.f dsyt22.f dskewsgt01.f dskewstt21.f dskewsyt21.f dskewstt22.f dskewsyt22.f)
 
 set(DDMDEIGTST dchkdmd.f90)

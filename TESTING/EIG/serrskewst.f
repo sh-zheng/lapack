@@ -88,7 +88,8 @@
       EXTERNAL           CHKXER, SSKEWSTEQR, SSKEWSYEV, SSKEWSTEV,
      $                   SSKEWSYTRD, SSKEWSTEBZ, SSKEWSTEIN,
      $                   SSKEWSYEVX, SSKEWSTEVX, SSKEWSTEDC,
-     $                   SSKEWSTEVD, SSKEWSYEVD
+     $                   SSKEWSTEVD, SSKEWSYEVD, SSKEWSBTRD,
+     $                   SSKEWSBEV, SSKEWSBEVD, SSKEWSBEVX
 *     ..
 *     .. Scalars in Common ..
       LOGICAL            LERR, OK
@@ -446,6 +447,175 @@
          CALL SSKEWSYEVD( 'V', 'U', 2, A, 2, X, W, 27, IW, 7, INFO )
          CALL CHKXER( 'SSKEWSYEVD', INFOT, NOUT, LERR, OK )
          NT = NT + 10
+      ELSE IF( LSAMEN( 2, C2, 'KB' ) ) THEN
+*
+*        SSKEWSBTRD
+*
+         SRNAMT = 'SSKEWSBTRD'
+         INFOT = 1
+         CALL SSKEWSBTRD( '/', 'U', 0, 0, A, 1, E, Z, 1, W, INFO )
+         CALL CHKXER( 'SSKEWSBTRD', INFOT, NOUT, LERR, OK )
+         INFOT = 2
+         CALL SSKEWSBTRD( 'N', '/', 0, 0, A, 1, E, Z, 1, W, INFO )
+         CALL CHKXER( 'SSKEWSBTRD', INFOT, NOUT, LERR, OK )
+         INFOT = 3
+         CALL SSKEWSBTRD( 'N', 'U', -1, 0, A, 1, E, Z, 1, W, INFO )
+         CALL CHKXER( 'SSKEWSBTRD', INFOT, NOUT, LERR, OK )
+         INFOT = 4
+         CALL SSKEWSBTRD( 'N', 'U', 0, -1, A, 1, E, Z, 1, W, INFO )
+         CALL CHKXER( 'SSKEWSBTRD', INFOT, NOUT, LERR, OK )
+         INFOT = 4
+         CALL SSKEWSBTRD( 'N', 'U', 0, 0, A, 1, E, Z, 1, W, INFO )
+         CALL CHKXER( 'SSKEWSBTRD', INFOT, NOUT, LERR, OK )
+         INFOT = 6
+         CALL SSKEWSBTRD( 'N', 'U', 1, 1, A, 1, E, Z, 1, W, INFO )
+         CALL CHKXER( 'SSKEWSBTRD', INFOT, NOUT, LERR, OK )
+         INFOT = 9
+         CALL SSKEWSBTRD( 'V', 'U', 2, 1, A, 2, E, Z, 1, W, INFO )
+         CALL CHKXER( 'SSKEWSBTRD', INFOT, NOUT, LERR, OK )
+         NT = NT + 7
+*
+*        SSKEWSBEV
+*
+         SRNAMT = 'SSKEWSBEV'
+         INFOT = 1
+         CALL SSKEWSBEV( '/', 'U', 0, 0, A, 1, X, Z, 1, W, INFO )
+         CALL CHKXER( 'SSKEWSBEV', INFOT, NOUT, LERR, OK )
+         INFOT = 2
+         CALL SSKEWSBEV( 'N', '/', 0, 0, A, 1, X, Z, 1, W, INFO )
+         CALL CHKXER( 'SSKEWSBEV', INFOT, NOUT, LERR, OK )
+         INFOT = 3
+         CALL SSKEWSBEV( 'N', 'U', -1, 0, A, 1, X, Z, 1, W, INFO )
+         CALL CHKXER( 'SSKEWSBEV', INFOT, NOUT, LERR, OK )
+         INFOT = 4
+         CALL SSKEWSBEV( 'N', 'U', 0, -1, A, 1, X, Z, 1, W, INFO )
+         CALL CHKXER( 'SSKEWSBEV', INFOT, NOUT, LERR, OK )
+         INFOT = 4
+         CALL SSKEWSBEV( 'N', 'U', 0, 0, A, 1, X, Z, 1, W, INFO )
+         CALL CHKXER( 'SSKEWSBEV', INFOT, NOUT, LERR, OK )
+         INFOT = 6
+         CALL SSKEWSBEV( 'N', 'U', 2, 1, A, 1, X, Z, 1, W, INFO )
+         CALL CHKXER( 'SSKEWSBEV', INFOT, NOUT, LERR, OK )
+         INFOT = 9
+         CALL SSKEWSBEV( 'V', 'U', 2, 1, A, 2, X, Z, 1, W, INFO )
+         CALL CHKXER( 'SSKEWSBEV', INFOT, NOUT, LERR, OK )
+         NT = NT + 7
+*
+*        SSKEWSBEVD
+*
+         SRNAMT = 'SSKEWSBEVD'
+         INFOT = 1
+         CALL SSKEWSBEVD( '/', 'U', 0, 0, A, 1, X, Z, 1, W, 1, IW, 1,
+     $                INFO )
+         CALL CHKXER( 'SSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 2
+         CALL SSKEWSBEVD( 'N', '/', 0, 0, A, 1, X, Z, 1, W, 1, IW, 1,
+     $                INFO )
+         CALL CHKXER( 'SSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 3
+         CALL SSKEWSBEVD( 'N', 'U', -1, 0, A, 1, X, Z, 1, W, 1, IW, 1,
+     $                INFO )
+         CALL CHKXER( 'SSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 4
+         CALL SSKEWSBEVD( 'N', 'U', 0, -1, A, 1, X, Z, 1, W, 1, IW, 1,
+     $                INFO )
+         CALL CHKXER( 'SSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 4
+         CALL SSKEWSBEVD( 'N', 'U', 0, 0, A, 1, X, Z, 1, W, 1, IW, 1,
+     $                INFO )
+         CALL CHKXER( 'SSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 6
+         CALL SSKEWSBEVD( 'N', 'U', 2, 1, A, 1, X, Z, 1, W, 4, IW, 1,
+     $                INFO )
+         CALL CHKXER( 'SSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 9
+         CALL SSKEWSBEVD( 'V', 'U', 2, 1, A, 2, X, Z, 1, W, 25, IW, 12,
+     $                INFO )
+         CALL CHKXER( 'SSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 11
+         CALL SSKEWSBEVD( 'N', 'U', 1, 1, A, 2, X, Z, 1, W, 0, IW, 1,
+     $                INFO )
+         CALL CHKXER( 'SSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 11
+         CALL SSKEWSBEVD( 'N', 'U', 2, 1, A, 2, X, Z, 1, W, 3, IW, 1,
+     $                INFO )
+         CALL CHKXER( 'SSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 11
+         CALL SSKEWSBEVD( 'V', 'U', 2, 1, A, 2, X, Z, 2, W, 18, IW, 12,
+     $                INFO )
+         CALL CHKXER( 'SSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 13
+         CALL SSKEWSBEVD( 'N', 'U', 1, 1, A, 2, X, Z, 1, W, 1, IW, 0,
+     $                INFO )
+         CALL CHKXER( 'SSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         INFOT = 13
+         CALL SSKEWSBEVD( 'V', 'U', 2, 1, A, 2, X, Z, 2, W, 25, IW, 11,
+     $                INFO )
+         CALL CHKXER( 'SSKEWSBEVD', INFOT, NOUT, LERR, OK )
+         NT = NT + 12
+*
+*        SSKEWSBEVX
+*
+         SRNAMT = 'SSKEWSBEVX'
+         INFOT = 1
+         CALL SSKEWSBEVX( '/', 'A', 'U', 0, 0, A, 1, Q, 1, 0.0, 0.0,
+     $                0, 0, 0.0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'SSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 2
+         CALL SSKEWSBEVX( 'N', '/', 'U', 0, 0, A, 1, Q, 1, 0.0, 0.0,
+     $                0, 0, 0.0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'SSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 3
+         CALL SSKEWSBEVX( 'N', 'A', '/', 0, 0, A, 1, Q, 1, 0.0, 0.0,
+     $                0, 0, 0.0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'SSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 4
+         CALL SSKEWSBEVX( 'N', 'A', 'U', -1, 0, A, 1, Q, 1, 0.0,
+     $                0.0, 0, 0, 0.0, M, X, Z, 1, W, IW, I3,
+     $                INFO )
+         CALL CHKXER( 'SSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 5
+         CALL SSKEWSBEVX( 'N', 'A', 'U', 0, -1, A, 1, Q, 1, 0.0,
+     $                0.0, 0, 0, 0.0, M, X, Z, 1, W, IW, I3,
+     $                INFO )
+         CALL CHKXER( 'SSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 5
+         CALL SSKEWSBEVX( 'N', 'A', 'U', 0, 0, A, 1, Q, 1, 0.0, 0.0,
+     $                0, 0, 0.0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'SSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 7
+         CALL SSKEWSBEVX( 'N', 'A', 'U', 2, 1, A, 1, Q, 1, 0.0, 0.0,
+     $                0, 0, 0.0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'SSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 9
+         CALL SSKEWSBEVX( 'V', 'A', 'U', 2, 1, A, 2, Q, 1, 0.0, 0.0,
+     $                0, 0, 0.0, M, X, Z, 2, W, IW, I3, INFO )
+         CALL CHKXER( 'SSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 11
+         CALL SSKEWSBEVX( 'N', 'V', 'U', 1, 1, A, 2, Q, 1, 0.0, 0.0,
+     $                0, 0, 0.0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'SSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 12
+         CALL SSKEWSBEVX( 'N', 'I', 'U', 1, 1, A, 2, Q, 1, 0.0, 0.0,
+     $                0, 0, 0.0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'SSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 12
+         CALL SSKEWSBEVX( 'N', 'I', 'U', 1, 1, A, 2, Q, 1, 0.0, 0.0,
+     $                2, 1, 0.0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'SSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 13
+         CALL SSKEWSBEVX( 'N', 'I', 'U', 2, 1, A, 2, Q, 1, 0.0, 0.0,
+     $                2, 1, 0.0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'SSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 13
+         CALL SSKEWSBEVX( 'N', 'I', 'U', 1, 1, A, 2, Q, 1, 0.0, 0.0,
+     $                1, 2, 0.0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'SSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         INFOT = 18
+         CALL SSKEWSBEVX( 'V', 'A', 'U', 2, 1, A, 2, Q, 2, 0.0, 0.0,
+     $                0, 0, 0.0, M, X, Z, 1, W, IW, I3, INFO )
+         CALL CHKXER( 'SSKEWSBEVX', INFOT, NOUT, LERR, OK )
+         NT = NT + 14
       END IF
 *
 *     Print a summary line.
