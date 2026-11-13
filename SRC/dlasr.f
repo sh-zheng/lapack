@@ -47,7 +47,7 @@
 *> rotations and P**T is the transpose of P.
 *>
 *> If PIVOT = 'V', 'T' or 'B', then z = M when SIDE = 'L' and z = N when SIDE = 'R'.
-*> If PIVOT = 'G', then z = M-1 when SIDE = 'L' and z = N-1 when SIDE = 'R'.
+*> If PIVOT = 'G', 'L' or 'D', then z = M-1 when SIDE = 'L' and z = N-1 when SIDE = 'R'.
 *>
 *> When DIRECT = 'F' (Forward sequence), then
 *>
@@ -64,7 +64,7 @@
 *>
 *> or 2-by-2 rotation with reflection
 *>    R(k) = (  c(k)  s(k) )
-*>         = (  s(k) -c(k) ). (PIVOT = 'G')
+*>         = (  s(k) -c(k) ). (PIVOT = 'G', 'L' or 'D')
 *>
 *> When PIVOT = 'V' (Variable pivot), the rotation is performed
 *> for the plane (k,k+1), i.e., P(k) has the form
@@ -124,6 +124,10 @@
 *>
 *> where R(k) appears as a rank-2 modification to the identity matrix in
 *> rows and columns k and k+2.
+*>
+*> When PIVOT = 'L' and 'D' (Light and Dark), the pivot has the same pattern as 'G',
+*> but only the elements in the same color (for 'L', the light-coloured and for 'D',
+*> the dark-coloured) are operated if the matrix is looked as a checkerboard.
 *> The rotations are performed without ever forming P(k) explicitly.
 *> \endverbatim
 *
@@ -148,6 +152,8 @@
 *>          = 'T':  Top pivot, the plane (1,k+1)
 *>          = 'B':  Bottom pivot, the plane (k,z)
 *>          = 'G':  Gapped variable pivot, the plane (k,k+2), with row k+2 being reflected
+*>          = 'L':  Light checkerboard gapped variable pivot, 'G' pattern for light-coloured elements
+*>          = 'D':  Dark checkerboard gapped variable pivot, 'G' pattern for dark-coloured elements
 *> \endverbatim
 *>
 *> \param[in] DIRECT
@@ -188,7 +194,7 @@
 *>                 ( -s(k)  c(k) ). (PIVOT = 'V', 'T' or 'B')
 *>          or
 *>          R(k) = (  c(k)  s(k) )
-*>                 (  s(k) -c(k) ). (PIVOT = 'G')
+*>                 (  s(k) -c(k) ). (PIVOT = 'G', 'L' or 'D')
 *> \endverbatim
 *>
 *> \param[in,out] A
@@ -237,8 +243,9 @@
       PARAMETER          ( ONE = 1.0D+0, ZERO = 0.0D+0 )
 *     ..
 *     .. Local Scalars ..
-      INTEGER            I, INFO, J
+      INTEGER            I, INFO, J, ISTART, ISTEP
       DOUBLE PRECISION   CTEMP, STEMP, TEMP
+      LOGICAL            LIGHT
 *     ..
 *     .. External Functions ..
       LOGICAL            LSAME
@@ -248,7 +255,7 @@
       EXTERNAL           XERBLA
 *     ..
 *     .. Intrinsic Functions ..
-      INTRINSIC          MAX
+      INTRINSIC          MAX, MOD
 *     ..
 *     .. Executable Statements ..
 *
@@ -260,7 +267,9 @@
          INFO = 1
       ELSE IF( .NOT.( LSAME( PIVOT, 'V' ) .OR. LSAME( PIVOT,
      $         'T' ) .OR. LSAME( PIVOT, 'B' ) .OR. 
-     $		   LSAME( PIVOT, 'G' ) ) ) THEN
+     $		   LSAME( PIVOT, 'G' ) .OR.
+     $         LSAME( PIVOT, 'L' ) .OR.
+     $         LSAME( PIVOT, 'D' ) ) ) THEN
          INFO = 2
       ELSE IF( .NOT.( LSAME( DIRECT, 'F' ) .OR.
      $         LSAME( DIRECT, 'B' ) ) )
@@ -282,6 +291,11 @@
 *
       IF( ( M.EQ.0 ) .OR. ( N.EQ.0 ) )
      $   RETURN
+*
+*     LIGHT = .TRUE. means PIVOT = 'L'; otherwise PIVOT = 'D'
+*
+      LIGHT = LSAME( PIVOT, 'L' )
+*
       IF( LSAME( SIDE, 'L' ) ) THEN
 *
 *        Form  P * A
@@ -364,19 +378,31 @@
                   END IF
   120          CONTINUE
             END IF
-         ELSE IF( LSAME( PIVOT, 'G' ) ) THEN
+         ELSE IF( LSAME( PIVOT, 'G' ) .OR.
+     $            LSAME( PIVOT, 'L' ) .OR.
+     $            LSAME( PIVOT, 'D' ) ) THEN
             IF( LSAME( DIRECT, 'F' ) ) THEN
                DO 150 J = 1, M - 2
                   CTEMP = C( J )
                   STEMP = S( J )
+                  IF( LSAME( PIVOT, 'G' ) ) THEN
+                     ISTART = 1
+                     ISTEP = 1
+                  ELSE IF( LIGHT ) THEN
+                     ISTART = 2 - MOD( J, 2 )
+                     ISTEP = 2
+                  ELSE
+                     ISTART = 1 + MOD( J, 2 )
+                     ISTEP = 2
+                  END IF
                   IF( ( CTEMP.NE.ONE ) .OR. ( STEMP.NE.ZERO ) ) THEN
-                     DO 130 I = 1, N
+                     DO 130 I = ISTART, N, ISTEP
                         TEMP = A( J+2, I )
                         A( J+2, I ) = STEMP*A( J, I ) - CTEMP*TEMP
                         A( J, I ) = STEMP*TEMP + CTEMP*A( J, I )
   130                CONTINUE
                   ELSE
-                     DO 140 I = 1, N
+                     DO 140 I = ISTART, N, ISTEP
                         A( J+2, I ) = -A( J+2, I )
   140                CONTINUE
                   END IF
@@ -385,14 +411,24 @@
                DO 180 J = M - 2, 1, -1
                   CTEMP = C( J )
                   STEMP = S( J )
+                  IF( LSAME( PIVOT, 'G' ) ) THEN
+                     ISTART = 1
+                     ISTEP = 1
+                  ELSE IF( LIGHT ) THEN
+                     ISTART = 2 - MOD( J, 2 )
+                     ISTEP = 2
+                  ELSE
+                     ISTART = 1 + MOD( J, 2 )
+                     ISTEP = 2
+                  END IF
                   IF( ( CTEMP.NE.ONE ) .OR. ( STEMP.NE.ZERO ) ) THEN
-                     DO 160 I = 1, N
+                     DO 160 I = ISTART, N, ISTEP
                         TEMP = A( J+2, I )
                         A( J+2, I ) = STEMP*A( J, I ) - CTEMP*TEMP
                         A( J, I ) = STEMP*TEMP + CTEMP*A( J, I )
   160                CONTINUE
                   ELSE
-                     DO 170 I = 1, N
+                     DO 170 I = ISTART, N, ISTEP
                         A( J+2, I ) = -A( J+2, I )
   170                CONTINUE
                   END IF
@@ -481,19 +517,31 @@
                   END IF
   300          CONTINUE
             END IF
-         ELSE IF( LSAME( PIVOT, 'G' ) ) THEN
+         ELSE IF( LSAME( PIVOT, 'G' ) .OR.
+     $            LSAME( PIVOT, 'L' ) .OR.
+     $            LSAME( PIVOT, 'D' ) ) THEN
             IF( LSAME( DIRECT, 'F' ) ) THEN
                DO 330 J = 1, N - 2
                   CTEMP = C( J )
                   STEMP = S( J )
+                  IF( LSAME( PIVOT, 'G' ) ) THEN
+                     ISTART = 1
+                     ISTEP = 1
+                  ELSE IF( LIGHT ) THEN
+                     ISTART = 2 - MOD( J, 2 )
+                     ISTEP = 2
+                  ELSE
+                     ISTART = 1 + MOD( J, 2 )
+                     ISTEP = 2
+                  END IF
                   IF( ( CTEMP.NE.ONE ) .OR. ( STEMP.NE.ZERO ) ) THEN
-                     DO 310 I = 1, M
+                     DO 310 I = ISTART, M, ISTEP
                         TEMP = A( I, J+2 )
                         A( I, J+2 ) = STEMP*A( I, J ) - CTEMP*TEMP
                         A( I, J ) = STEMP*TEMP + CTEMP*A( I, J )
   310                CONTINUE
                   ELSE
-                     DO 320 I = 1, M
+                     DO 320 I = ISTART, M, ISTEP
                         A( I, J+2 ) = -A( I, J+2 )
   320                CONTINUE
                   END IF
@@ -502,14 +550,24 @@
                DO 360 J = N - 2, 1, -1
                   CTEMP = C( J )
                   STEMP = S( J )
+                  IF( LSAME( PIVOT, 'G' ) ) THEN
+                     ISTART = 1
+                     ISTEP = 1
+                  ELSE IF( LIGHT ) THEN
+                     ISTART = 2 - MOD( J, 2 )
+                     ISTEP = 2
+                  ELSE
+                     ISTART = 1 + MOD( J, 2 )
+                     ISTEP = 2
+                  END IF
                   IF( ( CTEMP.NE.ONE ) .OR. ( STEMP.NE.ZERO ) ) THEN
-                     DO 340 I = 1, M
+                     DO 340 I = ISTART, M, ISTEP
                         TEMP = A( I, J+2 )
                         A( I, J+2 ) = STEMP*A( I, J ) - CTEMP*TEMP
                         A( I, J ) = STEMP*TEMP + CTEMP*A( I, J )
   340                CONTINUE
                   ELSE
-                     DO 350 I = 1, M
+                     DO 350 I = ISTART, M, ISTEP
                         A( I, J+2 ) = -A( I, J+2 )
   350                CONTINUE
                   END IF

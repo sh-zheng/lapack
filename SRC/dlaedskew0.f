@@ -197,8 +197,7 @@
 *     ..
 *     .. External Functions ..
       INTEGER            ILAENV
-      DOUBLE PRECISION   DDOT
-      EXTERNAL           DDOT, ILAENV
+      EXTERNAL           ILAENV
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          INT, MAX
@@ -292,25 +291,12 @@
 *        Reorganize the output of DSKEWSTEQR into DLASD1's layout
 *
          DO J = 1, NL
-            IF( DDOT( NL+1, WORK( 2*NLF-1+(2*(NLF+J-1)-2)*N ),
-     $          2, WORK( 2*NLF-1+(2*(NLF+J-1)-2)*N ), 2 ) .GT.
-     $          DDOT( NL, WORK( 2*NLF+(2*(NLF+J-1)-2)*N ),
-     $          2, WORK( 2*NLF+(2*(NLF+J-1)-2)*N ), 2 ) ) THEN
-               WORK( IDXD+NLF+J-2 ) = E( 2*(NLF+J-1)-1 )
-               CALL DCOPY( NL, WORK( 2*NLF+(2*(NLF+J-1)-1)*N ),
-     $                     2, Q( NLF, NLF+J-1 ), 1 )
-               CALL DCOPY( NL+1,
-     $                     WORK( 2*NLF-1+(2*(NLF+J-1)-2)*N ),
-     $                     2, Q( NSVD+NLF+J-1, NSVD+NLF ), LDQ )
-            ELSE
-               WORK( IDXD+NLF+J-2 ) = E( 2*(NLF+J-1)-1 )
-               CALL DCOPY( NL, WORK( 2*NLF+(2*(NLF+J-1)-2)*N ),
-     $                     2, Q( NLF, NLF+J-1 ), 1 )
-               CALL DSCAL( NL, -ONE, Q( NLF, NLF+J-1 ), 1 )
-               CALL DCOPY( NL+1,
-     $                     WORK( 2*NLF-1+(2*(NLF+J-1)-1)*N ),
-     $                     2, Q( NSVD+NLF+J-1, NSVD+NLF ), LDQ )
-            END IF
+            WORK( IDXD+NLF+J-2 ) = E( 2*(NLF+J-1)-1 )
+            CALL DCOPY( NL, WORK( 2*NLF+(2*(NLF+J-1)-1)*N ),
+     $                  2, Q( NLF, NLF+J-1 ), 1 )
+            CALL DCOPY( NL+1,
+     $                  WORK( 2*NLF-1+(2*(NLF+J-1)-2)*N ),
+     $                  2, Q( NSVD+NLF+J-1, NSVD+NLF ), LDQ )
          END DO
          CALL DCOPY( NL+1, WORK( 2*NLF-1+(2*(NLF+NL)-2)*N ),
      $               2, Q( NSVD+NLF+NL, NSVD+NLF ), LDQ )
@@ -337,25 +323,12 @@
 *        Reorganize the output of DSKEWSTEQR into DLASD1's layout
 *
          DO J = 1, NR
-            IF( DDOT( NR+SQREI, WORK( 2*NRF-1+(2*(NRF+J-1)-2)*N ),
-     $          2, WORK( 2*NRF-1+(2*(NRF+J-1)-2)*N ), 2 ) .GT.
-     $          DDOT( NR, WORK( 2*NRF+(2*(NRF+J-1)-2)*N ),
-     $          2, WORK( 2*NRF+(2*(NRF+J-1)-2)*N ), 2 ) ) THEN
-               WORK( IDXD+NRF+J-2 ) = E( 2*(NRF+J-1)-1 )
-               CALL DCOPY( NR, WORK( 2*NRF+(2*(NRF+J-1)-1)*N ),
-     $                     2, Q( NRF, NRF+J-1 ), 1 )
-               CALL DCOPY( NR+SQREI,
-     $                     WORK( 2*NRF-1+(2*(NRF+J-1)-2)*N ),
-     $                     2, Q( NSVD+NRF+J-1, NSVD+NRF ), LDQ )
-            ELSE
-               WORK( IDXD+NRF+J-2 ) = E( 2*(NRF+J-1)-1 )
-               CALL DCOPY( NR, WORK( 2*NRF+(2*(NRF+J-1)-2)*N ),
-     $                     2, Q( NRF, NRF+J-1 ), 1 )
-               CALL DSCAL( NR, -ONE, Q( NRF, NRF+J-1 ), 1 )
-               CALL DCOPY( NR+SQREI,
-     $                     WORK( 2*NRF-1+(2*(NRF+J-1)-1)*N ),
-     $                     2, Q( NSVD+NRF+J-1, NSVD+NRF ), LDQ )
-            END IF
+            WORK( IDXD+NRF+J-2 ) = E( 2*(NRF+J-1)-1 )
+            CALL DCOPY( NR, WORK( 2*NRF+(2*(NRF+J-1)-1)*N ),
+     $                  2, Q( NRF, NRF+J-1 ), 1 )
+            CALL DCOPY( NR+SQREI,
+     $                  WORK( 2*NRF-1+(2*(NRF+J-1)-2)*N ),
+     $                  2, Q( NSVD+NRF+J-1, NSVD+NRF ), LDQ )
          END DO
          IF( SQREI.EQ.1 ) THEN
             CALL DCOPY( NR+1, WORK( 2*NRF-1+(2*(NRF+NR)-2)*N ),

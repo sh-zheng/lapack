@@ -197,8 +197,7 @@
 *     ..
 *     .. External Functions ..
       INTEGER            ILAENV
-      REAL               SDOT
-      EXTERNAL           SDOT, ILAENV
+      EXTERNAL           ILAENV
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          INT, MAX
@@ -292,25 +291,12 @@
 *        Reorganize the output of SSKEWSTEQR into SLASD1's layout
 *
          DO J = 1, NL
-            IF( SDOT( NL+1, WORK( 2*NLF-1+(2*(NLF+J-1)-2)*N ),
-     $          2, WORK( 2*NLF-1+(2*(NLF+J-1)-2)*N ), 2 ) .GT.
-     $          SDOT( NL, WORK( 2*NLF+(2*(NLF+J-1)-2)*N ),
-     $          2, WORK( 2*NLF+(2*(NLF+J-1)-2)*N ), 2 ) ) THEN
-               WORK( IDXD+NLF+J-2 ) = E( 2*(NLF+J-1)-1 )
-               CALL SCOPY( NL, WORK( 2*NLF+(2*(NLF+J-1)-1)*N ),
-     $                     2, Q( NLF, NLF+J-1 ), 1 )
-               CALL SCOPY( NL+1,
-     $                     WORK( 2*NLF-1+(2*(NLF+J-1)-2)*N ),
-     $                     2, Q( NSVD+NLF+J-1, NSVD+NLF ), LDQ )
-            ELSE
-               WORK( IDXD+NLF+J-2 ) = E( 2*(NLF+J-1)-1 )
-               CALL SCOPY( NL, WORK( 2*NLF+(2*(NLF+J-1)-2)*N ),
-     $                     2, Q( NLF, NLF+J-1 ), 1 )
-               CALL SSCAL( NL, -ONE, Q( NLF, NLF+J-1 ), 1 )
-               CALL SCOPY( NL+1,
-     $                     WORK( 2*NLF-1+(2*(NLF+J-1)-1)*N ),
-     $                     2, Q( NSVD+NLF+J-1, NSVD+NLF ), LDQ )
-            END IF
+            WORK( IDXD+NLF+J-2 ) = E( 2*(NLF+J-1)-1 )
+            CALL SCOPY( NL, WORK( 2*NLF+(2*(NLF+J-1)-1)*N ),
+     $                  2, Q( NLF, NLF+J-1 ), 1 )
+            CALL SCOPY( NL+1,
+     $                  WORK( 2*NLF-1+(2*(NLF+J-1)-2)*N ),
+     $                  2, Q( NSVD+NLF+J-1, NSVD+NLF ), LDQ )
          END DO
          CALL SCOPY( NL+1, WORK( 2*NLF-1+(2*(NLF+NL)-2)*N ),
      $               2, Q( NSVD+NLF+NL, NSVD+NLF ), LDQ )
@@ -337,25 +323,12 @@
 *        Reorganize the output of SSKEWSTEQR into SLASD1's layout
 *
          DO J = 1, NR
-            IF( SDOT( NR+SQREI, WORK( 2*NRF-1+(2*(NRF+J-1)-2)*N ),
-     $          2, WORK( 2*NRF-1+(2*(NRF+J-1)-2)*N ), 2 ) .GT.
-     $          SDOT( NR, WORK( 2*NRF+(2*(NRF+J-1)-2)*N ),
-     $          2, WORK( 2*NRF+(2*(NRF+J-1)-2)*N ), 2 ) ) THEN
-               WORK( IDXD+NRF+J-2 ) = E( 2*(NRF+J-1)-1 )
-               CALL SCOPY( NR, WORK( 2*NRF+(2*(NRF+J-1)-1)*N ),
-     $                     2, Q( NRF, NRF+J-1 ), 1 )
-               CALL SCOPY( NR+SQREI,
-     $                     WORK( 2*NRF-1+(2*(NRF+J-1)-2)*N ),
-     $                     2, Q( NSVD+NRF+J-1, NSVD+NRF ), LDQ )
-            ELSE
-               WORK( IDXD+NRF+J-2 ) = E( 2*(NRF+J-1)-1 )
-               CALL SCOPY( NR, WORK( 2*NRF+(2*(NRF+J-1)-2)*N ),
-     $                     2, Q( NRF, NRF+J-1 ), 1 )
-               CALL SSCAL( NR, -ONE, Q( NRF, NRF+J-1 ), 1 )
-               CALL SCOPY( NR+SQREI,
-     $                     WORK( 2*NRF-1+(2*(NRF+J-1)-1)*N ),
-     $                     2, Q( NSVD+NRF+J-1, NSVD+NRF ), LDQ )
-            END IF
+            WORK( IDXD+NRF+J-2 ) = E( 2*(NRF+J-1)-1 )
+            CALL SCOPY( NR, WORK( 2*NRF+(2*(NRF+J-1)-1)*N ),
+     $                  2, Q( NRF, NRF+J-1 ), 1 )
+            CALL SCOPY( NR+SQREI,
+     $                  WORK( 2*NRF-1+(2*(NRF+J-1)-2)*N ),
+     $                  2, Q( NSVD+NRF+J-1, NSVD+NRF ), LDQ )
          END DO
          IF( SQREI.EQ.1 ) THEN
             CALL SCOPY( NR+1, WORK( 2*NRF-1+(2*(NRF+NR)-2)*N ),

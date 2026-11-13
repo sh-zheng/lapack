@@ -232,7 +232,7 @@
          IF( E(1).LT.ZERO ) THEN
             E(1) = -E(1)
             IF( ICOMPZ.NE.0 ) THEN
-               CALL SSWAP( N, Z( 1, 1 ), 1, Z( 1, 2 ), 1 )
+               CALL SSCAL( N, -ONE, Z( 1, 2 ), 1 )
             END IF
          END IF
          RETURN
@@ -413,8 +413,18 @@
             IF( ICOMPZ.GT.0 ) THEN
                WORK( M-2 ) = -VA
                WORK( N+M-4 ) = VB
-               CALL SLASR( 'R', 'G', 'B', N, 3, WORK( M-2 ),
-     $                     WORK( N+M-4 ), Z(1, M-2), LDZ )
+               IF( ICOMPZ.EQ.1 ) THEN
+                  CALL SLASR( 'R', 'G', 'B', N, 3, WORK( M-2 ),
+     $                        WORK( N+M-4 ), Z(1, M-2), LDZ )
+               ELSE
+                  IF( MOD(M-2, 2).EQ.0 ) THEN
+                     CALL SLASR( 'R', 'D', 'B', N, 3, WORK( M-2 ),
+     $                           WORK( N+M-4 ), Z(1, M-2), LDZ )
+                  ELSE
+                     CALL SLASR( 'R', 'L', 'B', N, 3, WORK( M-2 ),
+     $                           WORK( N+M-4 ), Z(1, M-2), LDZ )
+                  END IF
+               END IF
             END IF
 *
             I = L + 1
@@ -465,8 +475,6 @@
          IF( ICOMPZ.GT.0 ) THEN
             WORK( M-2 ) = -VA
             WORK( N+M-4 ) = VB
-            CALL SLASR( 'R', 'G', 'B', N, 3, WORK( M-2 ),
-     $                  WORK( N+M-4 ), Z(1, M-2), LDZ )
          END IF    
 *
 *        Inner loop
@@ -506,11 +514,6 @@
 *
   70     CONTINUE
 *
-         IF( ICOMPZ.GT.0 ) THEN
-            CALL SLASR( 'R', 'G', 'B', N, M-L-1, WORK( L+1 ),
-     $                  WORK( N+L-1 ), Z( 1, L+1 ), LDZ )
-         END IF
-*
          I = L + 2
 *
 *        Set iterative values.
@@ -539,8 +542,18 @@
          IF( ICOMPZ.GT.0 ) THEN
             WORK( I-2 ) = -VA
             WORK( N+I-4 ) = VB
-            CALL SLASR( 'R', 'G', 'B', N, 3, WORK( I-2 ),
-     $                  WORK( N+I-4 ), Z(1, I-2), LDZ )
+            IF( ICOMPZ.EQ.1 ) THEN
+               CALL SLASR( 'R', 'G', 'B', N, M-L+1, WORK( I-2 ),
+     $                     WORK( N+I-4 ), Z(1, I-2), LDZ )
+            ELSE
+               IF( MOD(I-2, 2).EQ.0 ) THEN
+                  CALL SLASR( 'R', 'D', 'B', N, M-L+1, WORK( I-2 ),
+     $                        WORK( N+I-4 ), Z(1, I-2), LDZ )
+               ELSE
+                  CALL SLASR( 'R', 'L', 'B', N, M-L+1, WORK( I-2 ),
+     $                        WORK( N+I-4 ), Z(1, I-2), LDZ )
+               END IF
+            END IF
          END IF
 *
          I = L + 1
@@ -651,8 +664,18 @@
             IF( ICOMPZ.GT.0 ) THEN
                WORK( M ) = VA
                WORK( N+M-2 ) = VB
-               CALL SLASR( 'R', 'G', 'F', N, 3, WORK( M ),
-     $                     WORK( N+M-2 ), Z( 1, M ), LDZ )
+               IF( ICOMPZ.EQ.1 ) THEN
+                  CALL SLASR( 'R', 'G', 'F', N, 3, WORK( M ),
+     $                        WORK( N+M-2 ), Z( 1, M ), LDZ )
+               ELSE
+                  IF( MOD(M, 2).EQ.0 ) THEN
+                     CALL SLASR( 'R', 'D', 'F', N, 3, WORK( M ),
+     $                           WORK( N+M-2 ), Z( 1, M ), LDZ )
+                  ELSE
+                     CALL SLASR( 'R', 'L', 'F', N, 3, WORK( M ),
+     $                           WORK( N+M-2 ), Z( 1, M ), LDZ )
+                  END IF
+               END IF
             END IF
 *
             I = L - 1
@@ -703,8 +726,6 @@
          IF( ICOMPZ.GT.0 ) THEN
             WORK( M ) = VA
             WORK( N+M-2 ) = VB
-            CALL SLASR( 'R', 'G', 'F', N, 3, WORK( M ),
-     $                  WORK( N+M-2 ), Z( 1, M ), LDZ )
          END IF    
 *
 *        Inner loop
@@ -744,11 +765,6 @@
 *
   120    CONTINUE
 *
-         IF( ICOMPZ.GT.0 ) THEN
-            CALL SLASR( 'R', 'G', 'F', N, L-M-1, WORK( M+1 ),
-     $                  WORK( N+M-1 ), Z( 1, M+1 ), LDZ )
-         END IF
-*
          I = L - 2
 *
 *        Set iterative values.
@@ -777,8 +793,18 @@
          IF( ICOMPZ.GT.0 ) THEN
             WORK( I ) = VA
             WORK( N+I-2 ) = VB
-            CALL SLASR( 'R', 'G', 'F', N, 3, WORK( I ),
-     $                  WORK( N+I-2 ), Z( 1, I ), LDZ )
+            IF( ICOMPZ.EQ.1 ) THEN
+               CALL SLASR( 'R', 'G', 'F', N, L-M+1, WORK( M ),
+     $                     WORK( N+M-2 ), Z( 1, M ), LDZ )
+            ELSE
+               IF( MOD(M, 2).EQ.0 ) THEN
+                  CALL SLASR( 'R', 'D', 'F', N, L-M+1, WORK( M ),
+     $                        WORK( N+M-2 ), Z( 1, M ), LDZ )
+               ELSE
+                  CALL SLASR( 'R', 'L', 'F', N, L-M+1, WORK( M ),
+     $                        WORK( N+M-2 ), Z( 1, M ), LDZ )
+               END IF
+            END IF
          END IF
 *
          I = L - 1
@@ -835,6 +861,15 @@
       II = 1
       DO WHILE(II.LT.(N-1))
          IF(E(II).EQ.ZERO) THEN
+            DO K = II+1,N-1,2
+               IF(E(K).EQ.ZERO) THEN
+                  EXIT
+               END IF
+               IF( ICOMPZ.GT.0 ) THEN
+                  CALL SSWAP( N, Z( 1, K ), 1, Z( 1, K+1 ), 1 )
+                  CALL SSCAL( N, -ONE, Z( 1, K+1 ), 1 )
+               END IF
+            END DO
             DO K = II+1,N-1,2
                IF(E(K).EQ.ZERO) THEN
                   DO I = II, K-2
@@ -900,7 +935,7 @@
          IF(E(II).LT.ZERO) THEN
             E(II) = -E(II)
             IF( ICOMPZ.GT.0 ) THEN
-               CALL SSWAP( N, Z( 1, II ), 1, Z( 1, II+1 ), 1 )
+               CALL SSCAL( N, -ONE, Z( 1, II+1 ), 1 )
             END IF
          END IF
   180 CONTINUE
