@@ -604,7 +604,7 @@
      $                2, 1, 0.0, M, X, Z, 1, W, IW, I3, INFO )
          CALL CHKXER( 'SSKEWSBEVX', INFOT, NOUT, LERR, OK )
          INFOT = 13
-         CALL SSKEWSBEVX( 'N', 'I', 'U', 2, 1, A, 2, Q, 1, 0.0, 0.0,
+         CALL SSKEWSBEVX( 'N', 'I', 'U', 3, 1, A, 2, Q, 1, 0.0, 0.0,
      $                2, 1, 0.0, M, X, Z, 1, W, IW, I3, INFO )
          CALL CHKXER( 'SSKEWSBEVX', INFOT, NOUT, LERR, OK )
          INFOT = 13

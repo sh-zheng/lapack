@@ -751,10 +751,10 @@ c           LIWEDC = 12
             IF( JTYPE.LE.7 ) THEN
                NTEST = 1
                DO 120 I = 1, N
-                  D1( I ) = DBLE( A( I, I ) )
+                  D1( I ) = A( I, I )
   120          CONTINUE
                DO 130 I = 1, N - 1
-                  D2( I ) = DBLE( A( I+1, I ) )
+                  D2( I ) = A( I+1, I )
   130          CONTINUE
                SRNAMT = 'DSKEWSTEV'
                CALL DSKEWSTEV( 'V', N, D1, D2, Z, LDU, WORK, IINFO )
@@ -775,17 +775,17 @@ c           LIWEDC = 12
 *              Do tests 1 and 2.
 *
                DO 140 I = 1, N
-                  D3( I ) = DBLE( A( I, I ) )
+                  D3( I ) = A( I, I )
   140          CONTINUE
                DO 150 I = 1, N - 1
-                  D4( I ) = DBLE( A( I+1, I ) )
+                  D4( I ) = A( I+1, I )
   150          CONTINUE
                CALL DSKEWSTT21( N, 1, D3, D4, D2, D1, Z, LDU, WORK,
      $                      RESULT( 1 ) )
 *
                NTEST = 3
                DO 160 I = 1, N - 1
-                  D4( I ) = DBLE( A( I+1, I ) )
+                  D4( I ) = A( I+1, I )
   160          CONTINUE
                SRNAMT = 'DSKEWSTEV'
                CALL DSKEWSTEV( 'N', N, D3, D4, Z, LDU, WORK, IINFO )
@@ -817,10 +817,10 @@ c           LIWEDC = 12
                NTEST = 4
                DO 190 I = 1, N
                   EVEIGS( I ) = D3( I )
-                  D1( I ) = DBLE( A( I, I ) )
+                  D1( I ) = A( I, I )
   190          CONTINUE
                DO 200 I = 1, N - 1
-                  D2( I ) = DBLE( A( I+1, I ) )
+                  D2( I ) = A( I+1, I )
   200          CONTINUE
                SRNAMT = 'DSKEWSTEVX'
                CALL DSKEWSTEVX( 'V', 'A', N, D2, VL, VU, IL, IU, ABSTOL,
@@ -848,17 +848,17 @@ c           LIWEDC = 12
 *              Do tests 4 and 5.
 *
                DO 210 I = 1, N
-                  D3( I ) = DBLE( A( I, I ) )
+                  D3( I ) = A( I, I )
   210          CONTINUE
                DO 220 I = 1, N - 1
-                  D4( I ) = DBLE( A( I+1, I ) )
+                  D4( I ) = A( I+1, I )
   220          CONTINUE
                CALL DSKEWSTT21( N, 1, D3, D4, D2, WA1, Z, LDU, WORK,
      $                      RESULT( 4 ) )
 *
                NTEST = 6
                DO 230 I = 1, N - 1
-                  D4( I ) = DBLE( A( I+1, I ) )
+                  D4( I ) = A( I+1, I )
   230          CONTINUE
                SRNAMT = 'DSKEWSTEVX'
                CALL DSKEWSTEVX( 'N', 'A', N, D4, VL, VU, IL, IU, ABSTOL,
@@ -893,10 +893,10 @@ c           LIWEDC = 12
 *
                NTEST = 7
                DO 330 I = 1, N
-                  D1( I ) = DBLE( A( I, I ) )
+                  D1( I ) = A( I, I )
   330          CONTINUE
                DO 340 I = 1, N - 1
-                  D2( I ) = DBLE( A( I+1, I ) )
+                  D2( I ) = A( I+1, I )
   340          CONTINUE
                SRNAMT = 'DSKEWSTEVX'
                CALL DSKEWSTEVX( 'V', 'I', N, D2, VL, VU, IL, IU,
@@ -919,10 +919,10 @@ c           LIWEDC = 12
 *              Do tests 10 and 11.
 *
                DO 350 I = 1, N
-                  D3( I ) = DBLE( A( I, I ) )
+                  D3( I ) = A( I, I )
   350          CONTINUE
                DO 360 I = 1, N - 1
-                  D4( I ) = DBLE( A( I+1, I ) )
+                  D4( I ) = A( I+1, I )
   360          CONTINUE
                CALL DSKEWSTT22( N, M2, 1, D3, D4, D2, WA2, Z, LDU,
      $                      WORK, MAX( 1, M2 ), RESULT( 7 ) )
@@ -930,7 +930,7 @@ c           LIWEDC = 12
 *
                NTEST = 9
                DO 370 I = 1, N - 1
-                  D4( I ) = DBLE( A( I+1, I ) )
+                  D4( I ) = A( I+1, I )
   370          CONTINUE
                SRNAMT = 'DSKEWSTEVX'
                CALL DSKEWSTEVX( 'N', 'I', N, D4, VL, VU, IL, IU,
@@ -1001,10 +1001,10 @@ c           LIWEDC = 12
                END IF
 *
                DO 390 I = 1, N
-                  D1( I ) = DBLE( A( I, I ) )
+                  D1( I ) = A( I, I )
   390          CONTINUE
                DO 400 I = 1, N - 1
-                  D2( I ) = DBLE( A( I+1, I ) )
+                  D2( I ) = A( I+1, I )
   400          CONTINUE
                SRNAMT = 'DSKEWSTEVX'
                CALL DSKEWSTEVX( 'V', 'V', N, D2, VL, VU, IL, IU,
@@ -1034,17 +1034,17 @@ c           LIWEDC = 12
 *              Do tests 13 and 14.
 *
                DO 410 I = 1, N
-                  D3( I ) = DBLE( A( I, I ) )
+                  D3( I ) = A( I, I )
   410          CONTINUE
                DO 420 I = 1, N - 1
-                  D4( I ) = DBLE( A( I+1, I ) )
+                  D4( I ) = A( I+1, I )
   420          CONTINUE
                CALL DSKEWSTT22( N, M2, 1, D3, D4, D2, WA2, Z, LDU,
      $                      WORK, MAX( 1, M2 ), RESULT( 10 ) )
 *
                NTEST = 12
                DO 430 I = 1, N - 1
-                  D4( I ) = DBLE( A( I+1, I ) )
+                  D4( I ) = A( I+1, I )
   430          CONTINUE
                SRNAMT = 'DSKEWSTEVX'
                CALL DSKEWSTEVX( 'N', 'V', N, D4, VL, VU, IL, IU,
@@ -1072,10 +1072,10 @@ c           LIWEDC = 12
 *
                NTEST = 13
                DO 450 I = 1, N
-                  D1( I ) = DBLE( A( I, I ) )
+                  D1( I ) = A( I, I )
   450          CONTINUE
                DO 460 I = 1, N - 1
-                  D2( I ) = DBLE( A( I+1, I ) )
+                  D2( I ) = A( I+1, I )
   460          CONTINUE
                SRNAMT = 'DSKEWSTEVD'
                CALL DSKEWSTEVD( 'V', N, D1, D2, Z, LDU, WORK, LWEDC,
@@ -1097,17 +1097,17 @@ c           LIWEDC = 12
 *              Do tests 13 and 14.
 *
                DO 470 I = 1, N
-                  D3( I ) = DBLE( A( I, I ) )
+                  D3( I ) = A( I, I )
   470          CONTINUE
                DO 480 I = 1, N - 1
-                  D4( I ) = DBLE( A( I+1, I ) )
+                  D4( I ) = A( I+1, I )
   480          CONTINUE
                CALL DSKEWSTT21( N, 1, D3, D4, D2, D1, Z, LDU, WORK,
      $                      RESULT( 13 ) )
 *
                NTEST = 15
                DO 490 I = 1, N - 1
-                  D4( I ) = DBLE( A( I+1, I ) )
+                  D4( I ) = A( I+1, I )
   490          CONTINUE
                SRNAMT = 'DSKEWSTEVD'
                CALL DSKEWSTEVD( 'N', N, D3, D4, Z, LDU, WORK, LWEDC,

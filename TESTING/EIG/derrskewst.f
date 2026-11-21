@@ -604,7 +604,7 @@
      $                2, 1, 0.0D0, M, X, Z, 1, W, IW, I3, INFO )
          CALL CHKXER( 'DSKEWSBEVX', INFOT, NOUT, LERR, OK )
          INFOT = 13
-         CALL DSKEWSBEVX( 'N', 'I', 'U', 2, 1, A, 2, Q, 1, 0.0D0, 0.0D0,
+         CALL DSKEWSBEVX( 'N', 'I', 'U', 3, 1, A, 2, Q, 1, 0.0D0, 0.0D0,
      $                2, 1, 0.0D0, M, X, Z, 1, W, IW, I3, INFO )
          CALL CHKXER( 'DSKEWSBEVX', INFOT, NOUT, LERR, OK )
          INFOT = 13
