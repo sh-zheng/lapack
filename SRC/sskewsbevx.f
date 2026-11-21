@@ -348,12 +348,14 @@
          INFO = -9
       ELSE
          IF( VALEIG ) THEN
-            IF( N.GT.0 .AND. VU.LE.VL )
-     $         INFO = -11
+            IF( N.GT.0 .AND. VU.LE.VL .OR. VU.LT.ZERO ) THEN
+               INFO = -11
+            END IF
          ELSE IF( INDEIG ) THEN
-            IF( IL.LT.1 .OR. IL.GT.MAX( 1, N ) ) THEN
+            IF( IL.LT.1 .OR. IL.GT.MAX( 1, (N+1)/2 ) ) THEN
                INFO = -12
-            ELSE IF( IU.LT.MIN( N, IL ) .OR. IU.GT.N ) THEN
+            ELSE IF( IU.LT.MIN( (N+1)/2, IL ) .OR. IU.GT.(N+1)/2 )
+     $      THEN
                INFO = -13
             END IF
          END IF
