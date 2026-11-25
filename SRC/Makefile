@@ -205,6 +205,8 @@ SLASRC = \
    sskewsytrd_2stage.o sskewsytrd_sy2sb.o sskewsytrd_sb2st.o sskewsb2st_kernels.o \
    ssyevd_2stage.o ssyev_2stage.o ssyevx_2stage.o ssyevr_2stage.o \
    ssbev_2stage.o ssbevx_2stage.o ssbevd_2stage.o ssygv_2stage.o \
+   sskewsyevd_2stage.o sskewsyev_2stage.o sskewsyevx_2stage.o \
+   sskewsbev_2stage.o sskewsbevx_2stage.o sskewsbevd_2stage.o sskewsygv_2stage.o \
    sgesvdq.o sgedmd.o sgedmdq.o
 
 DSLASRC = spotrs.o sgetrs.o spotrf.o sgetrf.o
@@ -418,6 +420,8 @@ DLASRC = \
    dskewsytrd_2stage.o dskewsytrd_sy2sb.o dskewsytrd_sb2st.o dskewsb2st_kernels.o \
    dsyevd_2stage.o dsyev_2stage.o dsyevx_2stage.o dsyevr_2stage.o \
    dsbev_2stage.o dsbevx_2stage.o dsbevd_2stage.o dsygv_2stage.o \
+   dskewsyevd_2stage.o dskewsyev_2stage.o dskewsyevx_2stage.o \
+   dskewsbev_2stage.o dskewsbevx_2stage.o dskewsbevd_2stage.o dskewsygv_2stage.o \
    dgesvdq.o dgedmd.o dgedmdq.o
 
 ifdef USEXBLAS

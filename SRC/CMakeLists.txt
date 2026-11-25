@@ -175,6 +175,8 @@ set(SLASRC
    sskewsytrd_2stage.f sskewsytrd_sy2sb.f sskewsytrd_sb2st.F sskewsb2st_kernels.f
    ssyevd_2stage.f ssyev_2stage.f ssyevx_2stage.f ssyevr_2stage.f
    ssbev_2stage.f ssbevx_2stage.f ssbevd_2stage.f ssygv_2stage.f
+   sskewsyevd_2stage.f sskewsyev_2stage.f sskewsyevx_2stage.f
+   sskewsbev_2stage.f sskewsbevx_2stage.f sskewsbevd_2stage.f sskewsygv_2stage.f
    sgesvdq.f sgedmd.f90 sgedmdq.f90)
 
 set(DSLASRC
@@ -387,6 +389,8 @@ set(DLASRC
    dskewsytrd_2stage.f dskewsytrd_sy2sb.f dskewsytrd_sb2st.F dskewsb2st_kernels.f
    dsyevd_2stage.f dsyev_2stage.f dsyevx_2stage.f dsyevr_2stage.f
    dsbev_2stage.f dsbevx_2stage.f dsbevd_2stage.f dsygv_2stage.f
+   dskewsyevd_2stage.f dskewsyev_2stage.f dskewsyevx_2stage.f
+   dskewsbev_2stage.f dskewsbevx_2stage.f dskewsbevd_2stage.f dskewsygv_2stage.f
    dgesvdq.f dgedmd.f90 dgedmdq.f90)
 
 set(DXLASRC dgesvxx.f dgerfsx.f dla_gerfsx_extended.f dla_geamv.f

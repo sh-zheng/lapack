@@ -52,10 +52,10 @@ SEIGTST = schkee.o \
    schkbb.o schkbd.o schkbk.o schkbl.o schkec.o \
    schkgg.o schkgk.o schkgl.o schkhs.o schksb.o schkskewsb.o schkst.o schkst2stg.o schksb2stg.o \
    sckcsd.o sckglm.o sckgqr.o sckgsv.o scklse.o scsdts.o \
-   schkskewst.o \
+   schkskewst.o schkskewst2stg.o schkskewsb2stg.o \
    sdrges.o sdrgev.o sdrges3.o sdrgev3.o sdrgsx.o sdrgvx.o \
    sdrvbd.o sdrves.o sdrvev.o sdrvsg.o sdrvsg2stg.o \
-   sdrvst.o sdrvst2stg.o sdrvsx.o sdrvvx.o sdrvskewst.o sdrvskewsg2stg.o \
+   sdrvst.o sdrvst2stg.o sdrvsx.o sdrvvx.o sdrvskewst.o sdrvskewsg2stg.o sdrvskewst2stg.o \
    serrbd.o serrec.o serred.o serrgg.o serrhs.o serrst.o serrskewst.o \
    sget02.o sget10.o sget22.o sget23.o sget24.o sget31.o \
    sget32.o sget33.o sget34.o sget35.o sget36.o \
@@ -94,10 +94,10 @@ DEIGTST = dchkee.o \
    dchkbb.o dchkbd.o dchkbk.o dchkbl.o dchkec.o \
    dchkgg.o dchkgk.o dchkgl.o dchkhs.o dchksb.o dchkskewsb.o dchkst.o dchkst2stg.o dchksb2stg.o \
    dckcsd.o dckglm.o dckgqr.o dckgsv.o dcklse.o dcsdts.o \
-   dchkskewst.o \
+   dchkskewst.o dchkskewst2stg.o dchkskewsb2stg.o \
    ddrges.o ddrgev.o ddrges3.o ddrgev3.o ddrgsx.o ddrgvx.o \
    ddrvbd.o ddrves.o ddrvev.o ddrvsg.o ddrvsg2stg.o ddrvskewsg2stg.o \
-   ddrvst.o ddrvst2stg.o ddrvsx.o ddrvvx.o ddrvskewst.o \
+   ddrvst.o ddrvst2stg.o ddrvsx.o ddrvvx.o ddrvskewst.o ddrvskewst2stg.o \
    derrbd.o derrec.o derred.o derrgg.o derrhs.o derrst.o derrskewst.o \
    dget02.o dget10.o dget22.o dget23.o dget24.o dget31.o \
    dget32.o dget33.o dget34.o dget35.o dget36.o \

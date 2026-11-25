@@ -1126,7 +1126,8 @@
      $                   SERRED, SERRGG, SERRHS, SERRST, ILAVER, XLAENV,
      $                   SDRGES3, SDRGEV3, SERRSKEWST, SCHKSKEWST,
      $                   SDRVSKEWST, SCHKST2STG, SDRVST2STG, SCHKSB2STG,
-     $                   SDRVSG2STG, SDRVSKEWSG2STG, SCHKSKEWSB
+     $                   SDRVSG2STG, SDRVSKEWSG2STG, SCHKSKEWSB,
+     $                   SCHKSKEWST2STG, SDRVSKEWST2STG, SCHKSKEWSB2STG
 *     ..
 *     .. Intrinsic Functions ..
       INTRINSIC          LEN, MIN
@@ -1186,7 +1187,7 @@
       SEP = LSAMEN( 3, PATH, 'SEP' ) .OR. LSAMEN( 3, PATH, 'SST' ) .OR.
      $      LSAMEN( 3, PATH, 'SSG' ) .OR. LSAMEN( 3, PATH, 'SE2' )
       KEP = LSAMEN( 3, PATH, 'KEP' ) .OR. LSAMEN( 3, PATH, 'SKT' ) .OR.
-     $      LSAMEN( 3, PATH, 'SKG' )
+     $      LSAMEN( 3, PATH, 'SKG' ) .OR. LSAMEN( 3, PATH, 'KE2' )
       SVD = LSAMEN( 3, PATH, 'SVD' ) .OR. LSAMEN( 3, PATH, 'DBD' )
       SVD = LSAMEN( 3, PATH, 'SVD' ) .OR. LSAMEN( 3, PATH, 'SBD' )
       SEV = LSAMEN( 3, PATH, 'SEV' )
@@ -1963,7 +1964,8 @@
             END IF
   290    CONTINUE
 *
-      ELSE IF( LSAMEN( 3, C3, 'SKT' ) .OR. LSAMEN( 3, C3, 'KEP' ) ) THEN
+      ELSE IF( LSAMEN( 3, C3, 'SKT' ) .OR. LSAMEN( 3, C3, 'KEP' )
+     $                                .OR. LSAMEN( 3, C3, 'KE2' ) ) THEN
 *
 *        ----------------------------------
 *        KEP:  Skew-symmetric Eigenvalue Problem
@@ -2002,6 +2004,16 @@
             WRITE( NOUT, FMT = 9997 )C3, NBVAL( I ), NBMIN( I ),
      $         NXVAL( I )
             IF( TSTCHK ) THEN
+               IF( LSAMEN( 3, C3, 'KE2' ) ) THEN
+               CALL SCHKSKEWST2STG( NN, NVAL, MAXTYP, DOTYPE, ISEED,
+     $                      THRESH, NOUT, A( 1, 1 ), NMAX, A( 1, 2 ),
+     $                      D( 1, 1 ), D( 1, 2 ), D( 1, 3 ), D( 1, 4 ),
+     $                      D( 1, 5 ), D( 1, 6 ), D( 1, 7 ), D( 1, 8 ),
+     $                      D( 1, 9 ), D( 1, 10 ), D( 1, 11 ),
+     $                      A( 1, 3 ), NMAX, A( 1, 4 ), A( 1, 5 ),
+     $                      D( 1, 12 ), A( 1, 6 ), WORK, LWORK, IWORK,
+     $                      LIWORK, RESULT, INFO )
+               ELSE
                CALL SCHKSKEWST( NN, NVAL, MAXTYP, DOTYPE, ISEED, THRESH,
      $                      NOUT, A( 1, 1 ), NMAX, A( 1, 2 ), D( 1, 1 ),
      $                      D( 1, 2 ), D( 1, 3 ), D( 1, 4 ), D( 1, 5 ),
@@ -2009,16 +2021,26 @@
      $                      D( 1, 10 ), D( 1, 11 ), A( 1, 3 ), NMAX,
      $                      A( 1, 4 ), A( 1, 5 ), D( 1, 12 ), A( 1, 6 ),
      $                      WORK, LWORK, IWORK, LIWORK, RESULT, INFO )
+               ENDIF
                IF( INFO.NE.0 )
      $            WRITE( NOUT, FMT = 9980 )'SCHKSKEWST', INFO
             END IF
             IF( TSTDRV ) THEN
+               IF( LSAMEN( 3, C3, 'KE2' ) ) THEN
+               CALL SDRVSKEWST2STG( NN, NVAL, 18, DOTYPE, ISEED, THRESH,
+     $                      NOUT, A( 1, 1 ), NMAX, D( 1, 3 ), D( 1, 4 ),
+     $                      D( 1, 5 ), D( 1, 6 ), D( 1, 8 ), D( 1, 9 ),
+     $                      D( 1, 10 ), D( 1, 11), A( 1, 2 ), NMAX,
+     $                      A( 1, 3 ), D( 1, 12 ), A( 1, 4 ), WORK,
+     $                      LWORK, IWORK, LIWORK, RESULT, INFO )
+               ELSE
                CALL SDRVSKEWST( NN, NVAL, 18, DOTYPE, ISEED, THRESH,
      $                      NOUT, A( 1, 1 ), NMAX, D( 1, 3 ), D( 1, 4 ),
      $                      D( 1, 5 ), D( 1, 6 ), D( 1, 8 ), D( 1, 9 ),
      $                      D( 1, 10 ), D( 1, 11), A( 1, 2 ), NMAX,
      $                      A( 1, 3 ), D( 1, 12 ), A( 1, 4 ), WORK,
      $                      LWORK, IWORK, LIWORK, RESULT, INFO )
+               ENDIF
                IF( INFO.NE.0 )
      $            WRITE( NOUT, FMT = 9980 )'SDRVSKEWST', INFO
             END IF
@@ -2487,14 +2509,14 @@
          CALL ALAREQ( C3, NTYPES, DOTYPE, MAXTYP, NIN, NOUT )
          IF( TSTERR )
      $      CALL SERRSKEWST( 'SKB', NOUT )
-         CALL SCHKSKEWSB( NN, NVAL, NK, KVAL, MAXTYP, DOTYPE, ISEED,
-     $                THRESH, NOUT, A( 1, 1 ), NMAX, D( 1, 1 ),
-     $                D( 1, 2 ), A( 1, 2 ), NMAX, WORK, LWORK,
-     $                RESULT, INFO )
-*         CALL SCHKSB2STG( NN, NVAL, NK, KVAL, MAXTYP, DOTYPE, ISEED,
-*     $                 THRESH, NOUT, A( 1, 1 ), NMAX, D( 1, 1 ), 
-*     $                 D( 1, 2 ), D( 1, 3 ), D( 1, 4 ), D( 1, 5 ),
-*     $                 A( 1, 2 ), NMAX, WORK, LWORK, RESULT, INFO )
+*         CALL SCHKSKEWSB( NN, NVAL, NK, KVAL, MAXTYP, DOTYPE, ISEED,
+*     $                THRESH, NOUT, A( 1, 1 ), NMAX, D( 1, 1 ),
+*     $                D( 1, 2 ), A( 1, 2 ), NMAX, WORK, LWORK,
+*     $                RESULT, INFO )
+         CALL SCHKSKEWSB2STG( NN, NVAL, NK, KVAL, MAXTYP, DOTYPE, ISEED,
+     $                 THRESH, NOUT, A( 1, 1 ), NMAX, D( 1, 1 ), 
+     $                 D( 1, 2 ), D( 1, 3 ), D( 1, 4 ), D( 1, 5 ),
+     $                 A( 1, 2 ), NMAX, WORK, LWORK, RESULT, INFO )
          IF( INFO.NE.0 )
      $      WRITE( NOUT, FMT = 9980 )'SCHKSKEWSB', INFO
 *

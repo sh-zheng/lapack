@@ -44,6 +44,7 @@ SEIGTST= snep.out \
          ssep.out \
 		 skep.out \
          sse2.out \
+         ske2.out \
          ssvd.out \
          sec.out \
          sed.out \
@@ -93,6 +94,7 @@ DEIGTST= dnep.out \
          dsep.out \
 		 dkep.out \
          dse2.out \
+         dke2.out \
          dsvd.out \
          dec.out \
          ded.out \
@@ -246,6 +248,10 @@ skep.out: kep.in EIG/xeigtsts
 sse2.out: se2.in EIG/xeigtsts
 	@echo SEP: Testing Symmetric Eigenvalue Problem routines
 	./EIG/xeigtsts < se2.in > $@ 2>&1
+   
+ske2.out: ke2.in EIG/xeigtsts
+	@echo SEP: Testing Skew-symmetric Eigenvalue Problem routines
+	./EIG/xeigtsts < ke2.in > $@ 2>&1
 
 ssvd.out: svd.in EIG/xeigtsts
 	@echo SVD: Testing Singular Value Decomposition routines
@@ -430,6 +436,10 @@ dkep.out: kep.in EIG/xeigtstd
 dse2.out: se2.in EIG/xeigtstd
 	@echo SEP: Testing Symmetric Eigenvalue Problem routines
 	./EIG/xeigtstd < se2.in > $@ 2>&1
+   
+dke2.out: ke2.in EIG/xeigtstd
+	@echo SEP: Testing Skew-symmetric Eigenvalue Problem routines
+	./EIG/xeigtstd < ke2.in > $@ 2>&1
 
 dsvd.out: svd.in EIG/xeigtstd
 	@echo SVD: Testing Singular Value Decomposition routines
