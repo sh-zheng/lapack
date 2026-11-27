@@ -205,7 +205,8 @@
 *     .. Local Scalars ..
       INTEGER            B1, BLKSIZ, BN, GPIND, I, IINFO, INDRV1,
      $                   INDRV2, INDRV3, INDRV4, INDRV5, ITS, J, J1,
-     $                   JBLK, JMAX, JMAX1, JMAX2, NBLK, NRMCHK
+     $                   JBLK, JMAX, JMAX1, JMAX2, NBLK, NRMCHK,
+     $                   SMALLPIV
       REAL               CTR, EPS, EPS1, NRM, ONENRM, ORTOL, PERTOL,
      $                   SCL, SEP, STPCRT, TOL, XJ, XJM, CTR1, CTR2
 *     ..
@@ -407,6 +408,18 @@
      $                       WORK( INDRV2+2 ), WORK( INDRV3+1 ),
      $                       TOL, WORK( INDRV5+1 ), IWORK, IINFO )
 *
+*              Determine the index of the smallest pivot for scaling.
+*              Unlike the symmetric case, the small pivot of the LU
+*              factorization of T - lambda*I (with imaginary lambda)
+*              need not be the last one, so use the index returned in
+*              IWORK( BLKSIZ+1 ) by SLAGTFSKEW.
+*
+               IF( IWORK( BLKSIZ+1 ).GT.0 ) THEN
+                  SMALLPIV = IWORK( BLKSIZ+1 )
+               ELSE
+                  SMALLPIV = BLKSIZ
+               END IF
+*
 *              Update iteration count.
 *
    70          CONTINUE
@@ -419,7 +432,7 @@
                JMAX1 = ISAMAX( BLKSIZ, WORK( INDRV1+1 ), 1 )
                JMAX2 = ISAMAX( BLKSIZ, WORK( N+INDRV1+1 ), 1 )
                SCL = REAL( BLKSIZ )*ONENRM*MAX( EPS,
-     $               ABS( WORK( INDRV4+BLKSIZ ) ) ) /
+     $               ABS( WORK( INDRV4+SMALLPIV ) ) ) /
      $               MAX( ABS( WORK( INDRV1+JMAX1 ) ),
      $               ABS( WORK( N+INDRV1+JMAX2 ) ) )
                CALL SSCAL( BLKSIZ, SCL, WORK( INDRV1+1 ), 1 )
@@ -438,8 +451,11 @@
 *
                IF( JBLK.EQ.2 )
      $            GO TO 90
-               IF( ABS( XJM-XJ ).GT.ORTOL )
-     $            GPIND = J
+               IF( XJ.LE.ORTOL ) THEN
+                  GPIND = J1
+               ELSE IF( ABS( XJM-XJ ).GT.ORTOL ) THEN
+                  GPIND = J
+               END IF
                IF( GPIND.NE.J ) THEN
                   DO 80 I = GPIND, J - 2, 2
                      CTR1 = -SDOT( BLKSIZ, WORK( INDRV1+1 ), 1,
@@ -461,6 +477,17 @@
    80             CONTINUE
                END IF
    90          CONTINUE
+*
+*              Check the infinity norm of the iterate BEFORE the
+*              equal-norm/rotation conditioning below: when u and v are
+*              nearly parallel (small-eigenvalue conjugate mixture), the
+*              rotation (u-v)/sqrt(2) can shrink the norm drastically and
+*              would otherwise defeat the norm-growth stopping criterion.
+*
+               JMAX1 = ISAMAX( BLKSIZ, WORK( INDRV1+1 ), 1 )
+               JMAX2 = ISAMAX( BLKSIZ, WORK( N+INDRV1+1 ), 1 )
+               NRM = MAX( ABS( WORK( INDRV1+JMAX1 ) ),
+     $               ABS( WORK( N+INDRV1+JMAX2 ) ) )
                IF( GPIND.NE.J .OR. XJ.LT.ORTOL / TWO ) THEN
                   CTR1 = SNRM2( BLKSIZ, WORK( INDRV1+1 ), 1 )
                   CTR2 = SNRM2( BLKSIZ, WORK( N+INDRV1+1 ), 1 )
@@ -497,13 +524,6 @@
                      END IF
                   END IF
                END IF
-*
-*              Check the infinity norm of the iterate.
-*
-               JMAX1 = ISAMAX( BLKSIZ, WORK( INDRV1+1 ), 1 )
-               JMAX2 = ISAMAX( BLKSIZ, WORK( N+INDRV1+1 ), 1 )
-               NRM = MAX( ABS( WORK( INDRV1+JMAX1 ) ),
-     $               ABS( WORK( N+INDRV1+JMAX2 ) ) )
 *
 *              Continue for additional iterations after norm reaches
 *              stopping criterion.
